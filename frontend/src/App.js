@@ -333,9 +333,17 @@ const App = () => {
                   history.map((item) => (
                     <div key={item.id} className="p-4 rounded-xl border border-slate-100 hover:border-slate-200 transition-colors bg-white/60">
                       <div className="flex items-center justify-between mb-2">
-                        <Badge variant={getSentimentBadgeVariant(item.sentiment)} className="text-xs">
-                          {item.sentiment}
-                        </Badge>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant={getSentimentBadgeVariant(item.sentiment)} className="text-xs">
+                            {item.sentiment}
+                          </Badge>
+                          {item.dominant_emotion && (
+                            <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getEmotionColor(item.dominant_emotion)}`}>
+                              {getEmotionIcon(item.dominant_emotion)}
+                              <span>{formatEmotionName(item.dominant_emotion)}</span>
+                            </div>
+                          )}
+                        </div>
                         <span className="text-xs text-slate-500">
                           {Math.round(item.confidence * 100)}%
                         </span>
@@ -343,6 +351,20 @@ const App = () => {
                       <p className="text-sm text-slate-700 mb-2 line-clamp-2">
                         "{item.text.length > 100 ? item.text.substring(0, 100) + "..." : item.text}"
                       </p>
+                      {item.emotions && Object.keys(item.emotions).length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          {Object.entries(item.emotions)
+                            .filter(([_, confidence]) => confidence > 0.2) // Show emotions with >20% confidence
+                            .sort(([, a], [, b]) => b - a) // Sort by confidence
+                            .slice(0, 3) // Show top 3 emotions in history
+                            .map(([emotion, confidence]) => (
+                              <div key={emotion} className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs ${getEmotionColor(emotion)}`}>
+                                {getEmotionIcon(emotion)}
+                                <span>{Math.round(confidence * 100)}%</span>
+                              </div>
+                            ))}
+                        </div>
+                      )}
                       <p className="text-xs text-slate-600 italic">
                         {item.analysis}
                       </p>
