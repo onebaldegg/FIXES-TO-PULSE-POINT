@@ -62,30 +62,43 @@ class SentimentAnalysis(BaseModel):
 
 # Sentiment Analysis Service
 async def analyze_sentiment(text: str) -> dict:
-    """Analyze sentiment using LLM"""
+    """Analyze sentiment and emotions using LLM"""
     try:
         # Initialize LLM chat
         chat = LlmChat(
             api_key=os.environ.get('EMERGENT_LLM_KEY'),
             session_id=f"sentiment_{uuid.uuid4()}",
-            system_message="""You are an expert sentiment analysis AI specialized in PR and marketing text analysis. 
-            
+            system_message="""You are an expert sentiment and emotion analysis AI specialized in PR and marketing text analysis. 
+
             Analyze the provided text and return ONLY a valid JSON response with these exact fields:
             {
                 "sentiment": "positive" | "negative" | "neutral",
                 "confidence": 0.85,
-                "analysis": "Brief explanation of the sentiment and key factors"
+                "analysis": "Brief explanation of the sentiment and key factors",
+                "emotions": {
+                    "joy": 0.8,
+                    "sadness": 0.1,
+                    "anger": 0.0,
+                    "fear": 0.0,
+                    "trust": 0.7,
+                    "disgust": 0.0,
+                    "surprise": 0.3,
+                    "anticipation": 0.5
+                },
+                "dominant_emotion": "joy"
             }
             
             Rules:
             - sentiment must be exactly "positive", "negative", or "neutral"
             - confidence must be a number between 0 and 1
-            - analysis should be 1-2 sentences explaining the sentiment
+            - analysis should be 1-2 sentences explaining the sentiment and emotions
+            - emotions: Use Plutchik's 8 basic emotions, each scored 0-1
+            - dominant_emotion: The emotion with the highest score
             - Return ONLY the JSON, no other text"""
         ).with_model("openai", "gpt-4o-mini")
         
         # Create user message
-        user_message = UserMessage(text=f"Analyze the sentiment of this text: {text}")
+        user_message = UserMessage(text=f"Analyze the sentiment and emotions of this text: {text}")
         
         # Get response
         response = await chat.send_message(user_message)
@@ -94,7 +107,31 @@ async def analyze_sentiment(text: str) -> dict:
         import json
         try:
             result = json.loads(response)
+            
+            # Ensure emotions dictionary exists and has all 8 emotions
+            if "emotions" not in result:
+                result["emotions"] = {}
+            
+            # Default emotion values
+            default_emotions = {
+                "joy": 0.0, "sadness": 0.0, "anger": 0.0, "fear": 0.0,
+                "trust": 0.0, "disgust": 0.0, "surprise": 0.0, "anticipation": 0.0
+            }
+            
+            # Merge with detected emotions
+            for emotion in default_emotions:
+                if emotion not in result["emotions"]:
+                    result["emotions"][emotion] = 0.0
+            
+            # Find dominant emotion
+            if result["emotions"]:
+                dominant_emotion = max(result["emotions"], key=result["emotions"].get)
+                result["dominant_emotion"] = dominant_emotion
+            else:
+                result["dominant_emotion"] = "neutral"
+            
             return result
+            
         except json.JSONDecodeError:
             # Fallback parsing if response is not pure JSON
             response_lower = response.lower()
@@ -104,19 +141,39 @@ async def analyze_sentiment(text: str) -> dict:
                 sentiment = "negative"
             else:
                 sentiment = "neutral"
+            
+            # Basic emotion detection from keywords
+            emotions = {
+                "joy": 0.7 if any(word in response_lower for word in ["joy", "happy", "excited", "pleased"]) else 0.0,
+                "sadness": 0.6 if any(word in response_lower for word in ["sad", "disappointed", "sorrow"]) else 0.0,
+                "anger": 0.6 if any(word in response_lower for word in ["angry", "frustrated", "annoyed"]) else 0.0,
+                "fear": 0.5 if any(word in response_lower for word in ["fear", "worried", "anxious"]) else 0.0,
+                "trust": 0.6 if any(word in response_lower for word in ["trust", "confident", "reliable"]) else 0.0,
+                "disgust": 0.5 if any(word in response_lower for word in ["disgusted", "revolting"]) else 0.0,
+                "surprise": 0.5 if any(word in response_lower for word in ["surprised", "shocked", "amazed"]) else 0.0,
+                "anticipation": 0.5 if any(word in response_lower for word in ["excited", "anticipation", "expecting"]) else 0.0,
+            }
                 
             return {
                 "sentiment": sentiment,
                 "confidence": 0.75,
-                "analysis": "Sentiment analysis completed based on text content."
+                "analysis": "Sentiment and emotion analysis completed based on text content.",
+                "emotions": emotions,
+                "dominant_emotion": max(emotions, key=emotions.get) if emotions else "neutral"
             }
             
     except Exception as e:
         logger.error(f"Error in sentiment analysis: {e}")
+        default_emotions = {
+            "joy": 0.0, "sadness": 0.0, "anger": 0.0, "fear": 0.0,
+            "trust": 0.0, "disgust": 0.0, "surprise": 0.0, "anticipation": 0.0
+        }
         return {
             "sentiment": "neutral",
             "confidence": 0.5,
-            "analysis": f"Error in analysis: {str(e)}"
+            "analysis": f"Error in analysis: {str(e)}",
+            "emotions": default_emotions,
+            "dominant_emotion": "neutral"
         }
 
 
