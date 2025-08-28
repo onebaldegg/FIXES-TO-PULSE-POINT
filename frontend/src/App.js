@@ -384,11 +384,11 @@ const App = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="text-center p-6 border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-shadow">
               <div className="bg-gradient-to-r from-emerald-500 to-teal-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="h-6 w-6 text-white" />
+                <Heart className="h-6 w-6 text-white" />
               </div>
-              <h3 className="font-semibold text-slate-800 mb-2">Real-time Analysis</h3>
+              <h3 className="font-semibold text-slate-800 mb-2">Emotion Detection</h3>
               <p className="text-sm text-slate-600">
-                Get instant sentiment analysis with confidence scores and detailed insights
+                Advanced AI detects 8 core emotions including joy, trust, anger, and fear with confidence scores
               </p>
             </Card>
 
@@ -398,7 +398,7 @@ const App = () => {
               </div>
               <h3 className="font-semibold text-slate-800 mb-2">AI-Powered Insights</h3>
               <p className="text-sm text-slate-600">
-                Advanced AI models trained specifically for PR and marketing text analysis
+                Advanced AI models trained specifically for PR and marketing text analysis with emotional intelligence
               </p>
             </Card>
 
