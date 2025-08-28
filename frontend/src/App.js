@@ -253,6 +253,54 @@ const App = () => {
                           {Math.round(analysis.confidence * 100)}% confidence
                         </span>
                       </div>
+
+                      {/* Emotion Detection Display */}
+                      {analysis.emotions && Object.keys(analysis.emotions).length > 0 && (
+                        <div className="mb-3">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <span className="text-sm font-medium text-slate-700">Dominant Emotion:</span>
+                            {analysis.dominant_emotion && (
+                              <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${getEmotionColor(analysis.dominant_emotion)}`}>
+                                {getEmotionIcon(analysis.dominant_emotion)}
+                                <span>{formatEmotionName(analysis.dominant_emotion)}</span>
+                                <span>({Math.round((analysis.emotions[analysis.dominant_emotion] || 0) * 100)}%)</span>
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <span className="text-sm font-medium text-slate-700">All Emotions Detected:</span>
+                            <div className="grid grid-cols-2 gap-2">
+                              {Object.entries(analysis.emotions)
+                                .filter(([_, confidence]) => confidence > 0.1) // Only show emotions with >10% confidence
+                                .sort(([, a], [, b]) => b - a) // Sort by confidence
+                                .slice(0, 6) // Show top 6 emotions
+                                .map(([emotion, confidence]) => (
+                                  <div key={emotion} className="flex items-center justify-between p-2 bg-white/80 rounded-lg border">
+                                    <div className="flex items-center space-x-2">
+                                      {getEmotionIcon(emotion)}
+                                      <span className="text-sm font-medium text-slate-700">
+                                        {formatEmotionName(emotion)}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <div className="w-16 bg-slate-200 rounded-full h-2">
+                                        <div 
+                                          className={`h-2 rounded-full ${getEmotionColor(emotion).split(' ')[0]}`}
+                                          style={{ width: `${confidence * 100}%` }}
+                                        />
+                                      </div>
+                                      <span className="text-xs text-slate-600 font-medium">
+                                        {Math.round(confidence * 100)}%
+                                      </span>
+                                    </div>
+                                  </div>
+                                ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       <AlertDescription className="text-slate-700">
                         {analysis.analysis}
                       </AlertDescription>
