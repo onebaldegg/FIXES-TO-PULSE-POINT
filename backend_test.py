@@ -221,8 +221,8 @@ class BrandWatchAPITester:
         )
 
 def main():
-    print("🚀 Starting Brand Watch AI Backend API Tests")
-    print("=" * 60)
+    print("🚀 Starting Brand Watch AI Backend API Tests - Emotion Detection Feature")
+    print("=" * 70)
     
     tester = BrandWatchAPITester()
     
@@ -233,8 +233,8 @@ def main():
         return 1
 
     # Test sentiment analysis with different text types
-    print("\n📊 Testing Sentiment Analysis Functionality")
-    print("-" * 40)
+    print("\n📊 Testing Basic Sentiment Analysis Functionality")
+    print("-" * 50)
     
     # Test positive sentiment
     success, positive_response = tester.test_analyze_sentiment_positive()
@@ -251,6 +251,30 @@ def main():
     if success:
         tester.validate_sentiment_response(neutral_response)
 
+    # Test emotion detection with specific emotional texts
+    print("\n🎭 Testing Emotion Detection Feature")
+    print("-" * 40)
+    
+    # Test joy detection
+    success, joy_response = tester.test_emotion_detection_joy()
+    if success:
+        tester.validate_sentiment_response(joy_response)
+    
+    # Test mixed emotions
+    success, mixed_response = tester.test_emotion_detection_mixed()
+    if success:
+        tester.validate_sentiment_response(mixed_response)
+    
+    # Test anger detection
+    success, anger_response = tester.test_emotion_detection_anger()
+    if success:
+        tester.validate_sentiment_response(anger_response)
+    
+    # Test fear detection
+    success, fear_response = tester.test_emotion_detection_fear()
+    if success:
+        tester.validate_sentiment_response(fear_response)
+
     # Test error handling
     print("\n🚨 Testing Error Handling")
     print("-" * 30)
@@ -263,9 +287,16 @@ def main():
     success, history_response = tester.test_sentiment_history()
     if success and isinstance(history_response, list):
         print(f"   History contains {len(history_response)} entries")
+        # Check if recent entries have emotion data
+        if len(history_response) > 0:
+            recent_entry = history_response[0]
+            if 'emotions' in recent_entry and 'dominant_emotion' in recent_entry:
+                print(f"✅ Recent entries include emotion data")
+            else:
+                print(f"⚠️  Recent entries may not have emotion data")
 
     # Print final results
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 70)
     print(f"📊 FINAL RESULTS: {tester.tests_passed}/{tester.tests_run} tests passed")
     
     if tester.tests_passed == tester.tests_run:
