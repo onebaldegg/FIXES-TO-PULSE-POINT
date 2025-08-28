@@ -102,6 +102,56 @@ const App = () => {
     }
   };
 
+  const getEmotionIcon = (emotion) => {
+    switch (emotion) {
+      case "joy":
+        return <Smile className="h-3 w-3" />;
+      case "sadness":
+        return <Frown className="h-3 w-3" />;
+      case "anger":
+        return <X className="h-3 w-3" />;
+      case "fear":
+        return <Meh className="h-3 w-3" />;
+      case "trust":
+        return <Shield className="h-3 w-3" />;
+      case "disgust":
+        return <X className="h-3 w-3" />;
+      case "surprise":
+        return <Sparkles className="h-3 w-3" />;
+      case "anticipation":
+        return <Clock className="h-3 w-3" />;
+      default:
+        return <Heart className="h-3 w-3" />;
+    }
+  };
+
+  const getEmotionColor = (emotion) => {
+    switch (emotion) {
+      case "joy":
+        return "bg-yellow-500 text-white";
+      case "sadness":
+        return "bg-blue-500 text-white";
+      case "anger":
+        return "bg-red-500 text-white";
+      case "fear":
+        return "bg-purple-500 text-white";
+      case "trust":
+        return "bg-green-500 text-white";
+      case "disgust":
+        return "bg-gray-500 text-white";
+      case "surprise":
+        return "bg-orange-500 text-white";
+      case "anticipation":
+        return "bg-teal-500 text-white";
+      default:
+        return "bg-slate-500 text-white";
+    }
+  };
+
+  const formatEmotionName = (emotion) => {
+    return emotion.charAt(0).toUpperCase() + emotion.slice(1);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Hero Section */}
