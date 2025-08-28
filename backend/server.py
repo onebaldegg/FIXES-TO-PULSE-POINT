@@ -209,7 +209,9 @@ async def analyze_text_sentiment(request: SentimentRequest):
             text=request.text,
             sentiment=analysis_result["sentiment"],
             confidence=analysis_result["confidence"],
-            analysis=analysis_result["analysis"]
+            analysis=analysis_result["analysis"],
+            emotions=analysis_result.get("emotions", {}),
+            dominant_emotion=analysis_result.get("dominant_emotion", "")
         )
         
         # Store in database
