@@ -118,9 +118,10 @@ class BrandWatchAPITester:
         return self.run_test("Get Sentiment History", "GET", "sentiment-history", 200)
 
     def validate_sentiment_response(self, response_data):
-        """Validate sentiment analysis response structure"""
-        required_fields = ['id', 'text', 'sentiment', 'confidence', 'analysis', 'timestamp']
+        """Validate sentiment analysis response structure including emotion detection"""
+        required_fields = ['id', 'text', 'sentiment', 'confidence', 'analysis', 'timestamp', 'emotions', 'dominant_emotion']
         valid_sentiments = ['positive', 'negative', 'neutral']
+        expected_emotions = ['joy', 'sadness', 'anger', 'fear', 'trust', 'disgust', 'surprise', 'anticipation']
         
         print(f"\n🔍 Validating sentiment response structure...")
         
@@ -136,9 +137,88 @@ class BrandWatchAPITester:
         if not (0 <= response_data['confidence'] <= 1):
             print(f"❌ Invalid confidence value: {response_data['confidence']}")
             return False
+
+        # Validate emotions structure
+        emotions = response_data.get('emotions', {})
+        if not isinstance(emotions, dict):
+            print(f"❌ Emotions field should be a dictionary")
+            return False
+
+        # Check if all 8 emotions are present
+        for emotion in expected_emotions:
+            if emotion not in emotions:
+                print(f"❌ Missing emotion: {emotion}")
+                return False
             
+            emotion_score = emotions[emotion]
+            if not isinstance(emotion_score, (int, float)) or not (0 <= emotion_score <= 1):
+                print(f"❌ Invalid emotion score for {emotion}: {emotion_score}")
+                return False
+
+        # Validate dominant emotion
+        dominant_emotion = response_data.get('dominant_emotion', '')
+        if dominant_emotion not in expected_emotions:
+            print(f"❌ Invalid dominant emotion: {dominant_emotion}")
+            return False
+
+        # Check if dominant emotion has the highest score
+        if emotions:
+            actual_dominant = max(emotions, key=emotions.get)
+            if dominant_emotion != actual_dominant:
+                print(f"⚠️  Warning: Dominant emotion mismatch. Expected {actual_dominant}, got {dominant_emotion}")
+
         print(f"✅ Response structure is valid")
+        print(f"   Dominant emotion: {dominant_emotion} ({emotions.get(dominant_emotion, 0):.2f})")
+        print(f"   Top 3 emotions: {sorted(emotions.items(), key=lambda x: x[1], reverse=True)[:3]}")
         return True
+
+    def test_emotion_detection_joy(self):
+        """Test emotion detection with joyful text"""
+        joyful_text = "I'm so excited about this amazing product! This is absolutely fantastic and wonderful!"
+        return self.run_test(
+            "Emotion Detection - Joy",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": joyful_text},
+            timeout=60
+        )
+
+    def test_emotion_detection_mixed(self):
+        """Test emotion detection with mixed emotions"""
+        mixed_text = "I'm thrilled about the launch but nervous about the reaction. The team worked hard and I trust they've done amazing work!"
+        return self.run_test(
+            "Emotion Detection - Mixed Emotions",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": mixed_text},
+            timeout=60
+        )
+
+    def test_emotion_detection_anger(self):
+        """Test emotion detection with angry text"""
+        angry_text = "This service is absolutely terrible and frustrating! I'm furious about this experience!"
+        return self.run_test(
+            "Emotion Detection - Anger",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": angry_text},
+            timeout=60
+        )
+
+    def test_emotion_detection_fear(self):
+        """Test emotion detection with fearful text"""
+        fearful_text = "I'm worried about the security of my data. This makes me anxious and concerned."
+        return self.run_test(
+            "Emotion Detection - Fear",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": fearful_text},
+            timeout=60
+        )
 
 def main():
     print("🚀 Starting Brand Watch AI Backend API Tests")
