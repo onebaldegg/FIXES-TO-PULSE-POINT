@@ -45,6 +45,8 @@ class SentimentResponse(BaseModel):
     sentiment: str  # positive, negative, neutral
     confidence: float
     analysis: str
+    emotions: Optional[dict] = {}  # {"joy": 0.8, "anger": 0.1, etc.}
+    dominant_emotion: Optional[str] = ""  # Primary emotion detected
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class SentimentAnalysis(BaseModel):
@@ -53,6 +55,8 @@ class SentimentAnalysis(BaseModel):
     sentiment: str
     confidence: float
     analysis: str
+    emotions: Optional[dict] = {}
+    dominant_emotion: Optional[str] = ""
     timestamp: datetime
 
 
