@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./com
 import { Textarea } from "./components/ui/textarea";
 import { Badge } from "./components/ui/badge";
 import { Alert, AlertDescription } from "./components/ui/alert";
-import { Loader2, TrendingUp, TrendingDown, Minus, BarChart3, Brain, Zap } from "lucide-react";
+import { Loader2, TrendingUp, TrendingDown, Minus, BarChart3, Brain, Zap, Smile, Frown, Meh, Heart, Shield, X, Sparkles, Clock } from "lucide-react";
 import { Toaster } from "./components/ui/toaster";
 import { useToast } from "./hooks/use-toast";
 
