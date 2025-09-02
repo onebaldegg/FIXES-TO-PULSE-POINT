@@ -270,7 +270,59 @@ const App = () => {
                           <span className="text-sm text-green-200">
                             {Math.round(analysis.confidence * 100)}% confidence
                           </span>
+                          {/* Sarcasm Detection Warning */}
+                          {analysis.sarcasm_detected && (
+                            <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${getSarcasmBadgeColor()}`}>
+                              <AlertTriangle className="h-3 w-3" />
+                              <span>SARCASM ({Math.round(analysis.sarcasm_confidence * 100)}%)</span>
+                            </div>
+                          )}
                         </div>
+
+                        {/* Sarcasm Analysis Display */}
+                        {analysis.sarcasm_detected && (
+                          <div className="mb-3 p-3 bg-orange-950/30 border border-orange-500/30 rounded-lg">
+                            <div className="flex items-start space-x-2 mb-2">
+                              <AlertTriangle className="h-4 w-4 text-orange-400 mt-0.5" />
+                              <div>
+                                <span className="text-sm font-medium text-orange-200">Sarcasm Detected</span>
+                                <p className="text-xs text-orange-300 mt-1">{analysis.sarcasm_explanation}</p>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 mt-3">
+                              <div>
+                                <span className="text-xs text-orange-200 font-medium">Surface Sentiment:</span>
+                                <div className="flex items-center space-x-1 mt-1">
+                                  <Badge variant={getSentimentBadgeVariant(analysis.sentiment)} className="text-xs">
+                                    {analysis.sentiment}
+                                  </Badge>
+                                  <span className="text-xs text-green-300">{Math.round(analysis.confidence * 100)}%</span>
+                                </div>
+                              </div>
+                              <div>
+                                <span className="text-xs text-orange-200 font-medium">Actual Meaning:</span>
+                                <div className="flex items-center space-x-1 mt-1">
+                                  <Badge variant={getSentimentBadgeVariant(analysis.adjusted_sentiment)} className="text-xs">
+                                    {analysis.adjusted_sentiment}
+                                  </Badge>
+                                  <span className="text-xs text-orange-300">After sarcasm</span>
+                                </div>
+                              </div>
+                            </div>
+                            {analysis.sarcasm_indicators && analysis.sarcasm_indicators.length > 0 && (
+                              <div className="mt-3">
+                                <span className="text-xs text-orange-200 font-medium">Sarcasm Indicators:</span>
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {analysis.sarcasm_indicators.map((indicator, index) => (
+                                    <span key={index} className="px-2 py-0.5 bg-orange-500/20 text-orange-300 rounded text-xs">
+                                      "{indicator}"
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
 
                         {/* Emotion Detection Display */}
                         {analysis.emotions && Object.keys(analysis.emotions).length > 0 && (
