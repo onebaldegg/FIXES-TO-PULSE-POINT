@@ -120,8 +120,9 @@ class BrandWatchAPITester:
         return self.run_test("Get Sentiment History", "GET", "sentiment-history", 200)
 
     def validate_sentiment_response(self, response_data):
-        """Validate sentiment analysis response structure including emotion detection"""
-        required_fields = ['id', 'text', 'sentiment', 'confidence', 'analysis', 'timestamp', 'emotions', 'dominant_emotion']
+        """Validate sentiment analysis response structure including emotion and sarcasm detection"""
+        required_fields = ['id', 'text', 'sentiment', 'confidence', 'analysis', 'timestamp', 'emotions', 'dominant_emotion',
+                          'sarcasm_detected', 'sarcasm_confidence', 'sarcasm_explanation', 'adjusted_sentiment', 'sarcasm_indicators']
         valid_sentiments = ['positive', 'negative', 'neutral']
         expected_emotions = ['joy', 'sadness', 'anger', 'fear', 'trust', 'disgust', 'surprise', 'anticipation']
         
@@ -138,6 +139,23 @@ class BrandWatchAPITester:
             
         if not (0 <= response_data['confidence'] <= 1):
             print(f"❌ Invalid confidence value: {response_data['confidence']}")
+            return False
+
+        # Validate sarcasm fields
+        if not isinstance(response_data['sarcasm_detected'], bool):
+            print(f"❌ sarcasm_detected must be boolean")
+            return False
+        
+        if not isinstance(response_data['sarcasm_confidence'], (int, float)) or not (0 <= response_data['sarcasm_confidence'] <= 1):
+            print(f"❌ Invalid sarcasm_confidence value: {response_data['sarcasm_confidence']}")
+            return False
+        
+        if not isinstance(response_data['sarcasm_indicators'], list):
+            print(f"❌ sarcasm_indicators must be a list")
+            return False
+        
+        if response_data['adjusted_sentiment'] not in valid_sentiments:
+            print(f"❌ Invalid adjusted_sentiment value: {response_data['adjusted_sentiment']}")
             return False
 
         # Validate emotions structure
@@ -170,8 +188,11 @@ class BrandWatchAPITester:
                 print(f"⚠️  Warning: Dominant emotion mismatch. Expected {actual_dominant}, got {dominant_emotion}")
 
         print(f"✅ Response structure is valid")
+        print(f"   Sentiment: {response_data['sentiment']} -> {response_data['adjusted_sentiment']}")
+        print(f"   Sarcasm: {response_data['sarcasm_detected']} ({response_data['sarcasm_confidence']:.2f})")
         print(f"   Dominant emotion: {dominant_emotion} ({emotions.get(dominant_emotion, 0):.2f})")
-        print(f"   Top 3 emotions: {sorted(emotions.items(), key=lambda x: x[1], reverse=True)[:3]}")
+        if response_data['sarcasm_indicators']:
+            print(f"   Sarcasm indicators: {response_data['sarcasm_indicators']}")
         return True
 
     def test_emotion_detection_joy(self):
