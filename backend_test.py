@@ -480,6 +480,243 @@ class BrandWatchAPITester:
         
         return success, response
 
+    # TOPIC DETECTION TESTS - NEW FEATURE
+    def test_single_topic_customer_service(self):
+        """Test single topic detection - Customer Service"""
+        customer_service_text = "The customer support team was incredibly helpful and responsive."
+        success, response = self.run_test(
+            "Single Topic - Customer Service",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": customer_service_text},
+            timeout=60
+        )
+        
+        if success:
+            topics = response.get('topics_detected', [])
+            primary_topic = response.get('primary_topic', '')
+            
+            # Check if customer service topic is detected
+            customer_service_found = any(topic['topic'] == 'customer_service' for topic in topics)
+            if customer_service_found:
+                print(f"✅ Customer service topic detected")
+            else:
+                print(f"❌ Customer service topic not detected in obvious customer service text")
+                return False, response
+            
+            if primary_topic == 'customer_service':
+                print(f"✅ Customer service correctly identified as primary topic")
+            else:
+                print(f"⚠️  Expected customer_service as primary topic, got: {primary_topic}")
+        
+        return success, response
+
+    def test_multi_topic_business_text(self):
+        """Test multi-topic detection - Business scenario"""
+        multi_topic_text = "Great product quality but terrible customer support and overpriced."
+        success, response = self.run_test(
+            "Multi-Topic - Business Scenario",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": multi_topic_text},
+            timeout=60
+        )
+        
+        if success:
+            topics = response.get('topics_detected', [])
+            primary_topic = response.get('primary_topic', '')
+            topic_summary = response.get('topic_summary', '')
+            
+            expected_topics = ['product_quality', 'customer_service', 'pricing']
+            detected_topic_names = [topic['topic'] for topic in topics]
+            
+            print(f"   Expected topics: {expected_topics}")
+            print(f"   Detected topics: {detected_topic_names}")
+            
+            # Check if multiple topics are detected
+            if len(topics) >= 2:
+                print(f"✅ Multiple topics detected ({len(topics)} topics)")
+            else:
+                print(f"⚠️  Expected multiple topics, only got {len(topics)}")
+            
+            # Check for specific expected topics
+            for expected_topic in expected_topics:
+                if expected_topic in detected_topic_names:
+                    print(f"✅ {expected_topic} topic detected")
+                else:
+                    print(f"⚠️  {expected_topic} topic not detected")
+            
+            if topic_summary:
+                print(f"✅ Topic summary provided: {topic_summary}")
+            else:
+                print(f"⚠️  No topic summary provided")
+        
+        return success, response
+
+    def test_technical_focus_topics(self):
+        """Test technical issues topic detection"""
+        technical_text = "The app keeps crashing and loading times are very slow."
+        success, response = self.run_test(
+            "Technical Focus Topics",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": technical_text},
+            timeout=60
+        )
+        
+        if success:
+            topics = response.get('topics_detected', [])
+            detected_topic_names = [topic['topic'] for topic in topics]
+            
+            expected_topics = ['technical_issues', 'performance_speed']
+            
+            for expected_topic in expected_topics:
+                if expected_topic in detected_topic_names:
+                    print(f"✅ {expected_topic} topic detected")
+                else:
+                    print(f"⚠️  {expected_topic} topic not detected in technical text")
+        
+        return success, response
+
+    def test_competitor_comparison_topic(self):
+        """Test competitor comparison topic detection"""
+        competitor_text = "Competitor X has better pricing and their delivery is faster."
+        success, response = self.run_test(
+            "Competitor Comparison Topic",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": competitor_text},
+            timeout=60
+        )
+        
+        if success:
+            topics = response.get('topics_detected', [])
+            detected_topic_names = [topic['topic'] for topic in topics]
+            
+            expected_topics = ['competitor_comparison', 'pricing', 'delivery_shipping']
+            
+            for expected_topic in expected_topics:
+                if expected_topic in detected_topic_names:
+                    print(f"✅ {expected_topic} topic detected")
+                else:
+                    print(f"⚠️  {expected_topic} topic not detected")
+        
+        return success, response
+
+    def test_complex_business_topics(self):
+        """Test complex business scenario with multiple topics"""
+        complex_text = "Love the new features but concerned about security and privacy policies."
+        success, response = self.run_test(
+            "Complex Business Topics",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": complex_text},
+            timeout=60
+        )
+        
+        if success:
+            topics = response.get('topics_detected', [])
+            detected_topic_names = [topic['topic'] for topic in topics]
+            
+            expected_topics = ['feature_requests', 'security_privacy', 'company_policies']
+            
+            for expected_topic in expected_topics:
+                if expected_topic in detected_topic_names:
+                    print(f"✅ {expected_topic} topic detected")
+                else:
+                    print(f"⚠️  {expected_topic} topic not detected")
+        
+        return success, response
+
+    def test_topic_confidence_scores(self):
+        """Test topic confidence scores and keywords"""
+        confidence_text = "The customer support team was incredibly helpful, but the product quality is disappointing. The pricing seems reasonable, but the delivery took way too long."
+        success, response = self.run_test(
+            "Topic Confidence Scores",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": confidence_text},
+            timeout=60
+        )
+        
+        if success:
+            topics = response.get('topics_detected', [])
+            
+            print(f"   Topic confidence analysis:")
+            for topic in topics:
+                topic_name = topic.get('topic', 'unknown')
+                confidence = topic.get('confidence', 0)
+                keywords = topic.get('keywords', [])
+                display_name = topic.get('display_name', topic_name)
+                
+                print(f"     {display_name}: {confidence:.2f} confidence, keywords: {keywords}")
+                
+                # Validate confidence is reasonable (>0.3 as per system message)
+                if confidence < 0.3:
+                    print(f"⚠️  Low confidence topic detected: {topic_name} ({confidence:.2f})")
+                
+                # Validate keywords exist
+                if not keywords:
+                    print(f"⚠️  No keywords provided for topic: {topic_name}")
+        
+        return success, response
+
+    def test_all_topic_categories(self):
+        """Test detection of all 12 topic categories"""
+        topic_test_cases = {
+            'customer_service': "The support team helped me resolve my issue quickly",
+            'product_quality': "The build quality and materials are excellent", 
+            'pricing': "The cost is too expensive for what you get",
+            'delivery_shipping': "The package arrived late and shipping was slow",
+            'user_experience': "The interface is confusing and hard to navigate",
+            'technical_issues': "The software has bugs and keeps crashing",
+            'marketing_advertising': "Their ads are misleading and annoying",
+            'company_policies': "The terms and conditions are unclear",
+            'competitor_comparison': "Brand Y offers better features than this",
+            'feature_requests': "Please add dark mode and better search",
+            'security_privacy': "I'm worried about my data being shared",
+            'performance_speed': "The app is slow and takes forever to load"
+        }
+        
+        detected_categories = set()
+        
+        for expected_topic, test_text in topic_test_cases.items():
+            success, response = self.run_test(
+                f"Topic Category - {expected_topic}",
+                "POST",
+                "analyze-sentiment",
+                200,
+                data={"text": test_text},
+                timeout=60
+            )
+            
+            if success:
+                topics = response.get('topics_detected', [])
+                detected_topic_names = [topic['topic'] for topic in topics]
+                
+                if expected_topic in detected_topic_names:
+                    print(f"✅ {expected_topic} category detected")
+                    detected_categories.add(expected_topic)
+                else:
+                    print(f"❌ {expected_topic} category NOT detected in relevant text")
+            
+            time.sleep(0.5)  # Brief pause between AI calls
+        
+        print(f"\n📊 Topic Category Coverage: {len(detected_categories)}/12 categories detected")
+        missing_categories = set(topic_test_cases.keys()) - detected_categories
+        if missing_categories:
+            print(f"❌ Missing categories: {missing_categories}")
+        else:
+            print(f"✅ All topic categories successfully detected")
+        
+        return len(detected_categories) == 12, detected_categories
+
 def main():
     print("🚀 Starting Brand Watch AI Backend API Tests - Sarcasm Detection Feature")
     print("=" * 70)
