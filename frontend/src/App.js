@@ -152,6 +152,10 @@ const App = () => {
     return emotion.charAt(0).toUpperCase() + emotion.slice(1);
   };
 
+  const getSarcasmBadgeColor = () => {
+    return "bg-orange-500 text-white";
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Matrix Video Background */}
