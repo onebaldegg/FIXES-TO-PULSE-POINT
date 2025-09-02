@@ -52,6 +52,9 @@ class SentimentResponse(BaseModel):
     sarcasm_explanation: Optional[str] = ""  # Explanation of detected sarcasm
     adjusted_sentiment: Optional[str] = ""  # Sentiment after considering sarcasm
     sarcasm_indicators: Optional[List[str]] = []  # Specific phrases suggesting sarcasm
+    topics_detected: Optional[List[dict]] = []  # Array of detected topics with confidence
+    primary_topic: Optional[str] = ""  # Topic with highest confidence
+    topic_summary: Optional[str] = ""  # AI explanation of detected topics
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class SentimentAnalysis(BaseModel):
@@ -67,6 +70,9 @@ class SentimentAnalysis(BaseModel):
     sarcasm_explanation: Optional[str] = ""
     adjusted_sentiment: Optional[str] = ""
     sarcasm_indicators: Optional[List[str]] = []
+    topics_detected: Optional[List[dict]] = []
+    primary_topic: Optional[str] = ""
+    topic_summary: Optional[str] = ""
     timestamp: datetime
 
 
