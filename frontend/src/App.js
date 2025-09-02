@@ -543,6 +543,12 @@ const App = () => {
                                 <span>SARCASM</span>
                               </div>
                             )}
+                            {item.primary_topic && (
+                              <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getTopicColor(item.primary_topic)}`}>
+                                {getTopicIcon(item.primary_topic)}
+                                <span>{item.topics_detected?.find(t => t.topic === item.primary_topic)?.display_name || item.primary_topic.replace('_', ' ')}</span>
+                              </div>
+                            )}
                           </div>
                           <span className="text-xs text-green-300">
                             {Math.round(item.confidence * 100)}%
