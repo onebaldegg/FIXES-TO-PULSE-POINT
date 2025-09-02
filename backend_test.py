@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 
 class BrandWatchAPITester:
-    def __init__(self, base_url="https://prinsight.preview.emergentagent.com"):
+    def __init__(self, base_url="https://sentimentmatrix.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.tests_run = 0
