@@ -718,7 +718,7 @@ class BrandWatchAPITester:
         return len(detected_categories) == 12, detected_categories
 
 def main():
-    print("🚀 Starting Brand Watch AI Backend API Tests - Sarcasm Detection Feature")
+    print("🚀 Starting Brand Watch AI Backend API Tests - Topic Detection Feature")
     print("=" * 70)
     
     tester = BrandWatchAPITester()
@@ -748,6 +748,51 @@ def main():
     if success:
         tester.validate_sentiment_response(neutral_response)
 
+    # NEW: Test topic detection feature - MAIN FOCUS
+    print("\n🏷️  Testing Topic Detection Feature - NEW FEATURE")
+    print("-" * 50)
+    
+    # Test single topic detection
+    success, single_topic_response = tester.test_single_topic_customer_service()
+    if success:
+        tester.validate_sentiment_response(single_topic_response)
+    time.sleep(1)
+    
+    # Test multi-topic business scenario
+    success, multi_topic_response = tester.test_multi_topic_business_text()
+    if success:
+        tester.validate_sentiment_response(multi_topic_response)
+    time.sleep(1)
+    
+    # Test technical focus topics
+    success, technical_response = tester.test_technical_focus_topics()
+    if success:
+        tester.validate_sentiment_response(technical_response)
+    time.sleep(1)
+    
+    # Test competitor comparison
+    success, competitor_response = tester.test_competitor_comparison_topic()
+    if success:
+        tester.validate_sentiment_response(competitor_response)
+    time.sleep(1)
+    
+    # Test complex business topics
+    success, complex_response = tester.test_complex_business_topics()
+    if success:
+        tester.validate_sentiment_response(complex_response)
+    time.sleep(1)
+    
+    # Test topic confidence scores and keywords
+    success, confidence_response = tester.test_topic_confidence_scores()
+    if success:
+        tester.validate_sentiment_response(confidence_response)
+    time.sleep(1)
+    
+    # Test all 12 topic categories
+    print("\n🎯 Testing All 12 Topic Categories")
+    print("-" * 40)
+    all_categories_success, detected_categories = tester.test_all_topic_categories()
+
     # Test emotion detection with specific emotional texts
     print("\n🎭 Testing Emotion Detection Feature")
     print("-" * 40)
@@ -772,7 +817,7 @@ def main():
     if success:
         tester.validate_sentiment_response(fear_response)
 
-    # NEW: Test sarcasm detection feature
+    # Test sarcasm detection feature
     print("\n🎭 Testing Sarcasm Detection Feature")
     print("-" * 40)
     
@@ -829,9 +874,26 @@ def main():
     success, history_response = tester.test_sentiment_history()
     if success and isinstance(history_response, list):
         print(f"   History contains {len(history_response)} entries")
-        # Check if recent entries have sarcasm data
+        # Check if recent entries have topic data
         if len(history_response) > 0:
             recent_entry = history_response[0]
+            has_topic_fields = all(field in recent_entry for field in ['topics_detected', 'primary_topic', 'topic_summary'])
+            if has_topic_fields:
+                print(f"✅ Recent entries include topic detection data")
+                # Show topic stats from history
+                entries_with_topics = [entry for entry in history_response if entry.get('topics_detected') and len(entry.get('topics_detected', [])) > 0]
+                print(f"   Entries with topics in history: {len(entries_with_topics)}/{len(history_response)}")
+                
+                # Show primary topic distribution
+                primary_topics = [entry.get('primary_topic') for entry in entries_with_topics if entry.get('primary_topic')]
+                if primary_topics:
+                    from collections import Counter
+                    topic_counts = Counter(primary_topics)
+                    print(f"   Primary topic distribution: {dict(topic_counts)}")
+            else:
+                print(f"⚠️  Recent entries may not have topic detection data")
+            
+            # Check sarcasm data too
             has_sarcasm_fields = all(field in recent_entry for field in ['sarcasm_detected', 'sarcasm_confidence', 'adjusted_sentiment'])
             if has_sarcasm_fields:
                 print(f"✅ Recent entries include sarcasm detection data")
@@ -844,6 +906,12 @@ def main():
     # Print final results
     print("\n" + "=" * 70)
     print(f"📊 FINAL RESULTS: {tester.tests_passed}/{tester.tests_run} tests passed")
+    
+    # Special focus on topic detection results
+    print(f"\n🏷️  TOPIC DETECTION SUMMARY:")
+    print(f"   All 12 categories detected: {'✅ YES' if all_categories_success else '❌ NO'}")
+    if not all_categories_success:
+        print(f"   Categories detected: {len(detected_categories)}/12")
     
     if tester.tests_passed == tester.tests_run:
         print("🎉 All backend tests passed!")
