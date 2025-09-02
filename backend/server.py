@@ -78,13 +78,13 @@ class SentimentAnalysis(BaseModel):
 
 # Sentiment Analysis Service
 async def analyze_sentiment(text: str) -> dict:
-    """Analyze sentiment, emotions, and sarcasm using LLM"""
+    """Analyze sentiment, emotions, sarcasm, and topics using LLM"""
     try:
         # Initialize LLM chat
         chat = LlmChat(
             api_key=os.environ.get('EMERGENT_LLM_KEY'),
             session_id=f"sentiment_{uuid.uuid4()}",
-            system_message="""You are an expert sentiment, emotion, and sarcasm analysis AI specialized in PR and marketing text analysis. 
+            system_message="""You are an expert sentiment, emotion, sarcasm, and topic analysis AI specialized in PR and marketing text analysis. 
 
             Analyze the provided text and return ONLY a valid JSON response with these exact fields:
             {
@@ -106,13 +106,29 @@ async def analyze_sentiment(text: str) -> dict:
                 "sarcasm_confidence": 0.85,
                 "sarcasm_explanation": "Text uses ironic language that contradicts surface meaning",
                 "adjusted_sentiment": "negative",
-                "sarcasm_indicators": ["great", "just what I needed"]
+                "sarcasm_indicators": ["great", "just what I needed"],
+                "topics_detected": [
+                    {
+                        "topic": "customer_service",
+                        "display_name": "Customer Service",
+                        "confidence": 0.90,
+                        "keywords": ["support", "help", "service"]
+                    },
+                    {
+                        "topic": "product_quality", 
+                        "display_name": "Product Quality",
+                        "confidence": 0.75,
+                        "keywords": ["quality", "build", "materials"]
+                    }
+                ],
+                "primary_topic": "customer_service",
+                "topic_summary": "Discussion focuses on customer service experience with secondary mentions of product quality"
             }
             
             Rules:
             - sentiment must be exactly "positive", "negative", or "neutral" (surface-level sentiment)
             - confidence must be a number between 0 and 1
-            - analysis should be 1-2 sentences explaining the sentiment, emotions, and sarcasm if detected
+            - analysis should be 1-2 sentences explaining the sentiment, emotions, sarcasm, and topics
             - emotions: Use Plutchik's 8 basic emotions, each scored 0-1
             - dominant_emotion: The emotion with the highest score
             - sarcasm_detected: true if irony/sarcasm is present, false otherwise
@@ -120,18 +136,35 @@ async def analyze_sentiment(text: str) -> dict:
             - sarcasm_explanation: Brief explanation of why text is sarcastic (empty if no sarcasm)
             - adjusted_sentiment: The true sentiment after considering sarcasm (same as sentiment if no sarcasm)
             - sarcasm_indicators: Array of specific words/phrases that suggest sarcasm (empty if no sarcasm)
+            - topics_detected: Array of topic objects with topic, display_name, confidence, and keywords
+            - primary_topic: The topic with the highest confidence score
+            - topic_summary: Brief explanation of what topics the text discusses
             - Return ONLY the JSON, no other text
             
-            Sarcasm Detection Guidelines:
-            - Look for phrases like "Oh great", "Just perfect", "Thanks a lot"
-            - Identify quotation marks around positive words in negative contexts
-            - Detect exaggerated praise that seems insincere
-            - Watch for contradictions between tone and context
-            - Consider timing phrases like "just what I needed" in frustrating situations"""
+            Topic Categories (use these exact topic values):
+            - customer_service: Customer support, help desk, service experience
+            - product_quality: Build quality, materials, durability, craftsmanship
+            - pricing: Cost, value, expensive, cheap, pricing strategy
+            - delivery_shipping: Shipping, delivery, logistics, arrival time
+            - user_experience: Usability, interface, ease of use, design
+            - technical_issues: Bugs, crashes, performance problems, errors
+            - marketing_advertising: Ads, promotions, campaigns, marketing messages
+            - company_policies: Terms, conditions, policies, procedures
+            - competitor_comparison: Mentions of other companies/brands
+            - feature_requests: New features, improvements, suggestions
+            - security_privacy: Data protection, privacy, security concerns  
+            - performance_speed: Speed, performance, responsiveness, loading times
+            
+            Topic Detection Guidelines:
+            - Text can have multiple topics with different confidence levels
+            - Only include topics with confidence > 0.3
+            - Primary topic should have highest confidence
+            - Keywords should reflect actual words from the text that indicate the topic
+            - Topic summary should explain the main discussion focus"""
         ).with_model("openai", "gpt-4o-mini")
         
         # Create user message
-        user_message = UserMessage(text=f"Analyze the sentiment, emotions, and potential sarcasm of this text: {text}")
+        user_message = UserMessage(text=f"Analyze the sentiment, emotions, sarcasm, and topics of this text: {text}")
         
         # Get response
         response = await chat.send_message(user_message)
@@ -175,6 +208,19 @@ async def analyze_sentiment(text: str) -> dict:
             if "sarcasm_indicators" not in result:
                 result["sarcasm_indicators"] = []
             
+            # Ensure topic fields exist with defaults
+            if "topics_detected" not in result:
+                result["topics_detected"] = []
+            if "primary_topic" not in result:
+                result["primary_topic"] = ""
+            if "topic_summary" not in result:
+                result["topic_summary"] = ""
+            
+            # Find primary topic if topics exist
+            if result["topics_detected"] and len(result["topics_detected"]) > 0:
+                primary_topic = max(result["topics_detected"], key=lambda x: x.get("confidence", 0))
+                result["primary_topic"] = primary_topic.get("topic", "")
+            
             return result
             
         except json.JSONDecodeError:
@@ -191,6 +237,34 @@ async def analyze_sentiment(text: str) -> dict:
             sarcasm_keywords = ["oh great", "just perfect", "thanks a lot", "wonderful", "fantastic", "just what i needed"]
             sarcasm_detected = any(keyword in response_lower for keyword in sarcasm_keywords)
             
+            # Basic topic detection from keywords
+            topics_detected = []
+            topic_keywords = {
+                "customer_service": ["support", "service", "help", "customer", "staff"],
+                "product_quality": ["quality", "product", "build", "material", "construction"],
+                "pricing": ["price", "cost", "expensive", "cheap", "money", "value"],
+                "technical_issues": ["bug", "crash", "error", "problem", "issue", "broken"],
+                "delivery_shipping": ["delivery", "shipping", "package", "arrived", "sent"],
+                "user_experience": ["interface", "design", "usability", "experience", "navigation"]
+            }
+            
+            for topic, keywords in topic_keywords.items():
+                if any(keyword in response_lower for keyword in keywords):
+                    display_names = {
+                        "customer_service": "Customer Service",
+                        "product_quality": "Product Quality", 
+                        "pricing": "Pricing",
+                        "technical_issues": "Technical Issues",
+                        "delivery_shipping": "Delivery & Shipping",
+                        "user_experience": "User Experience"
+                    }
+                    topics_detected.append({
+                        "topic": topic,
+                        "display_name": display_names.get(topic, topic.replace("_", " ").title()),
+                        "confidence": 0.7,
+                        "keywords": [kw for kw in keywords if kw in response_lower]
+                    })
+            
             # Basic emotion detection from keywords
             emotions = {
                 "joy": 0.7 if any(word in response_lower for word in ["joy", "happy", "excited", "pleased"]) else 0.0,
@@ -206,14 +280,17 @@ async def analyze_sentiment(text: str) -> dict:
             return {
                 "sentiment": sentiment,
                 "confidence": 0.75,
-                "analysis": "Sentiment, emotion, and sarcasm analysis completed based on text content.",
+                "analysis": "Sentiment, emotion, sarcasm, and topic analysis completed based on text content.",
                 "emotions": emotions,
                 "dominant_emotion": max(emotions, key=emotions.get) if emotions else "neutral",
                 "sarcasm_detected": sarcasm_detected,
                 "sarcasm_confidence": 0.7 if sarcasm_detected else 0.0,
                 "sarcasm_explanation": "Detected potential sarcastic language patterns" if sarcasm_detected else "",
                 "adjusted_sentiment": "negative" if sarcasm_detected and sentiment == "positive" else sentiment,
-                "sarcasm_indicators": [kw for kw in sarcasm_keywords if kw in response_lower] if sarcasm_detected else []
+                "sarcasm_indicators": [kw for kw in sarcasm_keywords if kw in response_lower] if sarcasm_detected else [],
+                "topics_detected": topics_detected,
+                "primary_topic": topics_detected[0]["topic"] if topics_detected else "",
+                "topic_summary": f"Discussion about {', '.join([t['display_name'] for t in topics_detected])}" if topics_detected else ""
             }
             
     except Exception as e:
@@ -232,7 +309,10 @@ async def analyze_sentiment(text: str) -> dict:
             "sarcasm_confidence": 0.0,
             "sarcasm_explanation": "",
             "adjusted_sentiment": "neutral",
-            "sarcasm_indicators": []
+            "sarcasm_indicators": [],
+            "topics_detected": [],
+            "primary_topic": "",
+            "topic_summary": ""
         }
 
 
