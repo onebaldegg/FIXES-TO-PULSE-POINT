@@ -565,20 +565,45 @@ const App = () => {
                           </div>
                         )}
                         
-                        {item.emotions && Object.keys(item.emotions).length > 0 && (
-                          <div className="flex flex-wrap gap-1 mb-2">
-                            {Object.entries(item.emotions)
-                              .filter(([_, confidence]) => confidence > 0.2) // Show emotions with >20% confidence
-                              .sort(([, a], [, b]) => b - a) // Sort by confidence
-                              .slice(0, 3) // Show top 3 emotions in history
-                              .map(([emotion, confidence]) => (
-                                <div key={emotion} className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs ${getEmotionColor(emotion)}`}>
-                                  {getEmotionIcon(emotion)}
-                                  <span>{Math.round(confidence * 100)}%</span>
-                                </div>
-                              ))}
+                        {/* Topic summary in history */}
+                        {item.topic_summary && (
+                          <div className="text-xs text-green-300 mb-2 italic">
+                            📋 {item.topic_summary}
                           </div>
                         )}
+                        
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          {/* Topics Display */}
+                          {item.topics_detected && item.topics_detected.length > 0 && (
+                            <>
+                              {item.topics_detected
+                                .sort((a, b) => b.confidence - a.confidence)
+                                .slice(0, 2) // Show top 2 topics in history
+                                .map((topic, index) => (
+                                  <div key={topic.topic} className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs ${getTopicColor(topic.topic)}`}>
+                                    {getTopicIcon(topic.topic)}
+                                    <span>{Math.round(topic.confidence * 100)}%</span>
+                                  </div>
+                                ))}
+                            </>
+                          )}
+                          
+                          {/* Emotions Display */}
+                          {item.emotions && Object.keys(item.emotions).length > 0 && (
+                            <>
+                              {Object.entries(item.emotions)
+                                .filter(([_, confidence]) => confidence > 0.2) // Show emotions with >20% confidence
+                                .sort(([, a], [, b]) => b - a) // Sort by confidence
+                                .slice(0, 2) // Show top 2 emotions in history (reduced to make room for topics)
+                                .map(([emotion, confidence]) => (
+                                  <div key={emotion} className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs ${getEmotionColor(emotion)}`}>
+                                    {getEmotionIcon(emotion)}
+                                    <span>{Math.round(confidence * 100)}%</span>
+                                  </div>
+                                ))}
+                            </>
+                          )}
+                        </div>
                         <p className="text-xs text-green-300 italic">
                           {item.analysis}
                         </p>
