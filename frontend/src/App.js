@@ -403,7 +403,7 @@ const App = () => {
                     history.map((item) => (
                       <div key={item.id} className="p-4 rounded-xl border border-green-500/20 hover:border-green-500/40 transition-colors bg-black/40 backdrop-blur-sm">
                         <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-2 flex-wrap">
                             <Badge variant={getSentimentBadgeVariant(item.sentiment)} className="text-xs">
                               {item.sentiment}
                             </Badge>
@@ -411,6 +411,12 @@ const App = () => {
                               <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getEmotionColor(item.dominant_emotion)}`}>
                                 {getEmotionIcon(item.dominant_emotion)}
                                 <span>{formatEmotionName(item.dominant_emotion)}</span>
+                              </div>
+                            )}
+                            {item.sarcasm_detected && (
+                              <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getSarcasmBadgeColor()}`}>
+                                <AlertTriangle className="h-3 w-3" />
+                                <span>SARCASM</span>
                               </div>
                             )}
                           </div>
