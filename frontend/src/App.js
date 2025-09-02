@@ -427,6 +427,14 @@ const App = () => {
                         <p className="text-sm text-green-200 mb-2 line-clamp-2">
                           "{item.text.length > 100 ? item.text.substring(0, 100) + "..." : item.text}"
                         </p>
+                        
+                        {/* Sarcasm warning in history */}
+                        {item.sarcasm_detected && item.adjusted_sentiment !== item.sentiment && (
+                          <div className="text-xs text-orange-300 mb-2 italic">
+                            ⚠️ Appears {item.sentiment} but actually {item.adjusted_sentiment} (sarcastic)
+                          </div>
+                        )}
+                        
                         {item.emotions && Object.keys(item.emotions).length > 0 && (
                           <div className="flex flex-wrap gap-1 mb-2">
                             {Object.entries(item.emotions)
