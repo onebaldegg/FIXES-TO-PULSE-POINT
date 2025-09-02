@@ -191,10 +191,63 @@ class BrandWatchAPITester:
             if dominant_emotion != actual_dominant:
                 print(f"⚠️  Warning: Dominant emotion mismatch. Expected {actual_dominant}, got {dominant_emotion}")
 
+        # Validate topic detection fields
+        topics_detected = response_data.get('topics_detected', [])
+        if not isinstance(topics_detected, list):
+            print(f"❌ topics_detected must be a list")
+            return False
+
+        # Validate each topic in topics_detected
+        for topic in topics_detected:
+            if not isinstance(topic, dict):
+                print(f"❌ Each topic must be a dictionary")
+                return False
+            
+            required_topic_fields = ['topic', 'display_name', 'confidence', 'keywords']
+            for field in required_topic_fields:
+                if field not in topic:
+                    print(f"❌ Missing topic field: {field}")
+                    return False
+            
+            if topic['topic'] not in valid_topics:
+                print(f"❌ Invalid topic category: {topic['topic']}")
+                return False
+            
+            if not (0 <= topic['confidence'] <= 1):
+                print(f"❌ Invalid topic confidence: {topic['confidence']}")
+                return False
+            
+            if not isinstance(topic['keywords'], list):
+                print(f"❌ Topic keywords must be a list")
+                return False
+
+        # Validate primary_topic
+        primary_topic = response_data.get('primary_topic', '')
+        if primary_topic and primary_topic not in valid_topics:
+            print(f"❌ Invalid primary topic: {primary_topic}")
+            return False
+
+        # Check if primary_topic matches highest confidence topic
+        if topics_detected and primary_topic:
+            highest_confidence_topic = max(topics_detected, key=lambda x: x.get('confidence', 0))
+            if primary_topic != highest_confidence_topic.get('topic'):
+                print(f"⚠️  Warning: Primary topic mismatch. Expected {highest_confidence_topic.get('topic')}, got {primary_topic}")
+
+        # Validate topic_summary
+        topic_summary = response_data.get('topic_summary', '')
+        if not isinstance(topic_summary, str):
+            print(f"❌ topic_summary must be a string")
+            return False
+
         print(f"✅ Response structure is valid")
         print(f"   Sentiment: {response_data['sentiment']} -> {response_data['adjusted_sentiment']}")
         print(f"   Sarcasm: {response_data['sarcasm_detected']} ({response_data['sarcasm_confidence']:.2f})")
         print(f"   Dominant emotion: {dominant_emotion} ({emotions.get(dominant_emotion, 0):.2f})")
+        print(f"   Topics detected: {len(topics_detected)} topics")
+        if primary_topic:
+            print(f"   Primary topic: {primary_topic}")
+        if topic_summary:
+            print(f"   Topic summary: {topic_summary[:100]}...")
         if response_data['sarcasm_indicators']:
             print(f"   Sarcasm indicators: {response_data['sarcasm_indicators']}")
         return True
