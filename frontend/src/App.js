@@ -341,6 +341,68 @@ const App = () => {
                           )}
                         </div>
 
+                        {/* Topic Analysis Display */}
+                        {analysis.topics_detected && analysis.topics_detected.length > 0 && (
+                          <div className="mb-3">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <span className="text-sm font-medium text-green-200">Primary Topic:</span>
+                              {analysis.primary_topic && (
+                                <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${getTopicColor(analysis.primary_topic)}`}>
+                                  {getTopicIcon(analysis.primary_topic)}
+                                  <span>{analysis.topics_detected.find(t => t.topic === analysis.primary_topic)?.display_name || analysis.primary_topic}</span>
+                                  <span>({Math.round((analysis.topics_detected.find(t => t.topic === analysis.primary_topic)?.confidence || 0) * 100)}%)</span>
+                                </div>
+                              )}
+                            </div>
+                            
+                            <div className="space-y-2">
+                              <span className="text-sm font-medium text-green-200">All Topics Detected:</span>
+                              <div className="grid grid-cols-1 gap-2">
+                                {analysis.topics_detected
+                                  .sort((a, b) => b.confidence - a.confidence) // Sort by confidence
+                                  .slice(0, 4) // Show top 4 topics
+                                  .map((topic, index) => (
+                                    <div key={topic.topic} className="flex items-center justify-between p-2 bg-black/40 rounded-lg border border-green-500/20">
+                                      <div className="flex items-center space-x-2">
+                                        {getTopicIcon(topic.topic)}
+                                        <span className="text-sm font-medium text-green-200">
+                                          {topic.display_name}
+                                        </span>
+                                        {topic.keywords && topic.keywords.length > 0 && (
+                                          <div className="flex flex-wrap gap-1">
+                                            {topic.keywords.slice(0, 3).map((keyword, kidx) => (
+                                              <span key={kidx} className="px-1.5 py-0.5 bg-green-500/20 text-green-300 rounded text-xs">
+                                                {keyword}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        )}
+                                      </div>
+                                      <div className="flex items-center space-x-2">
+                                        <div className="w-16 bg-green-800/50 rounded-full h-2">
+                                          <div 
+                                            className={`h-2 rounded-full ${getTopicColor(topic.topic).split(' ')[0]}`}
+                                            style={{ width: `${topic.confidence * 100}%` }}
+                                          />
+                                        </div>
+                                        <span className="text-xs text-green-300 font-medium">
+                                          {Math.round(topic.confidence * 100)}%
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ))}
+                              </div>
+                              
+                              {analysis.topic_summary && (
+                                <div className="mt-2 p-2 bg-green-950/30 border border-green-500/30 rounded-lg">
+                                  <span className="text-xs font-medium text-green-200">Topic Summary:</span>
+                                  <p className="text-xs text-green-300 mt-1">{analysis.topic_summary}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
                         {/* Sarcasm Analysis Display */}
                         {analysis.sarcasm_detected && (
                           <div className="mb-3 p-3 bg-orange-950/30 border border-orange-500/30 rounded-lg">
