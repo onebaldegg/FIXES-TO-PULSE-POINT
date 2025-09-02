@@ -156,6 +156,68 @@ const App = () => {
     return "bg-orange-500 text-white";
   };
 
+  const getTopicIcon = (topic) => {
+    switch (topic) {
+      case "customer_service":
+        return <Users className="h-3 w-3" />;
+      case "product_quality":
+        return <Tag className="h-3 w-3" />;
+      case "pricing":
+        return <DollarSign className="h-3 w-3" />;
+      case "delivery_shipping":
+        return <Truck className="h-3 w-3" />;
+      case "user_experience":
+        return <Monitor className="h-3 w-3" />;
+      case "technical_issues":
+        return <Bug className="h-3 w-3" />;
+      case "marketing_advertising":
+        return <Megaphone className="h-3 w-3" />;
+      case "company_policies":
+        return <FileText className="h-3 w-3" />;
+      case "competitor_comparison":
+        return <GitCompare className="h-3 w-3" />;
+      case "feature_requests":
+        return <Lightbulb className="h-3 w-3" />;
+      case "security_privacy":
+        return <Lock className="h-3 w-3" />;
+      case "performance_speed":
+        return <Performance className="h-3 w-3" />;
+      default:
+        return <Tag className="h-3 w-3" />;
+    }
+  };
+
+  const getTopicColor = (topic) => {
+    switch (topic) {
+      case "customer_service":
+        return "bg-blue-500 text-white";
+      case "product_quality":
+        return "bg-purple-500 text-white";
+      case "pricing":
+        return "bg-emerald-500 text-white";
+      case "delivery_shipping":
+        return "bg-orange-500 text-white";
+      case "user_experience":
+        return "bg-indigo-500 text-white";
+      case "technical_issues":
+        return "bg-red-500 text-white";
+      case "marketing_advertising":
+        return "bg-pink-500 text-white";
+      case "company_policies":
+        return "bg-slate-500 text-white";
+      case "competitor_comparison":
+        return "bg-yellow-600 text-white";
+      case "feature_requests":
+        return "bg-cyan-500 text-white";
+      case "security_privacy":
+        return "bg-rose-500 text-white";
+      case "performance_speed":
+        return "bg-teal-500 text-white";
+      default:
+        return "bg-gray-500 text-white";
+    }
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Matrix Video Background */}
