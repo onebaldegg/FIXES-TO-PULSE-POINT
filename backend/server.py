@@ -72,13 +72,13 @@ class SentimentAnalysis(BaseModel):
 
 # Sentiment Analysis Service
 async def analyze_sentiment(text: str) -> dict:
-    """Analyze sentiment and emotions using LLM"""
+    """Analyze sentiment, emotions, and sarcasm using LLM"""
     try:
         # Initialize LLM chat
         chat = LlmChat(
             api_key=os.environ.get('EMERGENT_LLM_KEY'),
             session_id=f"sentiment_{uuid.uuid4()}",
-            system_message="""You are an expert sentiment and emotion analysis AI specialized in PR and marketing text analysis. 
+            system_message="""You are an expert sentiment, emotion, and sarcasm analysis AI specialized in PR and marketing text analysis. 
 
             Analyze the provided text and return ONLY a valid JSON response with these exact fields:
             {
@@ -95,20 +95,37 @@ async def analyze_sentiment(text: str) -> dict:
                     "surprise": 0.3,
                     "anticipation": 0.5
                 },
-                "dominant_emotion": "joy"
+                "dominant_emotion": "joy",
+                "sarcasm_detected": true,
+                "sarcasm_confidence": 0.85,
+                "sarcasm_explanation": "Text uses ironic language that contradicts surface meaning",
+                "adjusted_sentiment": "negative",
+                "sarcasm_indicators": ["great", "just what I needed"]
             }
             
             Rules:
-            - sentiment must be exactly "positive", "negative", or "neutral"
+            - sentiment must be exactly "positive", "negative", or "neutral" (surface-level sentiment)
             - confidence must be a number between 0 and 1
-            - analysis should be 1-2 sentences explaining the sentiment and emotions
+            - analysis should be 1-2 sentences explaining the sentiment, emotions, and sarcasm if detected
             - emotions: Use Plutchik's 8 basic emotions, each scored 0-1
             - dominant_emotion: The emotion with the highest score
-            - Return ONLY the JSON, no other text"""
+            - sarcasm_detected: true if irony/sarcasm is present, false otherwise
+            - sarcasm_confidence: 0-1 confidence in sarcasm detection
+            - sarcasm_explanation: Brief explanation of why text is sarcastic (empty if no sarcasm)
+            - adjusted_sentiment: The true sentiment after considering sarcasm (same as sentiment if no sarcasm)
+            - sarcasm_indicators: Array of specific words/phrases that suggest sarcasm (empty if no sarcasm)
+            - Return ONLY the JSON, no other text
+            
+            Sarcasm Detection Guidelines:
+            - Look for phrases like "Oh great", "Just perfect", "Thanks a lot"
+            - Identify quotation marks around positive words in negative contexts
+            - Detect exaggerated praise that seems insincere
+            - Watch for contradictions between tone and context
+            - Consider timing phrases like "just what I needed" in frustrating situations"""
         ).with_model("openai", "gpt-4o-mini")
         
         # Create user message
-        user_message = UserMessage(text=f"Analyze the sentiment and emotions of this text: {text}")
+        user_message = UserMessage(text=f"Analyze the sentiment, emotions, and potential sarcasm of this text: {text}")
         
         # Get response
         response = await chat.send_message(user_message)
@@ -140,6 +157,18 @@ async def analyze_sentiment(text: str) -> dict:
             else:
                 result["dominant_emotion"] = "neutral"
             
+            # Ensure sarcasm fields exist with defaults
+            if "sarcasm_detected" not in result:
+                result["sarcasm_detected"] = False
+            if "sarcasm_confidence" not in result:
+                result["sarcasm_confidence"] = 0.0
+            if "sarcasm_explanation" not in result:
+                result["sarcasm_explanation"] = ""
+            if "adjusted_sentiment" not in result:
+                result["adjusted_sentiment"] = result["sentiment"]  # Same as sentiment if no sarcasm
+            if "sarcasm_indicators" not in result:
+                result["sarcasm_indicators"] = []
+            
             return result
             
         except json.JSONDecodeError:
@@ -151,6 +180,10 @@ async def analyze_sentiment(text: str) -> dict:
                 sentiment = "negative"
             else:
                 sentiment = "neutral"
+            
+            # Basic sarcasm detection from keywords
+            sarcasm_keywords = ["oh great", "just perfect", "thanks a lot", "wonderful", "fantastic", "just what i needed"]
+            sarcasm_detected = any(keyword in response_lower for keyword in sarcasm_keywords)
             
             # Basic emotion detection from keywords
             emotions = {
@@ -167,9 +200,14 @@ async def analyze_sentiment(text: str) -> dict:
             return {
                 "sentiment": sentiment,
                 "confidence": 0.75,
-                "analysis": "Sentiment and emotion analysis completed based on text content.",
+                "analysis": "Sentiment, emotion, and sarcasm analysis completed based on text content.",
                 "emotions": emotions,
-                "dominant_emotion": max(emotions, key=emotions.get) if emotions else "neutral"
+                "dominant_emotion": max(emotions, key=emotions.get) if emotions else "neutral",
+                "sarcasm_detected": sarcasm_detected,
+                "sarcasm_confidence": 0.7 if sarcasm_detected else 0.0,
+                "sarcasm_explanation": "Detected potential sarcastic language patterns" if sarcasm_detected else "",
+                "adjusted_sentiment": "negative" if sarcasm_detected and sentiment == "positive" else sentiment,
+                "sarcasm_indicators": [kw for kw in sarcasm_keywords if kw in response_lower] if sarcasm_detected else []
             }
             
     except Exception as e:
@@ -183,7 +221,12 @@ async def analyze_sentiment(text: str) -> dict:
             "confidence": 0.5,
             "analysis": f"Error in analysis: {str(e)}",
             "emotions": default_emotions,
-            "dominant_emotion": "neutral"
+            "dominant_emotion": "neutral",
+            "sarcasm_detected": False,
+            "sarcasm_confidence": 0.0,
+            "sarcasm_explanation": "",
+            "adjusted_sentiment": "neutral",
+            "sarcasm_indicators": []
         }
 
 
