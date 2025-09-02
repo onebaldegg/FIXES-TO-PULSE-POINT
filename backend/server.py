@@ -47,6 +47,11 @@ class SentimentResponse(BaseModel):
     analysis: str
     emotions: Optional[dict] = {}  # {"joy": 0.8, "anger": 0.1, etc.}
     dominant_emotion: Optional[str] = ""  # Primary emotion detected
+    sarcasm_detected: Optional[bool] = False  # Whether sarcasm is detected
+    sarcasm_confidence: Optional[float] = 0.0  # Confidence of sarcasm detection (0-1)
+    sarcasm_explanation: Optional[str] = ""  # Explanation of detected sarcasm
+    adjusted_sentiment: Optional[str] = ""  # Sentiment after considering sarcasm
+    sarcasm_indicators: Optional[List[str]] = []  # Specific phrases suggesting sarcasm
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class SentimentAnalysis(BaseModel):
@@ -57,6 +62,11 @@ class SentimentAnalysis(BaseModel):
     analysis: str
     emotions: Optional[dict] = {}
     dominant_emotion: Optional[str] = ""
+    sarcasm_detected: Optional[bool] = False
+    sarcasm_confidence: Optional[float] = 0.0
+    sarcasm_explanation: Optional[str] = ""
+    adjusted_sentiment: Optional[str] = ""
+    sarcasm_indicators: Optional[List[str]] = []
     timestamp: datetime
 
 
