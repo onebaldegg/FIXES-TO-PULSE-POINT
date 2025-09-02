@@ -243,6 +243,186 @@ class BrandWatchAPITester:
             timeout=60
         )
 
+    # SARCASM DETECTION TESTS
+    def test_high_sarcasm_detection(self):
+        """Test high sarcasm detection"""
+        sarcastic_text = "Oh great, another system crash. Just what I needed today. Thanks a lot!"
+        success, response = self.run_test(
+            "High Sarcasm Detection",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": sarcastic_text},
+            timeout=60
+        )
+        
+        if success:
+            # Validate sarcasm was detected
+            if not response.get('sarcasm_detected', False):
+                print(f"❌ Sarcasm should be detected in obvious sarcastic text")
+                return False, response
+            
+            if response.get('sarcasm_confidence', 0) < 0.5:
+                print(f"⚠️  Low sarcasm confidence: {response.get('sarcasm_confidence', 0)}")
+            
+            if len(response.get('sarcasm_indicators', [])) == 0:
+                print(f"⚠️  No sarcasm indicators found")
+            
+            print(f"✅ Sarcasm detected with confidence: {response.get('sarcasm_confidence', 0):.2f}")
+            print(f"   Indicators: {response.get('sarcasm_indicators', [])}")
+        
+        return success, response
+
+    def test_subtle_sarcasm_detection(self):
+        """Test subtle sarcasm detection with quotes"""
+        sarcastic_text = "Thanks for the 'help' with my account issue."
+        success, response = self.run_test(
+            "Subtle Sarcasm Detection",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": sarcastic_text},
+            timeout=60
+        )
+        
+        if success:
+            if response.get('sarcasm_detected', False):
+                print(f"✅ Subtle sarcasm detected with confidence: {response.get('sarcasm_confidence', 0):.2f}")
+            else:
+                print(f"⚠️  Subtle sarcasm not detected (quotes around 'help')")
+        
+        return success, response
+
+    def test_quoted_sarcasm_detection(self):
+        """Test quoted sarcasm detection"""
+        sarcastic_text = "The 'premium' service is really living up to its name."
+        success, response = self.run_test(
+            "Quoted Sarcasm Detection",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": sarcastic_text},
+            timeout=60
+        )
+        
+        if success:
+            if response.get('sarcasm_detected', False):
+                print(f"✅ Quoted sarcasm detected with confidence: {response.get('sarcasm_confidence', 0):.2f}")
+            else:
+                print(f"⚠️  Quoted sarcasm not detected ('premium' in quotes)")
+        
+        return success, response
+
+    def test_non_sarcastic_positive(self):
+        """Test genuine positive text should NOT be sarcastic"""
+        positive_text = "This is genuinely great! I'm so happy and excited about this wonderful product."
+        success, response = self.run_test(
+            "Non-Sarcastic Positive Text",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": positive_text},
+            timeout=60
+        )
+        
+        if success:
+            if response.get('sarcasm_detected', False):
+                print(f"❌ False positive: Genuine positive text detected as sarcastic")
+                return False, response
+            
+            if response.get('sentiment') != 'positive':
+                print(f"❌ Expected positive sentiment, got: {response.get('sentiment')}")
+                return False, response
+            
+            if response.get('adjusted_sentiment') != response.get('sentiment'):
+                print(f"❌ Adjusted sentiment should match original when no sarcasm")
+                return False, response
+            
+            print(f"✅ Genuine positive text correctly identified (no sarcasm)")
+        
+        return success, response
+
+    def test_non_sarcastic_negative(self):
+        """Test genuine negative text should NOT be sarcastic"""
+        negative_text = "This service is terrible and frustrating. I'm really disappointed with the poor quality."
+        success, response = self.run_test(
+            "Non-Sarcastic Negative Text",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": negative_text},
+            timeout=60
+        )
+        
+        if success:
+            if response.get('sarcasm_detected', False):
+                print(f"❌ False positive: Genuine negative text detected as sarcastic")
+                return False, response
+            
+            if response.get('sentiment') != 'negative':
+                print(f"❌ Expected negative sentiment, got: {response.get('sentiment')}")
+                return False, response
+            
+            print(f"✅ Genuine negative text correctly identified (no sarcasm)")
+        
+        return success, response
+
+    def test_mixed_sarcasm_emotions(self):
+        """Test mixed sarcasm with emotions"""
+        mixed_text = "I'm thrilled about the launch but the timing is just perfect"
+        success, response = self.run_test(
+            "Mixed Sarcasm with Emotions",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": mixed_text},
+            timeout=60
+        )
+        
+        if success:
+            has_emotions = 'emotions' in response and response['emotions']
+            has_sarcasm = response.get('sarcasm_detected', False)
+            
+            print(f"   Emotions detected: {has_emotions}")
+            print(f"   Sarcasm detected: {has_sarcasm}")
+            
+            if has_sarcasm:
+                print(f"   Sarcasm confidence: {response.get('sarcasm_confidence', 0):.2f}")
+                print(f"   Surface sentiment: {response.get('sentiment')} -> Adjusted: {response.get('adjusted_sentiment')}")
+        
+        return success, response
+
+    def test_sentiment_adjustment_logic(self):
+        """Test that sarcasm properly adjusts sentiment"""
+        sarcastic_text = "Wonderful customer support as always."
+        success, response = self.run_test(
+            "Sentiment Adjustment Logic",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": sarcastic_text},
+            timeout=60
+        )
+        
+        if success:
+            sarcasm_detected = response.get('sarcasm_detected', False)
+            sarcasm_confidence = response.get('sarcasm_confidence', 0)
+            surface_sentiment = response.get('sentiment')
+            adjusted_sentiment = response.get('adjusted_sentiment')
+            
+            print(f"   Surface sentiment: {surface_sentiment}")
+            print(f"   Adjusted sentiment: {adjusted_sentiment}")
+            print(f"   Sarcasm detected: {sarcasm_detected} ({sarcasm_confidence:.2f})")
+            
+            # If high-confidence sarcasm is detected and surface is positive, adjusted should be negative
+            if sarcasm_detected and sarcasm_confidence > 0.6 and surface_sentiment == 'positive':
+                if adjusted_sentiment == 'positive':
+                    print(f"⚠️  High-confidence sarcasm should flip positive to negative")
+                else:
+                    print(f"✅ Sarcasm correctly adjusted sentiment")
+        
+        return success, response
+
 def main():
     print("🚀 Starting Brand Watch AI Backend API Tests - Emotion Detection Feature")
     print("=" * 70)
