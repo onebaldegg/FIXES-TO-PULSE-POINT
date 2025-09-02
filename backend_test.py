@@ -424,7 +424,7 @@ class BrandWatchAPITester:
         return success, response
 
 def main():
-    print("🚀 Starting Brand Watch AI Backend API Tests - Emotion Detection Feature")
+    print("🚀 Starting Brand Watch AI Backend API Tests - Sarcasm Detection Feature")
     print("=" * 70)
     
     tester = BrandWatchAPITester()
@@ -478,6 +478,51 @@ def main():
     if success:
         tester.validate_sentiment_response(fear_response)
 
+    # NEW: Test sarcasm detection feature
+    print("\n🎭 Testing Sarcasm Detection Feature")
+    print("-" * 40)
+    
+    # Test high sarcasm
+    success, high_sarcasm_response = tester.test_high_sarcasm_detection()
+    if success:
+        tester.validate_sentiment_response(high_sarcasm_response)
+    time.sleep(1)  # Brief pause between AI calls
+    
+    # Test subtle sarcasm
+    success, subtle_sarcasm_response = tester.test_subtle_sarcasm_detection()
+    if success:
+        tester.validate_sentiment_response(subtle_sarcasm_response)
+    time.sleep(1)
+    
+    # Test quoted sarcasm
+    success, quoted_sarcasm_response = tester.test_quoted_sarcasm_detection()
+    if success:
+        tester.validate_sentiment_response(quoted_sarcasm_response)
+    time.sleep(1)
+    
+    # Test non-sarcastic positive (should NOT detect sarcasm)
+    success, non_sarcastic_pos_response = tester.test_non_sarcastic_positive()
+    if success:
+        tester.validate_sentiment_response(non_sarcastic_pos_response)
+    time.sleep(1)
+    
+    # Test non-sarcastic negative (should NOT detect sarcasm)
+    success, non_sarcastic_neg_response = tester.test_non_sarcastic_negative()
+    if success:
+        tester.validate_sentiment_response(non_sarcastic_neg_response)
+    time.sleep(1)
+    
+    # Test mixed sarcasm with emotions
+    success, mixed_sarcasm_response = tester.test_mixed_sarcasm_emotions()
+    if success:
+        tester.validate_sentiment_response(mixed_sarcasm_response)
+    time.sleep(1)
+    
+    # Test sentiment adjustment logic
+    success, adjustment_response = tester.test_sentiment_adjustment_logic()
+    if success:
+        tester.validate_sentiment_response(adjustment_response)
+
     # Test error handling
     print("\n🚨 Testing Error Handling")
     print("-" * 30)
@@ -490,13 +535,17 @@ def main():
     success, history_response = tester.test_sentiment_history()
     if success and isinstance(history_response, list):
         print(f"   History contains {len(history_response)} entries")
-        # Check if recent entries have emotion data
+        # Check if recent entries have sarcasm data
         if len(history_response) > 0:
             recent_entry = history_response[0]
-            if 'emotions' in recent_entry and 'dominant_emotion' in recent_entry:
-                print(f"✅ Recent entries include emotion data")
+            has_sarcasm_fields = all(field in recent_entry for field in ['sarcasm_detected', 'sarcasm_confidence', 'adjusted_sentiment'])
+            if has_sarcasm_fields:
+                print(f"✅ Recent entries include sarcasm detection data")
+                # Show sarcasm stats from history
+                sarcastic_entries = [entry for entry in history_response if entry.get('sarcasm_detected', False)]
+                print(f"   Sarcastic entries in history: {len(sarcastic_entries)}/{len(history_response)}")
             else:
-                print(f"⚠️  Recent entries may not have emotion data")
+                print(f"⚠️  Recent entries may not have sarcasm detection data")
 
     # Print final results
     print("\n" + "=" * 70)
