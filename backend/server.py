@@ -264,7 +264,12 @@ async def analyze_text_sentiment(request: SentimentRequest):
             confidence=analysis_result["confidence"],
             analysis=analysis_result["analysis"],
             emotions=analysis_result.get("emotions", {}),
-            dominant_emotion=analysis_result.get("dominant_emotion", "")
+            dominant_emotion=analysis_result.get("dominant_emotion", ""),
+            sarcasm_detected=analysis_result.get("sarcasm_detected", False),
+            sarcasm_confidence=analysis_result.get("sarcasm_confidence", 0.0),
+            sarcasm_explanation=analysis_result.get("sarcasm_explanation", ""),
+            adjusted_sentiment=analysis_result.get("adjusted_sentiment", analysis_result["sentiment"]),
+            sarcasm_indicators=analysis_result.get("sarcasm_indicators", [])
         )
         
         # Store in database
