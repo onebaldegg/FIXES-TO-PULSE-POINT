@@ -203,10 +203,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Add aspect-based sentiment analysis to LLM prompt"
-    - "Update Pydantic models for aspect-based data"  
-    - "Modify analyze_sentiment function for aspect processing"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
