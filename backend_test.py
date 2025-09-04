@@ -1184,6 +1184,55 @@ def main():
     print("-" * 40)
     all_categories_success, detected_categories = tester.test_all_topic_categories()
 
+    # NEW: Test aspect-based sentiment analysis feature - MAIN FOCUS
+    print("\n🎯 Testing Aspect-Based Sentiment Analysis Feature - NEW FEATURE")
+    print("-" * 60)
+    
+    # Test restaurant review with mixed aspects
+    success, restaurant_response = tester.test_restaurant_review_aspects()
+    if success:
+        tester.validate_sentiment_response(restaurant_response)
+    time.sleep(1)
+    
+    # Test product review with mixed aspects
+    success, product_response = tester.test_product_review_aspects()
+    if success:
+        tester.validate_sentiment_response(product_response)
+    time.sleep(1)
+    
+    # Test simple positive text
+    success, simple_response = tester.test_simple_positive_aspects()
+    if success:
+        tester.validate_sentiment_response(simple_response)
+    time.sleep(1)
+    
+    # Test service feedback
+    success, service_response = tester.test_service_feedback_aspects()
+    if success:
+        tester.validate_sentiment_response(service_response)
+    time.sleep(1)
+    
+    # Test aspect confidence validation
+    success, confidence_response = tester.test_aspect_confidence_validation()
+    if success:
+        tester.validate_sentiment_response(confidence_response)
+    time.sleep(1)
+    
+    # Test integration with existing features
+    success, integration_response = tester.test_aspect_integration_with_existing_features()
+    if success:
+        tester.validate_sentiment_response(integration_response)
+    time.sleep(1)
+    
+    # Test aspect data structure validation
+    success, structure_response = tester.test_aspect_data_structure_validation()
+    if success:
+        tester.validate_sentiment_response(structure_response)
+    time.sleep(1)
+    
+    # Test empty text error handling for aspects
+    tester.test_empty_text_aspects()
+
     # Test emotion detection with specific emotional texts
     print("\n🎭 Testing Emotion Detection Feature")
     print("-" * 40)
