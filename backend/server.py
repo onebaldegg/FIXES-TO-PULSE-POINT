@@ -84,6 +84,26 @@ class SentimentAnalysis(BaseModel):
     aspects_summary: Optional[str] = ""
     timestamp: datetime
 
+class FileUploadResponse(BaseModel):
+    file_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    filename: str
+    file_type: str
+    total_entries: int
+    extracted_texts: List[dict]  # [{text: str, row_number: int, metadata: dict}]
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class BatchAnalysisRequest(BaseModel):
+    file_id: str
+    texts: List[dict]  # [{text: str, row_number: int, metadata: dict}]
+
+class BatchAnalysisResponse(BaseModel):
+    batch_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    file_id: str
+    filename: str
+    total_processed: int
+    results: List[dict]  # List of sentiment analysis results with metadata
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 
 # Sentiment Analysis Service
 async def analyze_sentiment(text: str) -> dict:
