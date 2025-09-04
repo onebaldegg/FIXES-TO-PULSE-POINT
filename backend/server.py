@@ -88,7 +88,7 @@ async def analyze_sentiment(text: str) -> dict:
         chat = LlmChat(
             api_key=os.environ.get('EMERGENT_LLM_KEY'),
             session_id=f"sentiment_{uuid.uuid4()}",
-            system_message="""You are an expert sentiment, emotion, sarcasm, and topic analysis AI specialized in PR and marketing text analysis. 
+            system_message="""You are an expert sentiment, emotion, sarcasm, topic, and aspect-based analysis AI specialized in PR and marketing text analysis. 
 
             Analyze the provided text and return ONLY a valid JSON response with these exact fields:
             {
@@ -126,7 +126,24 @@ async def analyze_sentiment(text: str) -> dict:
                     }
                 ],
                 "primary_topic": "customer_service",
-                "topic_summary": "Discussion focuses on customer service experience with secondary mentions of product quality"
+                "topic_summary": "Discussion focuses on customer service experience with secondary mentions of product quality",
+                "aspects_analysis": [
+                    {
+                        "aspect": "Food Quality",
+                        "sentiment": "positive",
+                        "confidence": 0.90,
+                        "keywords": ["delicious", "amazing", "great taste"],
+                        "explanation": "Customer praised the taste and quality of food"
+                    },
+                    {
+                        "aspect": "Service Speed",
+                        "sentiment": "negative", 
+                        "confidence": 0.85,
+                        "keywords": ["slow", "waited", "took forever"],
+                        "explanation": "Customer complained about long wait times"
+                    }
+                ],
+                "aspects_summary": "Mixed experience with excellent food quality but poor service speed"
             }
             
             Rules:
