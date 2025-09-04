@@ -410,7 +410,9 @@ async def analyze_sentiment(text: str) -> dict:
             "sarcasm_indicators": [],
             "topics_detected": [],
             "primary_topic": "",
-            "topic_summary": ""
+            "topic_summary": "",
+            "aspects_analysis": [],
+            "aspects_summary": ""
         }
 
 
