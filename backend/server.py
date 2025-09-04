@@ -105,6 +105,106 @@ class BatchAnalysisResponse(BaseModel):
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
+# File Processing Utilities
+async def extract_text_from_file(file: UploadFile) -> List[dict]:
+    """Extract text from uploaded files based on file type"""
+    file_extension = file.filename.split('.')[-1].lower()
+    extracted_texts = []
+    
+    try:
+        if file_extension == 'txt':
+            # Process TXT files
+            content = await file.read()
+            text_content = content.decode('utf-8')
+            lines = text_content.split('\n')
+            for i, line in enumerate(lines, 1):
+                line = line.strip()
+                if line:  # Skip empty lines
+                    extracted_texts.append({
+                        "text": line,
+                        "row_number": i,
+                        "metadata": {"source": "txt_line"}
+                    })
+                    
+        elif file_extension == 'csv':
+            # Process CSV files
+            content = await file.read()
+            df = pd.read_csv(io.BytesIO(content))
+            
+            # Try to find text columns (columns with string data)
+            text_columns = []
+            for col in df.columns:
+                if df[col].dtype == 'object':  # String columns
+                    text_columns.append(col)
+            
+            # Use first text column or all columns if no clear text column
+            if text_columns:
+                primary_text_col = text_columns[0]
+            else:
+                primary_text_col = df.columns[0]
+            
+            for index, row in df.iterrows():
+                text_content = str(row[primary_text_col])
+                if text_content and text_content != 'nan':
+                    metadata = {col: str(row[col]) for col in df.columns if col != primary_text_col}
+                    extracted_texts.append({
+                        "text": text_content,
+                        "row_number": index + 2,  # +2 because pandas starts at 0 and we account for header
+                        "metadata": metadata
+                    })
+                    
+        elif file_extension in ['xlsx', 'xls']:
+            # Process Excel files
+            content = await file.read()
+            df = pd.read_excel(io.BytesIO(content))
+            
+            # Similar logic to CSV
+            text_columns = []
+            for col in df.columns:
+                if df[col].dtype == 'object':
+                    text_columns.append(col)
+            
+            if text_columns:
+                primary_text_col = text_columns[0]
+            else:
+                primary_text_col = df.columns[0]
+            
+            for index, row in df.iterrows():
+                text_content = str(row[primary_text_col])
+                if text_content and text_content != 'nan':
+                    metadata = {col: str(row[col]) for col in df.columns if col != primary_text_col}
+                    extracted_texts.append({
+                        "text": text_content,
+                        "row_number": index + 2,
+                        "metadata": metadata
+                    })
+                    
+        elif file_extension == 'pdf':
+            # Process PDF files
+            content = await file.read()
+            pdf_reader = PyPDF2.PdfReader(io.BytesIO(content))
+            
+            for page_num, page in enumerate(pdf_reader.pages, 1):
+                text_content = page.extract_text().strip()
+                if text_content:
+                    # Split into paragraphs for better analysis
+                    paragraphs = [p.strip() for p in text_content.split('\n\n') if p.strip()]
+                    for para_num, paragraph in enumerate(paragraphs, 1):
+                        if len(paragraph) > 10:  # Only process substantial text
+                            extracted_texts.append({
+                                "text": paragraph,
+                                "row_number": f"page_{page_num}_para_{para_num}",
+                                "metadata": {"source": f"PDF page {page_num}"}
+                            })
+        else:
+            raise HTTPException(status_code=400, detail=f"Unsupported file type: {file_extension}")
+            
+        return extracted_texts
+        
+    except Exception as e:
+        logger.error(f"Error processing file {file.filename}: {e}")
+        raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
+
 # Sentiment Analysis Service
 async def analyze_sentiment(text: str) -> dict:
     """Analyze sentiment, emotions, sarcasm, and topics using LLM"""
