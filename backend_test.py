@@ -2,6 +2,9 @@ import requests
 import sys
 import json
 import time
+import io
+import tempfile
+import os
 from datetime import datetime
 
 class BrandWatchAPITester:
