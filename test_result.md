@@ -296,9 +296,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Add file upload endpoint with multi-format support"
-    - "Add batch sentiment analysis endpoint" 
-    - "Add file processing dependencies"
+    - "Create file upload UI component"
+    - "Add batch results display component"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
