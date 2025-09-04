@@ -318,6 +318,48 @@ async def analyze_sentiment(text: str) -> dict:
                         "confidence": 0.7,
                         "keywords": [kw for kw in keywords if kw in response_lower]
                     })
+
+            # Basic aspect detection from common patterns
+            aspects_analysis = []
+            aspect_patterns = {
+                "Food Quality": ["food", "taste", "delicious", "bland", "fresh", "stale", "meal", "dish"],
+                "Service Quality": ["service", "staff", "waiter", "waitress", "server", "friendly", "rude", "attentive"],
+                "Price/Value": ["price", "cost", "expensive", "cheap", "worth", "value", "money", "affordable"],
+                "Delivery Speed": ["delivery", "shipping", "fast", "slow", "quick", "delayed", "on time"],
+                "Build Quality": ["build", "construction", "material", "sturdy", "flimsy", "durable", "quality"],
+                "User Interface": ["interface", "UI", "design", "layout", "navigation", "easy", "confusing"],
+                "Customer Support": ["support", "help", "helpful", "unhelpful", "response", "assistance"]
+            }
+            
+            for aspect_name, keywords in aspect_patterns.items():
+                aspect_keywords_found = [kw for kw in keywords if kw in response_lower]
+                if aspect_keywords_found:
+                    # Determine sentiment for this aspect based on surrounding context
+                    aspect_sentiment = sentiment  # Default to overall sentiment
+                    confidence = 0.6
+                    
+                    # Try to determine more specific aspect sentiment
+                    positive_words = ["good", "great", "excellent", "amazing", "wonderful", "fantastic", "love", "perfect"]
+                    negative_words = ["bad", "terrible", "awful", "horrible", "hate", "worst", "disappointing", "poor"]
+                    
+                    # Look for sentiment words near aspect keywords
+                    aspect_context = " ".join([word for word in response_lower.split() 
+                                               if any(kw in word for kw in aspect_keywords_found)])
+                    
+                    if any(pos in aspect_context for pos in positive_words):
+                        aspect_sentiment = "positive"
+                        confidence = 0.7
+                    elif any(neg in aspect_context for neg in negative_words):
+                        aspect_sentiment = "negative"  
+                        confidence = 0.7
+                    
+                    aspects_analysis.append({
+                        "aspect": aspect_name,
+                        "sentiment": aspect_sentiment,
+                        "confidence": confidence,
+                        "keywords": aspect_keywords_found[:3],  # Limit to top 3 keywords
+                        "explanation": f"Detected {aspect_sentiment} sentiment for {aspect_name.lower()} based on keywords: {', '.join(aspect_keywords_found[:2])}"
+                    })
             
             # Basic emotion detection from keywords
             emotions = {
