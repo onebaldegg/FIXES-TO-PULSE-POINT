@@ -657,6 +657,22 @@ const App = () => {
                         )}
                         
                         <div className="flex flex-wrap gap-1 mb-2">
+                          {/* Aspects Display */}
+                          {item.aspects_analysis && item.aspects_analysis.length > 0 && (
+                            <>
+                              {item.aspects_analysis
+                                .sort((a, b) => b.confidence - a.confidence)
+                                .slice(0, 3) // Show top 3 aspects in history
+                                .map((aspect, index) => (
+                                  <div key={index} className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30`}>
+                                    {getSentimentIcon(aspect.sentiment)}
+                                    <span>{aspect.aspect}</span>
+                                    <span>({Math.round(aspect.confidence * 100)}%)</span>
+                                  </div>
+                                ))}
+                            </>
+                          )}
+                          
                           {/* Topics Display */}
                           {item.topics_detected && item.topics_detected.length > 0 && (
                             <>
@@ -678,7 +694,7 @@ const App = () => {
                               {Object.entries(item.emotions)
                                 .filter(([_, confidence]) => confidence > 0.2) // Show emotions with >20% confidence
                                 .sort(([, a], [, b]) => b - a) // Sort by confidence
-                                .slice(0, 2) // Show top 2 emotions in history (reduced to make room for topics)
+                                .slice(0, 1) // Show top 1 emotion in history (reduced to make room for aspects and topics)
                                 .map(([emotion, confidence]) => (
                                   <div key={emotion} className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs ${getEmotionColor(emotion)}`}>
                                     {getEmotionIcon(emotion)}
