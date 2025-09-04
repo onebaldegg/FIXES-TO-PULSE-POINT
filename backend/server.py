@@ -611,6 +611,136 @@ async def get_sentiment_history(limit: int = 20):
         logger.error(f"Error fetching sentiment history: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
+@api_router.post("/upload-file", response_model=FileUploadResponse)
+async def upload_file(file: UploadFile = File(...)):
+    """Upload and parse file for batch sentiment analysis"""
+    try:
+        # Validate file size (5MB limit)
+        MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB in bytes
+        file_size = len(await file.read())
+        await file.seek(0)  # Reset file pointer
+        
+        if file_size > MAX_FILE_SIZE:
+            raise HTTPException(status_code=413, detail="File size exceeds 5MB limit")
+        
+        # Validate file type
+        allowed_extensions = ['txt', 'csv', 'xlsx', 'xls', 'pdf']
+        file_extension = file.filename.split('.')[-1].lower()
+        
+        if file_extension not in allowed_extensions:
+            raise HTTPException(status_code=400, detail=f"File type '{file_extension}' not supported. Allowed types: {allowed_extensions}")
+        
+        # Extract text from file
+        extracted_texts = await extract_text_from_file(file)
+        
+        if not extracted_texts:
+            raise HTTPException(status_code=400, detail="No text content could be extracted from the file")
+        
+        # Limit number of entries to prevent overwhelming the system
+        if len(extracted_texts) > 100:
+            extracted_texts = extracted_texts[:100]
+            logger.warning(f"File {file.filename} had {len(extracted_texts)} entries, limiting to 100")
+        
+        # Create response
+        response = FileUploadResponse(
+            filename=file.filename,
+            file_type=file_extension,
+            total_entries=len(extracted_texts),
+            extracted_texts=extracted_texts
+        )
+        
+        # Store file metadata in database
+        file_metadata = response.dict()
+        file_metadata['timestamp'] = file_metadata['timestamp'].isoformat()
+        await db.uploaded_files.insert_one(file_metadata)
+        
+        logger.info(f"Successfully processed file {file.filename}: {len(extracted_texts)} texts extracted")
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error uploading file: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.post("/analyze-batch", response_model=BatchAnalysisResponse)
+async def analyze_batch(request: BatchAnalysisRequest):
+    """Perform batch sentiment analysis on extracted texts"""
+    try:
+        if not request.texts:
+            raise HTTPException(status_code=400, detail="No texts provided for analysis")
+        
+        # Get file metadata
+        file_metadata = await db.uploaded_files.find_one({"file_id": request.file_id})
+        if not file_metadata:
+            raise HTTPException(status_code=404, detail="File not found")
+        
+        results = []
+        processed_count = 0
+        
+        for text_entry in request.texts:
+            try:
+                text_content = text_entry.get("text", "")
+                if not text_content.strip():
+                    continue
+                
+                # Perform sentiment analysis
+                analysis_result = await analyze_sentiment(text_content)
+                
+                # Create result with metadata
+                result = {
+                    "id": str(uuid.uuid4()),
+                    "text": text_content,
+                    "row_number": text_entry.get("row_number"),
+                    "metadata": text_entry.get("metadata", {}),
+                    "sentiment": analysis_result["sentiment"],
+                    "confidence": analysis_result["confidence"],
+                    "analysis": analysis_result["analysis"],
+                    "emotions": analysis_result.get("emotions", {}),
+                    "dominant_emotion": analysis_result.get("dominant_emotion", ""),
+                    "sarcasm_detected": analysis_result.get("sarcasm_detected", False),
+                    "sarcasm_confidence": analysis_result.get("sarcasm_confidence", 0.0),
+                    "sarcasm_explanation": analysis_result.get("sarcasm_explanation", ""),
+                    "adjusted_sentiment": analysis_result.get("adjusted_sentiment", analysis_result["sentiment"]),
+                    "sarcasm_indicators": analysis_result.get("sarcasm_indicators", []),
+                    "topics_detected": analysis_result.get("topics_detected", []),
+                    "primary_topic": analysis_result.get("primary_topic", ""),
+                    "topic_summary": analysis_result.get("topic_summary", ""),
+                    "aspects_analysis": analysis_result.get("aspects_analysis", []),
+                    "aspects_summary": analysis_result.get("aspects_summary", ""),
+                    "timestamp": datetime.now(timezone.utc).isoformat()
+                }
+                
+                results.append(result)
+                processed_count += 1
+                
+            except Exception as e:
+                logger.error(f"Error analyzing text entry {text_entry.get('row_number', 'unknown')}: {e}")
+                # Continue processing other entries
+                continue
+        
+        # Create batch response
+        batch_response = BatchAnalysisResponse(
+            file_id=request.file_id,
+            filename=file_metadata.get("filename", "unknown"),
+            total_processed=processed_count,
+            results=results
+        )
+        
+        # Store batch results in database
+        batch_data = batch_response.dict()
+        batch_data['timestamp'] = batch_data['timestamp'].isoformat()
+        await db.batch_analyses.insert_one(batch_data)
+        
+        logger.info(f"Batch analysis completed: {processed_count} texts processed")
+        return batch_response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in batch analysis: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
 
 # Include the router in the main app
 app.include_router(api_router)
