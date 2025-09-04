@@ -256,6 +256,25 @@ async def analyze_sentiment(text: str) -> dict:
                 primary_topic = max(result["topics_detected"], key=lambda x: x.get("confidence", 0))
                 result["primary_topic"] = primary_topic.get("topic", "")
             
+            # Ensure aspect analysis fields exist with defaults
+            if "aspects_analysis" not in result:
+                result["aspects_analysis"] = []
+            if "aspects_summary" not in result:
+                result["aspects_summary"] = ""
+            
+            # Validate aspect analysis structure
+            if result["aspects_analysis"]:
+                validated_aspects = []
+                for aspect in result["aspects_analysis"]:
+                    if isinstance(aspect, dict) and all(key in aspect for key in ["aspect", "sentiment", "confidence"]):
+                        # Ensure required fields exist
+                        if "keywords" not in aspect:
+                            aspect["keywords"] = []
+                        if "explanation" not in aspect:
+                            aspect["explanation"] = ""
+                        validated_aspects.append(aspect)
+                result["aspects_analysis"] = validated_aspects
+            
             return result
             
         except json.JSONDecodeError:
