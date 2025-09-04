@@ -120,10 +120,10 @@ class BrandWatchAPITester:
         return self.run_test("Get Sentiment History", "GET", "sentiment-history", 200)
 
     def validate_sentiment_response(self, response_data):
-        """Validate sentiment analysis response structure including emotion, sarcasm, and topic detection"""
+        """Validate sentiment analysis response structure including emotion, sarcasm, topic, and aspect detection"""
         required_fields = ['id', 'text', 'sentiment', 'confidence', 'analysis', 'timestamp', 'emotions', 'dominant_emotion',
                           'sarcasm_detected', 'sarcasm_confidence', 'sarcasm_explanation', 'adjusted_sentiment', 'sarcasm_indicators',
-                          'topics_detected', 'primary_topic', 'topic_summary']
+                          'topics_detected', 'primary_topic', 'topic_summary', 'aspects_analysis', 'aspects_summary']
         valid_sentiments = ['positive', 'negative', 'neutral']
         expected_emotions = ['joy', 'sadness', 'anger', 'fear', 'trust', 'disgust', 'surprise', 'anticipation']
         valid_topics = ['customer_service', 'product_quality', 'pricing', 'delivery_shipping', 'user_experience', 
