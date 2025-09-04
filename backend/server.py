@@ -376,7 +376,7 @@ async def analyze_sentiment(text: str) -> dict:
             return {
                 "sentiment": sentiment,
                 "confidence": 0.75,
-                "analysis": "Sentiment, emotion, sarcasm, and topic analysis completed based on text content.",
+                "analysis": "Sentiment, emotion, sarcasm, topic, and aspect analysis completed based on text content.",
                 "emotions": emotions,
                 "dominant_emotion": max(emotions, key=emotions.get) if emotions else "neutral",
                 "sarcasm_detected": sarcasm_detected,
@@ -386,7 +386,9 @@ async def analyze_sentiment(text: str) -> dict:
                 "sarcasm_indicators": [kw for kw in sarcasm_keywords if kw in response_lower] if sarcasm_detected else [],
                 "topics_detected": topics_detected,
                 "primary_topic": topics_detected[0]["topic"] if topics_detected else "",
-                "topic_summary": f"Discussion about {', '.join([t['display_name'] for t in topics_detected])}" if topics_detected else ""
+                "topic_summary": f"Discussion about {', '.join([t['display_name'] for t in topics_detected])}" if topics_detected else "",
+                "aspects_analysis": aspects_analysis,
+                "aspects_summary": f"Analysis covers {len(aspects_analysis)} aspects with mixed sentiments" if aspects_analysis else ""
             }
             
     except Exception as e:
