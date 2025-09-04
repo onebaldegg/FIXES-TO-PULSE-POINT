@@ -725,9 +725,9 @@ const App = () => {
                 <div className="bg-gradient-to-r from-green-500 to-emerald-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Tag className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="font-semibold text-green-100 mb-2">Topic Analysis</h3>
+                <h3 className="font-semibold text-green-100 mb-2">Aspect-Based Analysis</h3>
                 <p className="text-sm text-green-200">
-                  Automatically detect discussion topics including customer service, pricing, product quality, and technical issues
+                  Analyze sentiment for specific aspects like food quality, service speed, pricing, and more with individual confidence scores
                 </p>
               </Card>
 
