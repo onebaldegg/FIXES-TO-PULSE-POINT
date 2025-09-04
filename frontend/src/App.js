@@ -341,6 +341,77 @@ const App = () => {
                           )}
                         </div>
 
+                        {/* Aspect-Based Analysis Display */}
+                        {analysis.aspects_analysis && analysis.aspects_analysis.length > 0 && (
+                          <div className="mb-3">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <span className="text-sm font-medium text-green-200">Aspect-Based Analysis:</span>
+                              <div className="px-2 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-medium">
+                                {analysis.aspects_analysis.length} aspects detected
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-2">
+                              <div className="grid grid-cols-1 gap-2">
+                                {analysis.aspects_analysis
+                                  .sort((a, b) => b.confidence - a.confidence) // Sort by confidence
+                                  .slice(0, 6) // Show top 6 aspects
+                                  .map((aspect, index) => (
+                                    <div key={index} className="flex items-center justify-between p-3 bg-black/40 rounded-lg border border-emerald-500/20 hover:border-emerald-500/40 transition-colors">
+                                      <div className="flex items-center space-x-3">
+                                        <div className={`p-1.5 rounded-full ${getSentimentColor(aspect.sentiment)}`}>
+                                          {getSentimentIcon(aspect.sentiment)}
+                                        </div>
+                                        <div className="flex-1">
+                                          <div className="flex items-center space-x-2 mb-1">
+                                            <span className="text-sm font-medium text-green-200">
+                                              {aspect.aspect}
+                                            </span>
+                                            <Badge variant={getSentimentBadgeVariant(aspect.sentiment)} className="text-xs">
+                                              {aspect.sentiment}
+                                            </Badge>
+                                          </div>
+                                          {aspect.explanation && (
+                                            <p className="text-xs text-green-300/80 italic">
+                                              {aspect.explanation}
+                                            </p>
+                                          )}
+                                          {aspect.keywords && aspect.keywords.length > 0 && (
+                                            <div className="flex flex-wrap gap-1 mt-1">
+                                              {aspect.keywords.slice(0, 3).map((keyword, kidx) => (
+                                                <span key={kidx} className="px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 rounded text-xs">
+                                                  {keyword}
+                                                </span>
+                                              ))}
+                                            </div>
+                                          )}
+                                        </div>
+                                      </div>
+                                      <div className="flex items-center space-x-2">
+                                        <div className="w-16 bg-green-800/50 rounded-full h-2">
+                                          <div 
+                                            className={`h-2 rounded-full ${getSentimentColor(aspect.sentiment)}`}
+                                            style={{ width: `${aspect.confidence * 100}%` }}
+                                          />
+                                        </div>
+                                        <span className="text-xs text-green-300 font-medium">
+                                          {Math.round(aspect.confidence * 100)}%
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ))}
+                              </div>
+                              
+                              {analysis.aspects_summary && (
+                                <div className="mt-2 p-2 bg-emerald-950/30 border border-emerald-500/30 rounded-lg">
+                                  <span className="text-xs font-medium text-emerald-200">Aspects Summary:</span>
+                                  <p className="text-xs text-emerald-300 mt-1">{analysis.aspects_summary}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
                         {/* Topic Analysis Display */}
                         {analysis.topics_detected && analysis.topics_detected.length > 0 && (
                           <div className="mb-3">
