@@ -764,6 +764,350 @@ class BrandWatchAPITester:
         
         return len(detected_categories) == 12, detected_categories
 
+    # ASPECT-BASED SENTIMENT ANALYSIS TESTS - NEW FEATURE
+    def test_restaurant_review_aspects(self):
+        """Test aspect-based analysis with restaurant review"""
+        restaurant_text = "The food was amazing and fresh, but the service was incredibly slow and the prices were too high"
+        success, response = self.run_test(
+            "Restaurant Review - Mixed Aspects",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": restaurant_text},
+            timeout=60
+        )
+        
+        if success:
+            aspects = response.get('aspects_analysis', [])
+            aspects_summary = response.get('aspects_summary', '')
+            
+            print(f"   Aspects detected: {len(aspects)}")
+            
+            # Expected aspects for restaurant review
+            expected_aspects = ['Food Quality', 'Service Quality', 'Price/Value']
+            detected_aspect_names = [aspect['aspect'] for aspect in aspects]
+            
+            print(f"   Expected aspects: {expected_aspects}")
+            print(f"   Detected aspects: {detected_aspect_names}")
+            
+            # Check for food quality (should be positive)
+            food_aspects = [a for a in aspects if 'food' in a['aspect'].lower() or 'quality' in a['aspect'].lower()]
+            if food_aspects:
+                food_aspect = food_aspects[0]
+                if food_aspect['sentiment'] == 'positive':
+                    print(f"✅ Food quality correctly identified as positive")
+                else:
+                    print(f"⚠️  Food quality sentiment: {food_aspect['sentiment']} (expected positive)")
+            else:
+                print(f"⚠️  Food quality aspect not detected")
+            
+            # Check for service (should be negative)
+            service_aspects = [a for a in aspects if 'service' in a['aspect'].lower()]
+            if service_aspects:
+                service_aspect = service_aspects[0]
+                if service_aspect['sentiment'] == 'negative':
+                    print(f"✅ Service quality correctly identified as negative")
+                else:
+                    print(f"⚠️  Service quality sentiment: {service_aspect['sentiment']} (expected negative)")
+            else:
+                print(f"⚠️  Service quality aspect not detected")
+            
+            # Check for price (should be negative)
+            price_aspects = [a for a in aspects if 'price' in a['aspect'].lower() or 'value' in a['aspect'].lower()]
+            if price_aspects:
+                price_aspect = price_aspects[0]
+                if price_aspect['sentiment'] == 'negative':
+                    print(f"✅ Price/Value correctly identified as negative")
+                else:
+                    print(f"⚠️  Price/Value sentiment: {price_aspect['sentiment']} (expected negative)")
+            else:
+                print(f"⚠️  Price/Value aspect not detected")
+            
+            # Check aspects summary
+            if aspects_summary:
+                print(f"✅ Aspects summary provided: {aspects_summary}")
+            else:
+                print(f"⚠️  No aspects summary provided")
+        
+        return success, response
+
+    def test_product_review_aspects(self):
+        """Test aspect-based analysis with product review"""
+        product_text = "Great build quality and fast shipping, but customer support was unhelpful when I had questions"
+        success, response = self.run_test(
+            "Product Review - Mixed Aspects",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": product_text},
+            timeout=60
+        )
+        
+        if success:
+            aspects = response.get('aspects_analysis', [])
+            
+            print(f"   Aspects detected: {len(aspects)}")
+            
+            # Expected aspects for product review
+            expected_categories = ['build', 'shipping', 'support']
+            
+            for aspect in aspects:
+                aspect_name = aspect['aspect']
+                sentiment = aspect['sentiment']
+                confidence = aspect['confidence']
+                keywords = aspect['keywords']
+                explanation = aspect['explanation']
+                
+                print(f"     {aspect_name}: {sentiment} ({confidence:.2f}) - {keywords}")
+                print(f"       Explanation: {explanation}")
+                
+                # Validate confidence is reasonable
+                if confidence < 0.4:
+                    print(f"⚠️  Low confidence for aspect: {aspect_name}")
+                
+                # Check for expected positive aspects
+                if any(word in aspect_name.lower() for word in ['build', 'quality', 'shipping']):
+                    if sentiment == 'positive':
+                        print(f"✅ {aspect_name} correctly positive")
+                    else:
+                        print(f"⚠️  {aspect_name} expected positive, got {sentiment}")
+                
+                # Check for expected negative aspects
+                if any(word in aspect_name.lower() for word in ['support', 'customer']):
+                    if sentiment == 'negative':
+                        print(f"✅ {aspect_name} correctly negative")
+                    else:
+                        print(f"⚠️  {aspect_name} expected negative, got {sentiment}")
+        
+        return success, response
+
+    def test_simple_positive_aspects(self):
+        """Test aspect analysis with simple positive text"""
+        simple_text = "I love this product!"
+        success, response = self.run_test(
+            "Simple Positive - Aspect Analysis",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": simple_text},
+            timeout=60
+        )
+        
+        if success:
+            aspects = response.get('aspects_analysis', [])
+            aspects_summary = response.get('aspects_summary', '')
+            
+            print(f"   Aspects detected: {len(aspects)}")
+            
+            # Simple text may not have clear aspects
+            if len(aspects) == 0:
+                print(f"✅ No aspects detected in simple text (expected)")
+            else:
+                print(f"   Detected aspects in simple text:")
+                for aspect in aspects:
+                    print(f"     {aspect['aspect']}: {aspect['sentiment']}")
+            
+            # Aspects summary should handle case with no aspects
+            if not aspects and not aspects_summary:
+                print(f"✅ Empty aspects summary for text with no clear aspects")
+            elif aspects_summary:
+                print(f"   Aspects summary: {aspects_summary}")
+        
+        return success, response
+
+    def test_empty_text_aspects(self):
+        """Test aspect analysis error handling with empty text"""
+        return self.run_test(
+            "Empty Text - Aspect Analysis (Error Case)",
+            "POST",
+            "analyze-sentiment",
+            400,
+            data={"text": ""}
+        )
+
+    def test_service_feedback_aspects(self):
+        """Test aspect analysis with service feedback"""
+        service_text = "The staff was friendly and knowledgeable, but the location is hard to find and parking is terrible"
+        success, response = self.run_test(
+            "Service Feedback - Mixed Aspects",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": service_text},
+            timeout=60
+        )
+        
+        if success:
+            aspects = response.get('aspects_analysis', [])
+            
+            print(f"   Aspects detected: {len(aspects)}")
+            
+            # Look for staff/service aspects (should be positive)
+            staff_aspects = [a for a in aspects if any(word in a['aspect'].lower() for word in ['staff', 'service', 'behavior'])]
+            if staff_aspects:
+                staff_aspect = staff_aspects[0]
+                print(f"   Staff aspect: {staff_aspect['aspect']} - {staff_aspect['sentiment']}")
+                if staff_aspect['sentiment'] == 'positive':
+                    print(f"✅ Staff aspect correctly positive")
+            
+            # Look for location/parking aspects (should be negative)
+            location_aspects = [a for a in aspects if any(word in a['aspect'].lower() for word in ['location', 'parking', 'ambiance'])]
+            if location_aspects:
+                location_aspect = location_aspects[0]
+                print(f"   Location aspect: {location_aspect['aspect']} - {location_aspect['sentiment']}")
+                if location_aspect['sentiment'] == 'negative':
+                    print(f"✅ Location aspect correctly negative")
+        
+        return success, response
+
+    def test_aspect_confidence_validation(self):
+        """Test aspect confidence scores and validation"""
+        confidence_text = "The user interface is intuitive and well-designed, the performance is lightning fast, but the documentation is confusing and incomplete"
+        success, response = self.run_test(
+            "Aspect Confidence Validation",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": confidence_text},
+            timeout=60
+        )
+        
+        if success:
+            aspects = response.get('aspects_analysis', [])
+            
+            print(f"   Aspect confidence analysis:")
+            for aspect in aspects:
+                aspect_name = aspect['aspect']
+                sentiment = aspect['sentiment']
+                confidence = aspect['confidence']
+                keywords = aspect['keywords']
+                
+                print(f"     {aspect_name}: {sentiment} (confidence: {confidence:.2f})")
+                print(f"       Keywords: {keywords}")
+                
+                # Validate confidence is in valid range
+                if not (0 <= confidence <= 1):
+                    print(f"❌ Invalid confidence range: {confidence}")
+                    return False, response
+                
+                # Check for reasonable confidence (should be > 0.4 as per system message)
+                if confidence < 0.4:
+                    print(f"⚠️  Low confidence aspect: {aspect_name} ({confidence:.2f})")
+                
+                # Validate keywords exist and are relevant
+                if not keywords:
+                    print(f"⚠️  No keywords for aspect: {aspect_name}")
+                elif len(keywords) > 5:
+                    print(f"⚠️  Too many keywords for aspect: {aspect_name} ({len(keywords)} keywords)")
+        
+        return success, response
+
+    def test_aspect_integration_with_existing_features(self):
+        """Test that aspect analysis works alongside existing features"""
+        integration_text = "Oh great, another 'premium' service with terrible customer support and overpriced features. Just what I needed!"
+        success, response = self.run_test(
+            "Aspect Integration with Sarcasm/Topics",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": integration_text},
+            timeout=60
+        )
+        
+        if success:
+            # Check all features are present
+            has_sentiment = 'sentiment' in response
+            has_sarcasm = 'sarcasm_detected' in response
+            has_topics = 'topics_detected' in response
+            has_aspects = 'aspects_analysis' in response
+            has_emotions = 'emotions' in response
+            
+            print(f"   Feature integration check:")
+            print(f"     Sentiment: {'✅' if has_sentiment else '❌'}")
+            print(f"     Sarcasm: {'✅' if has_sarcasm else '❌'}")
+            print(f"     Topics: {'✅' if has_topics else '❌'}")
+            print(f"     Aspects: {'✅' if has_aspects else '❌'}")
+            print(f"     Emotions: {'✅' if has_emotions else '❌'}")
+            
+            # Check sarcasm detection
+            sarcasm_detected = response.get('sarcasm_detected', False)
+            if sarcasm_detected:
+                print(f"✅ Sarcasm detected in sarcastic text")
+            else:
+                print(f"⚠️  Sarcasm not detected in obvious sarcastic text")
+            
+            # Check aspects are detected despite sarcasm
+            aspects = response.get('aspects_analysis', [])
+            if aspects:
+                print(f"✅ Aspects detected alongside sarcasm ({len(aspects)} aspects)")
+                for aspect in aspects:
+                    print(f"     {aspect['aspect']}: {aspect['sentiment']}")
+            else:
+                print(f"⚠️  No aspects detected in text with clear service/pricing mentions")
+            
+            # Check topics are detected
+            topics = response.get('topics_detected', [])
+            if topics:
+                print(f"✅ Topics detected alongside aspects ({len(topics)} topics)")
+            else:
+                print(f"⚠️  No topics detected")
+        
+        return success, response
+
+    def test_aspect_data_structure_validation(self):
+        """Test aspect data structure validation thoroughly"""
+        structure_text = "The mobile app crashes frequently but the web version works perfectly fine"
+        success, response = self.run_test(
+            "Aspect Data Structure Validation",
+            "POST",
+            "analyze-sentiment",
+            200,
+            data={"text": structure_text},
+            timeout=60
+        )
+        
+        if success:
+            aspects = response.get('aspects_analysis', [])
+            
+            print(f"   Validating aspect data structures:")
+            
+            for i, aspect in enumerate(aspects):
+                print(f"     Aspect {i+1}: {aspect.get('aspect', 'MISSING')}")
+                
+                # Check required fields
+                required_fields = ['aspect', 'sentiment', 'confidence', 'keywords', 'explanation']
+                for field in required_fields:
+                    if field not in aspect:
+                        print(f"❌ Missing required field: {field}")
+                        return False, response
+                    else:
+                        print(f"       ✅ {field}: {type(aspect[field]).__name__}")
+                
+                # Validate field types
+                if not isinstance(aspect['aspect'], str):
+                    print(f"❌ aspect must be string, got {type(aspect['aspect'])}")
+                    return False, response
+                
+                if aspect['sentiment'] not in ['positive', 'negative', 'neutral']:
+                    print(f"❌ Invalid sentiment: {aspect['sentiment']}")
+                    return False, response
+                
+                if not isinstance(aspect['confidence'], (int, float)) or not (0 <= aspect['confidence'] <= 1):
+                    print(f"❌ Invalid confidence: {aspect['confidence']}")
+                    return False, response
+                
+                if not isinstance(aspect['keywords'], list):
+                    print(f"❌ keywords must be list, got {type(aspect['keywords'])}")
+                    return False, response
+                
+                if not isinstance(aspect['explanation'], str):
+                    print(f"❌ explanation must be string, got {type(aspect['explanation'])}")
+                    return False, response
+            
+            print(f"✅ All aspect data structures are valid")
+        
+        return success, response
+
 def main():
     print("🚀 Starting Brand Watch AI Backend API Tests - Topic Detection Feature")
     print("=" * 70)
