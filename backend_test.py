@@ -1111,6 +1111,476 @@ class BrandWatchAPITester:
         
         return success, response
 
+    # FILE UPLOAD AND BATCH PROCESSING TESTS - NEW FEATURE
+    def run_file_upload_test(self, name, file_content, filename, expected_status, timeout=30):
+        """Run a file upload test"""
+        url = f"{self.api_url}/upload-file"
+        
+        self.tests_run += 1
+        print(f"\n🔍 Testing {name}...")
+        print(f"   URL: {url}")
+        print(f"   File: {filename}")
+        
+        try:
+            # Create file-like object
+            files = {'file': (filename, file_content, 'application/octet-stream')}
+            
+            response = requests.post(url, files=files, timeout=timeout)
+            print(f"   Status Code: {response.status_code}")
+            
+            success = response.status_code == expected_status
+            if success:
+                self.tests_passed += 1
+                print(f"✅ Passed - Expected {expected_status}, got {response.status_code}")
+                try:
+                    response_data = response.json()
+                    print(f"   Response: {json.dumps(response_data, indent=2)[:300]}...")
+                    return True, response_data
+                except:
+                    return True, response.text
+            else:
+                print(f"❌ Failed - Expected {expected_status}, got {response.status_code}")
+                try:
+                    error_data = response.json()
+                    print(f"   Error: {error_data}")
+                except:
+                    print(f"   Error: {response.text}")
+                return False, {}
+
+        except requests.exceptions.Timeout:
+            print(f"❌ Failed - Request timed out after {timeout} seconds")
+            return False, {}
+        except Exception as e:
+            print(f"❌ Failed - Error: {str(e)}")
+            return False, {}
+
+    def test_upload_txt_file(self):
+        """Test uploading a TXT file"""
+        txt_content = """This product is amazing! I love the quality and design.
+The customer service was excellent and very helpful.
+However, the price is a bit high for what you get.
+Overall, I'm satisfied with my purchase."""
+        
+        return self.run_file_upload_test(
+            "Upload TXT File",
+            txt_content.encode('utf-8'),
+            "sample_reviews.txt",
+            200
+        )
+
+    def test_upload_csv_file(self):
+        """Test uploading a CSV file"""
+        csv_content = """review_text,rating,category
+"The food was delicious but service was slow",4,restaurant
+"Great product quality and fast shipping",5,product
+"Terrible customer support experience",1,service
+"Amazing user interface and features",5,software"""
+        
+        return self.run_file_upload_test(
+            "Upload CSV File",
+            csv_content.encode('utf-8'),
+            "reviews.csv",
+            200
+        )
+
+    def test_upload_excel_file(self):
+        """Test uploading an Excel file"""
+        # Create a simple Excel file in memory
+        try:
+            import pandas as pd
+            
+            data = {
+                'feedback': [
+                    'Excellent service and quality products',
+                    'Poor delivery experience and damaged items',
+                    'Great value for money and fast support'
+                ],
+                'source': ['website', 'mobile_app', 'email'],
+                'date': ['2024-01-01', '2024-01-02', '2024-01-03']
+            }
+            
+            df = pd.DataFrame(data)
+            excel_buffer = io.BytesIO()
+            df.to_excel(excel_buffer, index=False)
+            excel_content = excel_buffer.getvalue()
+            
+            return self.run_file_upload_test(
+                "Upload Excel File",
+                excel_content,
+                "feedback.xlsx",
+                200
+            )
+        except ImportError:
+            print("⚠️  Pandas not available for Excel test, skipping...")
+            return True, {}
+
+    def test_upload_pdf_file(self):
+        """Test uploading a PDF file"""
+        # Create a simple PDF content (this is a minimal PDF structure)
+        pdf_content = b"""%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+>>
+endobj
+
+4 0 obj
+<<
+/Length 44
+>>
+stream
+BT
+/F1 12 Tf
+72 720 Td
+(This is a test review text.) Tj
+ET
+endstream
+endobj
+
+xref
+0 5
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000206 00000 n 
+trailer
+<<
+/Size 5
+/Root 1 0 R
+>>
+startxref
+299
+%%EOF"""
+        
+        return self.run_file_upload_test(
+            "Upload PDF File",
+            pdf_content,
+            "review.pdf",
+            200
+        )
+
+    def test_upload_unsupported_file(self):
+        """Test uploading unsupported file type"""
+        content = b"This is a test file with unsupported extension"
+        
+        return self.run_file_upload_test(
+            "Upload Unsupported File Type",
+            content,
+            "test.docx",
+            400
+        )
+
+    def test_upload_large_file(self):
+        """Test uploading file exceeding size limit"""
+        # Create content larger than 5MB
+        large_content = b"A" * (6 * 1024 * 1024)  # 6MB
+        
+        return self.run_file_upload_test(
+            "Upload Large File (>5MB)",
+            large_content,
+            "large_file.txt",
+            413
+        )
+
+    def test_upload_empty_file(self):
+        """Test uploading empty file"""
+        return self.run_file_upload_test(
+            "Upload Empty File",
+            b"",
+            "empty.txt",
+            400
+        )
+
+    def validate_file_upload_response(self, response_data):
+        """Validate file upload response structure"""
+        required_fields = ['file_id', 'filename', 'file_type', 'total_entries', 'extracted_texts', 'timestamp']
+        
+        print(f"\n🔍 Validating file upload response structure...")
+        
+        for field in required_fields:
+            if field not in response_data:
+                print(f"❌ Missing required field: {field}")
+                return False
+        
+        # Validate file_id is UUID-like string
+        if not isinstance(response_data['file_id'], str) or len(response_data['file_id']) < 10:
+            print(f"❌ Invalid file_id format: {response_data['file_id']}")
+            return False
+        
+        # Validate total_entries matches extracted_texts length
+        if response_data['total_entries'] != len(response_data['extracted_texts']):
+            print(f"❌ total_entries mismatch: {response_data['total_entries']} vs {len(response_data['extracted_texts'])}")
+            return False
+        
+        # Validate extracted_texts structure
+        for i, text_entry in enumerate(response_data['extracted_texts']):
+            if not isinstance(text_entry, dict):
+                print(f"❌ extracted_texts[{i}] must be dict")
+                return False
+            
+            required_text_fields = ['text', 'row_number', 'metadata']
+            for field in required_text_fields:
+                if field not in text_entry:
+                    print(f"❌ Missing field in extracted_texts[{i}]: {field}")
+                    return False
+            
+            if not isinstance(text_entry['text'], str) or not text_entry['text'].strip():
+                print(f"❌ Invalid text content in extracted_texts[{i}]")
+                return False
+        
+        print(f"✅ File upload response structure is valid")
+        print(f"   File ID: {response_data['file_id']}")
+        print(f"   Filename: {response_data['filename']}")
+        print(f"   File Type: {response_data['file_type']}")
+        print(f"   Total Entries: {response_data['total_entries']}")
+        
+        return True
+
+    def test_batch_analysis(self, file_id, extracted_texts, filename="test_file"):
+        """Test batch sentiment analysis"""
+        batch_data = {
+            "file_id": file_id,
+            "texts": extracted_texts[:3]  # Limit to first 3 entries for testing
+        }
+        
+        return self.run_test(
+            f"Batch Analysis - {filename}",
+            "POST",
+            "analyze-batch",
+            200,
+            data=batch_data,
+            timeout=120  # Batch processing can take longer
+        )
+
+    def validate_batch_analysis_response(self, response_data):
+        """Validate batch analysis response structure"""
+        required_fields = ['batch_id', 'file_id', 'filename', 'total_processed', 'results', 'timestamp']
+        
+        print(f"\n🔍 Validating batch analysis response structure...")
+        
+        for field in required_fields:
+            if field not in response_data:
+                print(f"❌ Missing required field: {field}")
+                return False
+        
+        # Validate batch_id is UUID-like string
+        if not isinstance(response_data['batch_id'], str) or len(response_data['batch_id']) < 10:
+            print(f"❌ Invalid batch_id format: {response_data['batch_id']}")
+            return False
+        
+        # Validate total_processed matches results length
+        if response_data['total_processed'] != len(response_data['results']):
+            print(f"❌ total_processed mismatch: {response_data['total_processed']} vs {len(response_data['results'])}")
+            return False
+        
+        # Validate each result has complete sentiment analysis
+        for i, result in enumerate(response_data['results']):
+            if not isinstance(result, dict):
+                print(f"❌ results[{i}] must be dict")
+                return False
+            
+            # Check for all sentiment analysis fields
+            required_result_fields = [
+                'id', 'text', 'row_number', 'metadata', 'sentiment', 'confidence', 
+                'analysis', 'emotions', 'dominant_emotion', 'sarcasm_detected',
+                'topics_detected', 'aspects_analysis', 'timestamp'
+            ]
+            
+            for field in required_result_fields:
+                if field not in result:
+                    print(f"❌ Missing field in results[{i}]: {field}")
+                    return False
+            
+            # Validate sentiment values
+            if result['sentiment'] not in ['positive', 'negative', 'neutral']:
+                print(f"❌ Invalid sentiment in results[{i}]: {result['sentiment']}")
+                return False
+            
+            if not (0 <= result['confidence'] <= 1):
+                print(f"❌ Invalid confidence in results[{i}]: {result['confidence']}")
+                return False
+        
+        print(f"✅ Batch analysis response structure is valid")
+        print(f"   Batch ID: {response_data['batch_id']}")
+        print(f"   File ID: {response_data['file_id']}")
+        print(f"   Filename: {response_data['filename']}")
+        print(f"   Total Processed: {response_data['total_processed']}")
+        
+        # Show sample results
+        if response_data['results']:
+            sample_result = response_data['results'][0]
+            print(f"   Sample Result:")
+            print(f"     Text: {sample_result['text'][:50]}...")
+            print(f"     Sentiment: {sample_result['sentiment']} ({sample_result['confidence']:.2f})")
+            print(f"     Emotions: {len(sample_result.get('emotions', {}))} detected")
+            print(f"     Topics: {len(sample_result.get('topics_detected', []))} detected")
+            print(f"     Aspects: {len(sample_result.get('aspects_analysis', []))} detected")
+        
+        return True
+
+    def test_batch_analysis_invalid_file_id(self):
+        """Test batch analysis with invalid file ID"""
+        batch_data = {
+            "file_id": "invalid-file-id-12345",
+            "texts": [{"text": "Test text", "row_number": 1, "metadata": {}}]
+        }
+        
+        return self.run_test(
+            "Batch Analysis - Invalid File ID",
+            "POST",
+            "analyze-batch",
+            404,
+            data=batch_data
+        )
+
+    def test_batch_analysis_empty_texts(self):
+        """Test batch analysis with empty texts array"""
+        batch_data = {
+            "file_id": "test-file-id",
+            "texts": []
+        }
+        
+        return self.run_test(
+            "Batch Analysis - Empty Texts",
+            "POST",
+            "analyze-batch",
+            400,
+            data=batch_data
+        )
+
+    def test_file_processing_dependencies(self):
+        """Test that required file processing dependencies are available"""
+        print(f"\n🔍 Testing File Processing Dependencies...")
+        
+        dependencies_available = True
+        
+        try:
+            import pandas as pd
+            print(f"✅ pandas: {pd.__version__}")
+        except ImportError:
+            print(f"❌ pandas: Not available")
+            dependencies_available = False
+        
+        try:
+            import PyPDF2
+            print(f"✅ PyPDF2: {PyPDF2.__version__}")
+        except ImportError:
+            print(f"❌ PyPDF2: Not available")
+            dependencies_available = False
+        
+        try:
+            import openpyxl
+            print(f"✅ openpyxl: {openpyxl.__version__}")
+        except ImportError:
+            print(f"❌ openpyxl: Not available")
+            dependencies_available = False
+        
+        if dependencies_available:
+            print(f"✅ All file processing dependencies are available")
+            self.tests_passed += 1
+        else:
+            print(f"❌ Some file processing dependencies are missing")
+        
+        self.tests_run += 1
+        return dependencies_available, {}
+
+    def test_complete_file_upload_workflow(self):
+        """Test complete workflow: upload file -> extract texts -> batch analyze"""
+        print(f"\n🔄 Testing Complete File Upload Workflow...")
+        
+        # Step 1: Upload a file
+        txt_content = """Great product with excellent build quality!
+Terrible customer service experience.
+The pricing is reasonable for the features offered.
+Fast delivery and good packaging."""
+        
+        upload_success, upload_response = self.run_file_upload_test(
+            "Workflow Step 1 - Upload File",
+            txt_content.encode('utf-8'),
+            "workflow_test.txt",
+            200
+        )
+        
+        if not upload_success:
+            print(f"❌ Workflow failed at upload step")
+            return False, {}
+        
+        # Validate upload response
+        if not self.validate_file_upload_response(upload_response):
+            print(f"❌ Workflow failed at upload validation")
+            return False, {}
+        
+        # Step 2: Perform batch analysis
+        file_id = upload_response['file_id']
+        extracted_texts = upload_response['extracted_texts']
+        
+        batch_success, batch_response = self.test_batch_analysis(
+            file_id, extracted_texts, "workflow_test.txt"
+        )
+        
+        if not batch_success:
+            print(f"❌ Workflow failed at batch analysis step")
+            return False, {}
+        
+        # Validate batch response
+        if not self.validate_batch_analysis_response(batch_response):
+            print(f"❌ Workflow failed at batch validation")
+            return False, {}
+        
+        # Step 3: Verify results make sense
+        results = batch_response['results']
+        if len(results) != len(extracted_texts):
+            print(f"❌ Results count mismatch: {len(results)} vs {len(extracted_texts)}")
+            return False, {}
+        
+        # Check that different sentiments are detected
+        sentiments = [result['sentiment'] for result in results]
+        unique_sentiments = set(sentiments)
+        
+        print(f"   Detected sentiments: {sentiments}")
+        print(f"   Unique sentiments: {list(unique_sentiments)}")
+        
+        if len(unique_sentiments) > 1:
+            print(f"✅ Multiple sentiments detected in batch (good variation)")
+        else:
+            print(f"⚠️  All texts have same sentiment: {list(unique_sentiments)[0]}")
+        
+        # Check that aspects are detected in some results
+        results_with_aspects = [r for r in results if r.get('aspects_analysis')]
+        if results_with_aspects:
+            print(f"✅ Aspects detected in {len(results_with_aspects)}/{len(results)} results")
+        else:
+            print(f"⚠️  No aspects detected in any results")
+        
+        # Check that topics are detected in some results
+        results_with_topics = [r for r in results if r.get('topics_detected')]
+        if results_with_topics:
+            print(f"✅ Topics detected in {len(results_with_topics)}/{len(results)} results")
+        else:
+            print(f"⚠️  No topics detected in any results")
+        
+        print(f"✅ Complete workflow test passed")
+        return True, batch_response
+
 def main():
     print("🚀 Starting Brand Watch AI Backend API Tests - Aspect-Based Sentiment Analysis Feature")
     print("=" * 80)
