@@ -1353,6 +1353,13 @@ def main():
     if not all_categories_success:
         print(f"   Categories detected: {len(detected_categories)}/12")
     
+    # Special focus on aspect-based analysis results
+    print(f"\n🎯 ASPECT-BASED ANALYSIS SUMMARY:")
+    print(f"   Restaurant review aspects: {'✅ TESTED' if 'restaurant_response' in locals() else '❌ NOT TESTED'}")
+    print(f"   Product review aspects: {'✅ TESTED' if 'product_response' in locals() else '❌ NOT TESTED'}")
+    print(f"   Integration with existing features: {'✅ TESTED' if 'integration_response' in locals() else '❌ NOT TESTED'}")
+    print(f"   Data structure validation: {'✅ TESTED' if 'structure_response' in locals() else '❌ NOT TESTED'}")
+    
     if tester.tests_passed == tester.tests_run:
         print("🎉 All backend tests passed!")
         return 0
