@@ -620,6 +620,12 @@ const App = () => {
                                 <span>{item.topics_detected?.find(t => t.topic === item.primary_topic)?.display_name || item.primary_topic.replace('_', ' ')}</span>
                               </div>
                             )}
+                            {item.aspects_analysis && item.aspects_analysis.length > 0 && (
+                              <div className="inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs bg-emerald-500/20 text-emerald-300">
+                                <Tag className="h-3 w-3" />
+                                <span>{item.aspects_analysis.length} aspects</span>
+                              </div>
+                            )}
                           </div>
                           <span className="text-xs text-green-300">
                             {Math.round(item.confidence * 100)}%
