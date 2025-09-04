@@ -1582,7 +1582,7 @@ Fast delivery and good packaging."""
         return True, batch_response
 
 def main():
-    print("🚀 Starting Brand Watch AI Backend API Tests - Aspect-Based Sentiment Analysis Feature")
+    print("🚀 Starting Brand Watch AI Backend API Tests - File Upload & Batch Processing Feature")
     print("=" * 80)
     
     tester = BrandWatchAPITester()
@@ -1592,6 +1592,78 @@ def main():
     if not success:
         print("\n❌ Basic API connectivity failed. Stopping tests.")
         return 1
+
+    # NEW: Test file processing dependencies first - MAIN FOCUS
+    print("\n📦 Testing File Processing Dependencies - NEW FEATURE")
+    print("-" * 55)
+    deps_success, _ = tester.test_file_processing_dependencies()
+    if not deps_success:
+        print("\n⚠️  Some dependencies missing, but continuing with tests...")
+
+    # NEW: Test file upload functionality - MAIN FOCUS
+    print("\n📁 Testing File Upload Functionality - NEW FEATURE")
+    print("-" * 50)
+    
+    # Test TXT file upload
+    txt_success, txt_response = tester.test_upload_txt_file()
+    if txt_success:
+        tester.validate_file_upload_response(txt_response)
+    
+    # Test CSV file upload
+    csv_success, csv_response = tester.test_upload_csv_file()
+    if csv_success:
+        tester.validate_file_upload_response(csv_response)
+    
+    # Test Excel file upload
+    excel_success, excel_response = tester.test_upload_excel_file()
+    if excel_success and excel_response:  # Skip if pandas not available
+        tester.validate_file_upload_response(excel_response)
+    
+    # Test PDF file upload
+    pdf_success, pdf_response = tester.test_upload_pdf_file()
+    if pdf_success:
+        tester.validate_file_upload_response(pdf_response)
+    
+    # Test file upload error cases
+    print("\n🚨 Testing File Upload Error Handling")
+    print("-" * 40)
+    tester.test_upload_unsupported_file()
+    tester.test_upload_large_file()
+    tester.test_upload_empty_file()
+
+    # NEW: Test batch analysis functionality - MAIN FOCUS
+    print("\n⚡ Testing Batch Analysis Functionality - NEW FEATURE")
+    print("-" * 55)
+    
+    # Test batch analysis with uploaded files
+    if txt_success and txt_response:
+        batch_success, batch_response = tester.test_batch_analysis(
+            txt_response['file_id'], 
+            txt_response['extracted_texts'], 
+            txt_response['filename']
+        )
+        if batch_success:
+            tester.validate_batch_analysis_response(batch_response)
+    
+    if csv_success and csv_response:
+        batch_success, batch_response = tester.test_batch_analysis(
+            csv_response['file_id'], 
+            csv_response['extracted_texts'], 
+            csv_response['filename']
+        )
+        if batch_success:
+            tester.validate_batch_analysis_response(batch_response)
+    
+    # Test batch analysis error cases
+    print("\n🚨 Testing Batch Analysis Error Handling")
+    print("-" * 45)
+    tester.test_batch_analysis_invalid_file_id()
+    tester.test_batch_analysis_empty_texts()
+
+    # NEW: Test complete workflow - MAIN FOCUS
+    print("\n🔄 Testing Complete File Upload & Batch Analysis Workflow - NEW FEATURE")
+    print("-" * 70)
+    workflow_success, workflow_response = tester.test_complete_file_upload_workflow()
 
     # Test sentiment analysis with different text types
     print("\n📊 Testing Basic Sentiment Analysis Functionality")
