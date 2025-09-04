@@ -183,7 +183,19 @@ async def analyze_sentiment(text: str) -> dict:
             - Only include topics with confidence > 0.3
             - Primary topic should have highest confidence
             - Keywords should reflect actual words from the text that indicate the topic
-            - Topic summary should explain the main discussion focus"""
+            - Topic summary should explain the main discussion focus
+            
+            Aspect-Based Sentiment Analysis Guidelines:
+            - Identify specific aspects/features/components mentioned in the text
+            - Analyze sentiment for each aspect individually (may differ from overall sentiment)
+            - Common aspects include: Food Quality, Service Quality, Price/Value, Delivery Speed, Product Features, User Interface, Build Quality, Customer Support, Location/Ambiance, Staff Behavior, etc.
+            - Only include aspects with confidence > 0.4
+            - Aspect names should be clear and business-relevant (e.g., "Food Quality" not just "Food")
+            - Keywords should be actual words from text that relate to that aspect
+            - Explanation should be brief (1 sentence) about why that sentiment was assigned
+            - Each aspect can have different sentiments (e.g., positive food, negative service)
+            - Aspects summary should synthesize how different aspects contribute to overall experience
+            - If no clear aspects are detected, return empty array for aspects_analysis"""
         ).with_model("openai", "gpt-4o-mini")
         
         # Create user message
