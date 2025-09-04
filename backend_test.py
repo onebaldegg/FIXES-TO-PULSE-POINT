@@ -239,15 +239,62 @@ class BrandWatchAPITester:
             print(f"❌ topic_summary must be a string")
             return False
 
+        # Validate aspect analysis fields - NEW FEATURE
+        aspects_analysis = response_data.get('aspects_analysis', [])
+        if not isinstance(aspects_analysis, list):
+            print(f"❌ aspects_analysis must be a list")
+            return False
+
+        # Validate each aspect in aspects_analysis
+        for aspect in aspects_analysis:
+            if not isinstance(aspect, dict):
+                print(f"❌ Each aspect must be a dictionary")
+                return False
+            
+            required_aspect_fields = ['aspect', 'sentiment', 'confidence', 'keywords', 'explanation']
+            for field in required_aspect_fields:
+                if field not in aspect:
+                    print(f"❌ Missing aspect field: {field}")
+                    return False
+            
+            # Validate aspect sentiment
+            if aspect['sentiment'] not in ['positive', 'negative', 'neutral']:
+                print(f"❌ Invalid aspect sentiment: {aspect['sentiment']}")
+                return False
+            
+            # Validate aspect confidence
+            if not (0 <= aspect['confidence'] <= 1):
+                print(f"❌ Invalid aspect confidence: {aspect['confidence']}")
+                return False
+            
+            # Validate aspect keywords
+            if not isinstance(aspect['keywords'], list):
+                print(f"❌ Aspect keywords must be a list")
+                return False
+            
+            # Validate aspect explanation
+            if not isinstance(aspect['explanation'], str):
+                print(f"❌ Aspect explanation must be a string")
+                return False
+
+        # Validate aspects_summary
+        aspects_summary = response_data.get('aspects_summary', '')
+        if not isinstance(aspects_summary, str):
+            print(f"❌ aspects_summary must be a string")
+            return False
+
         print(f"✅ Response structure is valid")
         print(f"   Sentiment: {response_data['sentiment']} -> {response_data['adjusted_sentiment']}")
         print(f"   Sarcasm: {response_data['sarcasm_detected']} ({response_data['sarcasm_confidence']:.2f})")
         print(f"   Dominant emotion: {dominant_emotion} ({emotions.get(dominant_emotion, 0):.2f})")
         print(f"   Topics detected: {len(topics_detected)} topics")
+        print(f"   Aspects detected: {len(aspects_analysis)} aspects")
         if primary_topic:
             print(f"   Primary topic: {primary_topic}")
         if topic_summary:
             print(f"   Topic summary: {topic_summary[:100]}...")
+        if aspects_summary:
+            print(f"   Aspects summary: {aspects_summary[:100]}...")
         if response_data['sarcasm_indicators']:
             print(f"   Sarcasm indicators: {response_data['sarcasm_indicators']}")
         return True
