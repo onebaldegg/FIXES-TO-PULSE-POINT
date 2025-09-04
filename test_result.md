@@ -101,3 +101,98 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Implement Aspect-Based Sentiment Analysis feature for Brand Watch AI tool. This should analyze sentiment for specific aspects/features mentioned in text (e.g., 'Food: Positive, Service: Negative' for restaurant reviews) rather than just overall sentiment. The feature should integrate seamlessly with existing emotion detection, sarcasm detection, and topic analysis while maintaining the Matrix-themed UI."
+
+backend:
+  - task: "Add aspect-based sentiment analysis to LLM prompt"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to extend LLM prompt to detect aspects and their individual sentiments"
+
+  - task: "Update Pydantic models for aspect-based data"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to add aspects_analysis field to SentimentResponse and SentimentAnalysis models"
+
+  - task: "Modify analyze_sentiment function for aspect processing"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to process aspect analysis from LLM response and handle fallback cases"
+
+frontend:
+  - task: "Add aspect-based results display in main analysis"
+    implemented: false
+    working: "NA"
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to display aspect-sentiment pairs with visual indicators in current analysis section"
+
+  - task: "Add aspect-based results display in history"
+    implemented: false
+    working: "NA"
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to show aspect summaries in analysis history entries"
+
+  - task: "Update Matrix theme styling for aspect displays"
+    implemented: false
+    working: "NA"
+    file: "frontend/src/index.css"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to add aspect-specific color schemes and styling that fit Matrix theme"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 0
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Add aspect-based sentiment analysis to LLM prompt"
+    - "Update Pydantic models for aspect-based data"
+    - "Modify analyze_sentiment function for aspect processing"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+    - agent: "main"
+      message: "Starting implementation of Aspect-Based Sentiment Analysis. Will begin with backend changes to extend LLM prompt and data models, then update frontend display components. Feature should integrate seamlessly with existing emotion, sarcasm, and topic analysis."
