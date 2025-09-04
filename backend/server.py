@@ -55,6 +55,8 @@ class SentimentResponse(BaseModel):
     topics_detected: Optional[List[dict]] = []  # Array of detected topics with confidence
     primary_topic: Optional[str] = ""  # Topic with highest confidence
     topic_summary: Optional[str] = ""  # AI explanation of detected topics
+    aspects_analysis: Optional[List[dict]] = []  # Array of aspect-sentiment pairs
+    aspects_summary: Optional[str] = ""  # Summary of aspect-based insights
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class SentimentAnalysis(BaseModel):
