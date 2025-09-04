@@ -649,6 +649,13 @@ const App = () => {
                           </div>
                         )}
                         
+                        {/* Aspects summary in history */}
+                        {item.aspects_summary && (
+                          <div className="text-xs text-emerald-300 mb-2 italic">
+                            🎯 {item.aspects_summary}
+                          </div>
+                        )}
+                        
                         <div className="flex flex-wrap gap-1 mb-2">
                           {/* Topics Display */}
                           {item.topics_detected && item.topics_detected.length > 0 && (
