@@ -1892,6 +1892,19 @@ def main():
     print("\n" + "=" * 70)
     print(f"📊 FINAL RESULTS: {tester.tests_passed}/{tester.tests_run} tests passed")
     
+    # Special focus on file upload and batch processing results - MAIN FOCUS
+    print(f"\n📁 FILE UPLOAD & BATCH PROCESSING SUMMARY - NEW FEATURE:")
+    print(f"   Dependencies available: {'✅ YES' if deps_success else '❌ NO'}")
+    print(f"   TXT file upload: {'✅ WORKING' if txt_success else '❌ FAILED'}")
+    print(f"   CSV file upload: {'✅ WORKING' if csv_success else '❌ FAILED'}")
+    print(f"   Excel file upload: {'✅ WORKING' if excel_success and excel_response else '⚠️ SKIPPED/FAILED'}")
+    print(f"   PDF file upload: {'✅ WORKING' if pdf_success else '❌ FAILED'}")
+    print(f"   Complete workflow: {'✅ WORKING' if workflow_success else '❌ FAILED'}")
+    
+    # Check if all file formats are supported
+    file_formats_working = sum([txt_success, csv_success, pdf_success, excel_success and bool(excel_response)])
+    print(f"   Supported file formats: {file_formats_working}/4 (TXT, CSV, Excel, PDF)")
+    
     # Special focus on topic detection results
     print(f"\n🏷️  TOPIC DETECTION SUMMARY:")
     print(f"   All 12 categories detected: {'✅ YES' if all_categories_success else '❌ NO'}")
@@ -1904,6 +1917,19 @@ def main():
     print(f"   Product review aspects: {'✅ TESTED' if 'product_response' in locals() else '❌ NOT TESTED'}")
     print(f"   Integration with existing features: {'✅ TESTED' if 'integration_response' in locals() else '❌ NOT TESTED'}")
     print(f"   Data structure validation: {'✅ TESTED' if 'structure_response' in locals() else '❌ NOT TESTED'}")
+    
+    # Overall assessment
+    critical_features_working = all([
+        txt_success,  # TXT upload must work
+        csv_success,  # CSV upload must work  
+        workflow_success,  # Complete workflow must work
+        deps_success  # Dependencies must be available
+    ])
+    
+    if critical_features_working:
+        print(f"\n🎉 All critical file upload and batch processing features are working!")
+    else:
+        print(f"\n⚠️  Some critical file upload and batch processing features failed")
     
     if tester.tests_passed == tester.tests_run:
         print("🎉 All backend tests passed!")
