@@ -106,40 +106,49 @@ user_problem_statement: "Implement Aspect-Based Sentiment Analysis feature for B
 
 backend:
   - task: "Add aspect-based sentiment analysis to LLM prompt"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Initial task creation - need to extend LLM prompt to detect aspects and their individual sentiments"
+        - working: "NA"
+          agent: "main"
+          comment: "COMPLETED: Extended LLM system message to include aspect-based sentiment analysis. Added detailed guidelines for identifying specific aspects like Food Quality, Service Quality, Price/Value, etc. Updated JSON response format to include aspects_analysis array and aspects_summary field."
 
   - task: "Update Pydantic models for aspect-based data"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Initial task creation - need to add aspects_analysis field to SentimentResponse and SentimentAnalysis models"
+        - working: "NA"
+          agent: "main"
+          comment: "COMPLETED: Added aspects_analysis and aspects_summary fields to both SentimentResponse and SentimentAnalysis Pydantic models. These will store aspect-sentiment pairs with confidence scores."
 
   - task: "Modify analyze_sentiment function for aspect processing"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Initial task creation - need to process aspect analysis from LLM response and handle fallback cases"
+        - working: "NA"
+          agent: "main"
+          comment: "COMPLETED: Updated analyze_sentiment function to handle aspects_analysis from LLM response. Added validation for aspect structure and fallback aspect detection using keyword patterns. Updated API endpoint to include new fields in response."
 
 frontend:
   - task: "Add aspect-based results display in main analysis"
