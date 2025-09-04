@@ -147,9 +147,9 @@ async def analyze_sentiment(text: str) -> dict:
             }
             
             Rules:
-            - sentiment must be exactly "positive", "negative", or "neutral" (surface-level sentiment)
+            - sentiment must be exactly "positive", "negative", or "neutral" (overall surface-level sentiment)
             - confidence must be a number between 0 and 1
-            - analysis should be 1-2 sentences explaining the sentiment, emotions, sarcasm, and topics
+            - analysis should be 1-2 sentences explaining the sentiment, emotions, sarcasm, topics, and aspects
             - emotions: Use Plutchik's 8 basic emotions, each scored 0-1
             - dominant_emotion: The emotion with the highest score
             - sarcasm_detected: true if irony/sarcasm is present, false otherwise
@@ -160,6 +160,8 @@ async def analyze_sentiment(text: str) -> dict:
             - topics_detected: Array of topic objects with topic, display_name, confidence, and keywords
             - primary_topic: The topic with the highest confidence score
             - topic_summary: Brief explanation of what topics the text discusses
+            - aspects_analysis: Array of specific aspects mentioned in text with individual sentiments
+            - aspects_summary: Brief summary of how different aspects contribute to overall experience
             - Return ONLY the JSON, no other text
             
             Topic Categories (use these exact topic values):
