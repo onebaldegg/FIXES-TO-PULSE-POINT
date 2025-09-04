@@ -75,6 +75,8 @@ class SentimentAnalysis(BaseModel):
     topics_detected: Optional[List[dict]] = []
     primary_topic: Optional[str] = ""
     topic_summary: Optional[str] = ""
+    aspects_analysis: Optional[List[dict]] = []
+    aspects_summary: Optional[str] = ""
     timestamp: datetime
 
 
