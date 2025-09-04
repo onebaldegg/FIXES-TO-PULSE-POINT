@@ -1109,8 +1109,8 @@ class BrandWatchAPITester:
         return success, response
 
 def main():
-    print("🚀 Starting Brand Watch AI Backend API Tests - Topic Detection Feature")
-    print("=" * 70)
+    print("🚀 Starting Brand Watch AI Backend API Tests - Aspect-Based Sentiment Analysis Feature")
+    print("=" * 80)
     
     tester = BrandWatchAPITester()
     
