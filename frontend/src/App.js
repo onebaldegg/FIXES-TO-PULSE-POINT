@@ -77,6 +77,115 @@ const App = () => {
     }
   };
 
+  // File upload functions
+  const handleFileUpload = async (file) => {
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['text/plain', 'text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf'];
+    const allowedExtensions = ['txt', 'csv', 'xls', 'xlsx', 'pdf'];
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+
+    if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
+      toast({
+        title: "Invalid File Type",
+        description: "Please upload TXT, CSV, Excel, or PDF files only.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File Too Large",
+        description: "Please upload files smaller than 5MB.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUploadLoading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axios.post(`${API}/upload-file`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setUploadedFile(response.data);
+      toast({
+        title: "File Uploaded Successfully",
+        description: `Extracted ${response.data.total_entries} text entries from ${response.data.filename}`,
+      });
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      toast({
+        title: "Upload Failed",
+        description: error.response?.data?.detail || "Failed to upload file. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
+  const handleBatchAnalysis = async () => {
+    if (!uploadedFile) {
+      toast({
+        title: "No File",
+        description: "Please upload a file first.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setBatchLoading(true);
+    try {
+      const response = await axios.post(`${API}/analyze-batch`, {
+        file_id: uploadedFile.file_id,
+        texts: uploadedFile.extracted_texts
+      });
+
+      setBatchResults(response.data);
+      toast({
+        title: "Batch Analysis Complete",
+        description: `Analyzed ${response.data.total_processed} text entries successfully`,
+      });
+    } catch (error) {
+      console.error("Error in batch analysis:", error);
+      toast({
+        title: "Analysis Failed",
+        description: error.response?.data?.detail || "Failed to analyze batch. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setBatchLoading(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragActive(false);
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      handleFileUpload(files[0]);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragActive(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragActive(false);
+  };
+
   const getSentimentIcon = (sentiment) => {
     switch (sentiment) {
       case "positive":
