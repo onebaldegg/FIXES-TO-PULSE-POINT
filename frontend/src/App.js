@@ -390,7 +390,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                       current: usage.files_uploaded || 0, 
                       limit: limits.files,
                       icon: Upload,
-                      color: 'from-emerald-600 to-green-600'
+                      color: 'from-[#42DF50] to-[#42DF50]'
                     },
                     { 
                       label: 'URLs Analyzed', 
