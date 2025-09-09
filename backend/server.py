@@ -1380,9 +1380,18 @@ async def get_sentiment_history(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @api_router.post("/upload-file", response_model=FileUploadResponse)
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(
+    file: UploadFile = File(...),
+    current_user = Depends(get_current_verified_user)
+):
     """Upload and parse file for batch sentiment analysis"""
     try:
+        # Check usage limits
+        if not await check_usage_limits(current_user, "files_uploaded"):
+            raise HTTPException(
+                status_code=status.HTTP_402_PAYMENT_REQUIRED,
+                detail="Monthly file upload limit reached. Please upgrade your plan."
+            )
         # Validate file size (5MB limit)
         MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB in bytes
         file_size = len(await file.read())
