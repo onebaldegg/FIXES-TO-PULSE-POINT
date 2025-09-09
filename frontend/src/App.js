@@ -1107,6 +1107,215 @@ const App = () => {
                     </div>
                   </div>
                 )}
+
+                {/* Single URL Analysis Results */}
+                {urlResults && activeTab === "url" && (
+                  <Alert className="border-blue-500/30 bg-blue-950/30">
+                    <CheckCircle className="h-4 w-4 text-blue-400" />
+                    <AlertDescription className="text-blue-100">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium">{urlResults.title || 'Webpage Analysis'}</p>
+                            <div className="flex items-center space-x-4 text-sm text-blue-300 mt-1">
+                              <span>{urlResults.text_length} characters</span>
+                              <span>{urlResults.processing_time.toFixed(2)}s processing</span>
+                              {urlResults.author && <span>by {urlResults.author}</span>}
+                            </div>
+                          </div>
+                          <Badge variant={getSentimentBadgeVariant(urlResults.sentiment)} className="text-sm">
+                            {urlResults.sentiment} ({Math.round(urlResults.confidence * 100)}%)
+                          </Badge>
+                        </div>
+
+                        {/* URL Analysis Details */}
+                        <div className="grid grid-cols-1 gap-3">
+                          {/* Aspects Analysis Display for URL */}
+                          {urlResults.aspects_analysis && urlResults.aspects_analysis.length > 0 && (
+                            <div className="space-y-2">
+                              <span className="text-sm font-medium text-blue-200">Aspects Detected:</span>
+                              <div className="flex flex-wrap gap-2">
+                                {urlResults.aspects_analysis.slice(0, 4).map((aspect, index) => (
+                                  <div key={index} className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30`}>
+                                    {getSentimentIcon(aspect.sentiment)}
+                                    <span>{aspect.aspect}</span>
+                                    <span>({Math.round(aspect.confidence * 100)}%)</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Topics Display for URL */}
+                          {urlResults.topics_detected && urlResults.topics_detected.length > 0 && (
+                            <div className="space-y-2">
+                              <span className="text-sm font-medium text-blue-200">Topics Detected:</span>
+                              <div className="flex flex-wrap gap-2">
+                                {urlResults.topics_detected.slice(0, 3).map((topic, index) => (
+                                  <div key={topic.topic} className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getTopicColor(topic.topic)}`}>
+                                    {getTopicIcon(topic.topic)}
+                                    <span>{topic.display_name}</span>
+                                    <span>({Math.round(topic.confidence * 100)}%)</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Emotions Display for URL */}
+                          {urlResults.emotions && Object.keys(urlResults.emotions).length > 0 && (
+                            <div className="space-y-2">
+                              <span className="text-sm font-medium text-blue-200">Emotions Detected:</span>
+                              <div className="flex flex-wrap gap-2">
+                                {Object.entries(urlResults.emotions)
+                                  .filter(([_, confidence]) => confidence > 0.2)
+                                  .sort(([, a], [, b]) => b - a)
+                                  .slice(0, 3)
+                                  .map(([emotion, confidence]) => (
+                                    <div key={emotion} className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getEmotionColor(emotion)}`}>
+                                      {getEmotionIcon(emotion)}
+                                      <span>{formatEmotionName(emotion)}</span>
+                                      <span>({Math.round(confidence * 100)}%)</span>
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Sarcasm Warning for URL */}
+                          {urlResults.sarcasm_detected && (
+                            <div className="flex items-center space-x-2 p-2 bg-orange-950/30 border border-orange-500/30 rounded-lg">
+                              <AlertTriangle className="h-4 w-4 text-orange-400" />
+                              <div className="text-sm">
+                                <span className="text-orange-200 font-medium">Sarcasm Detected</span>
+                                <span className="text-orange-300 ml-2">
+                                  Appears {urlResults.sentiment} but likely {urlResults.adjusted_sentiment}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="text-xs text-blue-300 pt-2 border-t border-blue-500/20">
+                          <p className="italic">"{urlResults.extracted_text.substring(0, 200)}..."</p>
+                          <p className="mt-1">Source: {urlResults.url}</p>
+                        </div>
+                      </div>
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Batch URL Analysis Results */}
+                {batchUrlResults && activeTab === "url" && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-cyan-950/30 border border-cyan-500/30 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="h-5 w-5 text-cyan-400" />
+                        <div>
+                          <p className="text-cyan-200 font-medium">Batch URL Analysis Complete</p>
+                          <p className="text-cyan-300 text-sm">
+                            {batchUrlResults.total_processed}/{batchUrlResults.total_requested} URLs analyzed successfully
+                            {batchUrlResults.total_failed > 0 && ` (${batchUrlResults.total_failed} failed)`}
+                          </p>
+                        </div>
+                      </div>
+                      <Button 
+                        size="sm"
+                        className="bg-cyan-600 hover:bg-cyan-700"
+                        onClick={() => {
+                          const csvContent = "data:text/csv;charset=utf-8," + 
+                            encodeURIComponent(
+                              "URL,Title,Sentiment,Confidence,Text Length,Processing Time,Dominant Emotion,Primary Topic,Aspects Count\n" +
+                              batchUrlResults.results.map(result => 
+                                `"${result.url}","${(result.title || '').replace(/"/g, '""')}","${result.sentiment}","${result.confidence}","${result.text_length}","${result.processing_time}","${result.dominant_emotion}","${result.primary_topic}","${result.aspects_analysis?.length || 0}"`
+                              ).join("\n")
+                            );
+                          const link = document.createElement("a");
+                          link.setAttribute("href", csvContent);
+                          link.setAttribute("download", `batch_url_analysis_${new Date().toISOString().split('T')[0]}.csv`);
+                          link.click();
+                        }}
+                      >
+                        <Download className="mr-1 h-3 w-3" />
+                        Export CSV
+                      </Button>
+                    </div>
+
+                    {/* Batch URL Results Summary */}
+                    <div className="grid grid-cols-3 gap-4">
+                      {(() => {
+                        const sentimentCounts = batchUrlResults.results.reduce((acc, result) => {
+                          acc[result.sentiment] = (acc[result.sentiment] || 0) + 1;
+                          return acc;
+                        }, {});
+                        return (
+                          <>
+                            <div className="text-center p-3 bg-green-950/30 border border-green-500/30 rounded-lg">
+                              <div className="text-2xl font-bold text-green-400">{sentimentCounts.positive || 0}</div>
+                              <div className="text-xs text-green-300">Positive</div>
+                            </div>
+                            <div className="text-center p-3 bg-red-950/30 border border-red-500/30 rounded-lg">
+                              <div className="text-2xl font-bold text-red-400">{sentimentCounts.negative || 0}</div>
+                              <div className="text-xs text-red-300">Negative</div>
+                            </div>
+                            <div className="text-center p-3 bg-slate-950/30 border border-slate-500/30 rounded-lg">
+                              <div className="text-2xl font-bold text-slate-400">{sentimentCounts.neutral || 0}</div>
+                              <div className="text-xs text-slate-300">Neutral</div>
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </div>
+
+                    {/* Sample URL Results Preview */}
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-cyan-200">Sample Results Preview:</p>
+                      <div className="max-h-64 overflow-y-auto space-y-2">
+                        {batchUrlResults.results.slice(0, 3).map((result, index) => (
+                          <div key={index} className="p-3 bg-black/40 border border-cyan-500/20 rounded-lg">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center space-x-2">
+                                <Badge variant={getSentimentBadgeVariant(result.sentiment)} className="text-xs">
+                                  {result.sentiment}
+                                </Badge>
+                                <span className="text-xs text-cyan-300">
+                                  {result.text_length} chars • {result.processing_time.toFixed(1)}s
+                                </span>
+                                {result.aspects_analysis && result.aspects_analysis.length > 0 && (
+                                  <Badge className="text-xs bg-emerald-500/20 text-emerald-300">
+                                    {result.aspects_analysis.length} aspects
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+                            <p className="text-sm text-cyan-200 font-medium line-clamp-1">
+                              {result.title || 'Untitled'}
+                            </p>
+                            <p className="text-xs text-cyan-300 line-clamp-1 mt-1">
+                              {result.url}
+                            </p>
+                            {result.aspects_analysis && result.aspects_analysis.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {result.aspects_analysis.slice(0, 3).map((aspect, aspIdx) => (
+                                  <span key={aspIdx} className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 rounded text-xs">
+                                    {aspect.aspect}: {aspect.sentiment}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                        {batchUrlResults.results.length > 3 && (
+                          <div className="text-center py-2">
+                            <span className="text-sm text-cyan-300">
+                              ...and {batchUrlResults.results.length - 3} more results
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
