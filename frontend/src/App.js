@@ -1593,7 +1593,7 @@ const AppContent = () => {
                     >
                       <FileUp className={`mx-auto h-12 w-12 mb-4`} style={{color: '#42DF50'}} />
                       <div className="space-y-2">
-                        <p className="text-green-100 font-medium">
+                        <p className="font-medium" style={{color: '#42DF50'}}>
                           {isDragActive ? "Drop your file here" : "Drag & drop your file here"}
                         </p>
                         <p className="text-green-300 text-sm">
