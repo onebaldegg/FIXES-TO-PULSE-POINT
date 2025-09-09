@@ -8,7 +8,7 @@ import os
 from datetime import datetime
 
 class BrandWatchAPITester:
-    def __init__(self, base_url="https://prwatch-ai.preview.emergentagent.com"):
+    def __init__(self, base_url="https://brand-monitor-2.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.tests_run = 0
