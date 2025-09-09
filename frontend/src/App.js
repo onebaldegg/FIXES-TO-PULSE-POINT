@@ -1919,7 +1919,7 @@ const AppContent = () => {
                                   <Badge variant={getSentimentBadgeVariant(analysis.sentiment)} className="text-xs">
                                     {analysis.sentiment}
                                   </Badge>
-                                  <span className="text-xs text-green-300">{Math.round(analysis.confidence * 100)}%</span>
+                                  <span className="text-xs" style={{color: '#42DF50'}}>{Math.round(analysis.confidence * 100)}%</span>
                                 </div>
                               </div>
                               <div>
