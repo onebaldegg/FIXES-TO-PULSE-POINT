@@ -1454,7 +1454,7 @@ const AppContent = () => {
                       </button>
 
                       {/* User Menu */}
-                      <div className="relative">
+                      <div className="relative z-[100000]">
                       <button
                         onClick={() => setShowUserMenu(!showUserMenu)}
                         className="flex items-center space-x-1 sm:space-x-2 bg-black/40 px-2 sm:px-3 py-1 sm:py-2 rounded-lg border transition-colors"
