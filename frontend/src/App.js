@@ -376,16 +376,16 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
               {/* User Info Card */}
               <Card className="bg-black/60 border-green-500/20">
                 <CardContent className="p-4 sm:p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{background: '#42DF50'}}>
-                        <User className="h-8 w-8 text-white" />
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                    <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center flex-shrink-0" style={{background: '#42DF50'}}>
+                        <User className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                       </div>
-                      <div>
-                        <h3 className="text-xl font-bold" style={{color: '#42DF50'}}>{user.full_name}</h3>
-                        <p style={{color: '#42DF50'}}>{user.email}</p>
-                        <div className="flex items-center space-x-2 mt-2">
-                          <Badge variant={user.subscription_tier === 'pro' ? 'default' : 'secondary'}>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-lg sm:text-xl font-bold truncate" style={{color: '#42DF50'}}>{user.full_name}</h3>
+                        <p className="text-sm sm:text-base truncate" style={{color: '#42DF50'}}>{user.email}</p>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 mt-2">
+                          <Badge variant={user.subscription_tier === 'pro' ? 'default' : 'secondary'} className="text-xs">
                             {user.subscription_tier.toUpperCase()} PLAN
                           </Badge>
                           <span className="text-xs" style={{color: '#42DF50'}}>
@@ -394,13 +394,13 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                         </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm" style={{color: '#42DF50'}}>Member since</p>
-                      <p style={{color: '#42DF50'}}>{new Date(user.created_at).toLocaleDateString()}</p>
+                    <div className="text-left sm:text-right flex-shrink-0 w-full sm:w-auto">
+                      <p className="text-xs sm:text-sm" style={{color: '#42DF50'}}>Member since</p>
+                      <p className="text-xs sm:text-base" style={{color: '#42DF50'}}>{new Date(user.created_at).toLocaleDateString()}</p>
                       {user.last_login && (
                         <>
-                          <p className="text-sm mt-2" style={{color: '#42DF50'}}>Last login</p>
-                          <p style={{color: '#42DF50'}}>{new Date(user.last_login).toLocaleDateString()}</p>
+                          <p className="text-xs sm:text-sm mt-2" style={{color: '#42DF50'}}>Last login</p>
+                          <p className="text-xs sm:text-base" style={{color: '#42DF50'}}>{new Date(user.last_login).toLocaleDateString()}</p>
                         </>
                       )}
                     </div>
