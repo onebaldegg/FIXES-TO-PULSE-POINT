@@ -1342,6 +1342,33 @@ class BrandWatchAPITester:
         
         return False, {}
 
+    def test_password_reset_request(self):
+        """Test password reset request"""
+        reset_data = {
+            "email": "onebaldegg@gmail.com"
+        }
+        
+        return self.run_test(
+            "Password Reset Request",
+            "POST",
+            "auth/forgot-password",
+            200,
+            data=reset_data
+        )
+
+    def test_user_login_invalid_credentials(self):
+        """Test user login with invalid credentials"""
+        login_data = {
+            "username": "onebaldegg@gmail.com",
+            "password": "wrongpassword"
+        }
+        
+        return self.run_oauth2_login_test(
+            "User Login - Invalid Credentials",
+            login_data,
+            401
+        )
+
     # URL ANALYSIS TESTS - NEW FEATURE
     def test_analyze_single_url_news_article(self):
         """Test single URL analysis with a news article"""
