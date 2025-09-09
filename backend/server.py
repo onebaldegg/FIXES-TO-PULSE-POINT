@@ -1579,12 +1579,16 @@ async def analyze_url(
             processing_time=url_data.get('processing_time', 0.0)
         )
         
-        # Store URL analysis in database
+        # Store URL analysis in database with user association
         url_analysis_data = response.dict()
         url_analysis_data['timestamp'] = url_analysis_data['timestamp'].isoformat()
+        url_analysis_data['user_id'] = current_user["id"]
         await db.url_analyses.insert_one(url_analysis_data)
         
-        logger.info(f"Successfully analyzed URL: {request.url[:100]}...")
+        # Increment usage counter
+        await increment_usage(current_user["id"], "urls_analyzed")
+        
+        logger.info(f"Successfully analyzed URL for user {current_user['email']}: {request.url[:100]}...")
         return response
         
     except HTTPException:
