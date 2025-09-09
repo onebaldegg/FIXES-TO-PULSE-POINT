@@ -2663,8 +2663,6 @@ const AppContent = () => {
         </div>
       </div>
 
-      {/* Authentication Modal */}
-      <AuthModal />
     </div>
   );
 };
