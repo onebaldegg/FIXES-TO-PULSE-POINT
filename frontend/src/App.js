@@ -1599,7 +1599,7 @@ const AppContent = () => {
             {/* Analysis Panel */}
             <Card className="shadow-2xl border-0 bg-black/60 backdrop-blur-lg border border-green-500/20">
               <CardHeader className="pb-4">
-                <CardTitle className="text-2xl font-semibold" style={{color: '#42DF50'}}>
+                <CardTitle className="text-lg sm:text-2xl font-semibold" style={{color: '#42DF50'}}>
                   {activeTab === "text" ? "Sentiment Analysis" : 
                    activeTab === "file" ? "File Upload & Analysis" :
                    "URL Analysis & Web Scraping"}
