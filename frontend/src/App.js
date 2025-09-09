@@ -407,8 +407,8 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                             <stat.icon className="h-6 w-6 text-white" />
                           </div>
                           <div className="text-right">
-                            <p className="text-2xl font-bold text-green-100">{stat.current}</p>
-                            <p className="text-sm text-green-300">of {stat.limit}</p>
+                            <p className="text-2xl font-bold" style={{color: '#42DF50'}}>{stat.current}</p>
+                            <p className="text-sm" style={{color: '#42DF50'}}>of {stat.limit}</p>
                           </div>
                         </div>
                         <div className="space-y-2">
