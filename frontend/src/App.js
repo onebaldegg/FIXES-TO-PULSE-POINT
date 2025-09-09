@@ -2362,7 +2362,7 @@ const AppContent = () => {
                             {Math.round(item.confidence * 100)}%
                           </span>
                         </div>
-                        <p className="text-sm text-green-200 mb-2 line-clamp-2">
+                        <p className="text-sm mb-2 line-clamp-2" style={{color: '#42DF50'}}>
                           "{item.text.length > 100 ? item.text.substring(0, 100) + "..." : item.text}"
                         </p>
                         
