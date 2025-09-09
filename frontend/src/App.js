@@ -663,6 +663,84 @@ const App = () => {
                       </div>
                     )}
                   </>
+                ) : (
+                  // URL Analysis Mode
+                  <>
+                    {/* Single URL Analysis */}
+                    <div className="space-y-4">
+                      <div className="space-y-3">
+                        <label className="text-sm font-medium text-green-200">
+                          Website URL to Analyze
+                        </label>
+                        <div className="flex space-x-2">
+                          <input
+                            type="url"
+                            placeholder="https://example.com/article"
+                            value={url}
+                            onChange={(e) => setUrl(e.target.value)}
+                            className="flex-1 px-3 py-2 bg-black/40 border border-green-500/30 rounded-lg text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50 focus:outline-none"
+                          />
+                          <Button 
+                            onClick={analyzeUrl}
+                            disabled={urlLoading || !url.trim()}
+                            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium px-6 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border border-blue-500/20"
+                          >
+                            {urlLoading ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Analyzing...
+                              </>
+                            ) : (
+                              <>
+                                <Monitor className="mr-2 h-4 w-4" />
+                                Analyze
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                        <p className="text-xs text-green-400/80">
+                          Supports news articles, blog posts, product pages, and any web content
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Batch URL Analysis */}
+                    <div className="mt-6 pt-6 border-t border-green-500/20">
+                      <div className="space-y-3">
+                        <label className="text-sm font-medium text-green-200">
+                          Batch URL Analysis (One URL per line)
+                        </label>
+                        <Textarea
+                          placeholder={`https://example.com/article1\nhttps://example.com/article2\nhttps://example.com/article3`}
+                          value={urls}
+                          onChange={(e) => setUrls(e.target.value)}
+                          className="min-h-[100px] resize-none bg-black/40 border-green-500/30 text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50"
+                        />
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs text-green-400/80">
+                            Maximum 20 URLs per batch
+                          </p>
+                          <Button 
+                            onClick={analyzeBatchUrls}
+                            disabled={batchUrlLoading || !urls.trim()}
+                            className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border border-cyan-500/20"
+                          >
+                            {batchUrlLoading ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Processing {urls.split('\n').filter(u => u.trim()).length} URLs...
+                              </>
+                            ) : (
+                              <>
+                                <BarChart3 className="mr-2 h-4 w-4" />
+                                Analyze All URLs
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </>
                 )}
 
                 {/* Current Analysis Result */}
