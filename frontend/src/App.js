@@ -1422,7 +1422,9 @@ const AppContent = () => {
             <div className="max-w-4xl mx-auto text-center pointer-events-auto">
               <div className="flex flex-col items-center justify-center text-center mb-6">
                 <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-24 w-24 mb-4" />
-                <img src="/pulse-point-logo.png" alt="Pulse Point Logo" className="h-30 w-auto" />
+                <div className="flex justify-center w-full">
+                  <img src="/pulse-point-logo.png" alt="Pulse Point Logo" className="h-30 w-auto mx-auto" />
+                </div>
               </div>
               <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
                 Advanced sentiment analysis for PR and marketing professionals. Analyze brand mentions, customer feedback, and campaign performance with AI-powered insights.
