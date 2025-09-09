@@ -344,6 +344,112 @@ class URLProcessor:
 # Initialize URL processor
 url_processor = URLProcessor()
 
+# Authentication Configuration
+SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-here-change-in-production")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+REFRESH_TOKEN_EXPIRE_DAYS = 7
+
+# Email Configuration
+SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
+SMTP_USERNAME = os.getenv("SMTP_USERNAME")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD") 
+FROM_EMAIL = os.getenv("FROM_EMAIL")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://sentimentmatrix.preview.emergentagent.com")
+
+# Security utilities
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+
+# Email template engine
+email_templates = {
+    "verification_email": """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Email Verification</title>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #0a0a0a; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { padding: 30px; background: linear-gradient(135deg, #1a1a1a, #2a2a2a); border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; padding: 15px 30px; background: linear-gradient(135deg, #10b981, #059669); 
+                      color: white; text-decoration: none; border-radius: 8px; margin: 20px 0; font-weight: bold; }
+            .footer { text-align: center; padding: 20px; font-size: 12px; color: #888; }
+            .text { color: #e5e5e5; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🛡️ Brand Watch AI</h1>
+                <h2>Verify Your Email</h2>
+            </div>
+            <div class="content">
+                <p class="text">Hello {{ user_name }},</p>
+                <p class="text">Welcome to Brand Watch AI! To complete your registration and unlock full access to our sentiment analysis platform, please verify your email address:</p>
+                <p style="text-align: center;">
+                    <a href="{{ verification_url }}" class="button">Verify Email Address</a>
+                </p>
+                <p class="text">If the button doesn't work, copy and paste this link:</p>
+                <p style="word-break: break-all; color: #10b981;">{{ verification_url }}</p>
+                <p class="text"><strong>This link expires in 24 hours for security.</strong></p>
+                <p class="text">If you didn't create an account, please ignore this email.</p>
+            </div>
+            <div class="footer">
+                <p>&copy; 2024 Brand Watch AI. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """,
+    "password_reset": """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Password Reset</title>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #0a0a0a; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { padding: 30px; background: linear-gradient(135deg, #1a1a1a, #2a2a2a); border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; padding: 15px 30px; background: linear-gradient(135deg, #dc2626, #b91c1c); 
+                      color: white; text-decoration: none; border-radius: 8px; margin: 20px 0; font-weight: bold; }
+            .footer { text-align: center; padding: 20px; font-size: 12px; color: #888; }
+            .text { color: #e5e5e5; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🔐 Brand Watch AI</h1>
+                <h2>Password Reset Request</h2>
+            </div>
+            <div class="content">
+                <p class="text">Hello {{ user_name }},</p>
+                <p class="text">We received a request to reset your password. If you made this request, click the button below to reset your password:</p>
+                <p style="text-align: center;">
+                    <a href="{{ reset_url }}" class="button">Reset Password</a>
+                </p>
+                <p class="text">If the button doesn't work, copy and paste this link:</p>
+                <p style="word-break: break-all; color: #dc2626;">{{ reset_url }}</p>
+                <p class="text"><strong>This link expires in {{ expiry_minutes }} minutes for security.</strong></p>
+                <p class="text">If you didn't request a password reset, please ignore this email and your password will remain unchanged.</p>
+            </div>
+            <div class="footer">
+                <p>&copy; 2024 Brand Watch AI. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+}
+
+template_env = Environment(loader=DictLoader(email_templates))
+
 # File Processing Utilities
 async def extract_text_from_file(file: UploadFile) -> List[dict]:
     """Extract text from uploaded files based on file type"""
