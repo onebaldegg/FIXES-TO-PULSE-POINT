@@ -167,6 +167,76 @@ class BatchURLResponse(BaseModel):
     processing_time: float
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+# User Authentication Models
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+    full_name: str
+    
+    @validator('password')
+    def validate_password(cls, v):
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters long')
+        if not any(c.isupper() for c in v):
+            raise ValueError('Password must contain at least one uppercase letter')
+        if not any(c.islower() for c in v):
+            raise ValueError('Password must contain at least one lowercase letter')
+        if not any(c.isdigit() for c in v):
+            raise ValueError('Password must contain at least one number')
+        return v
+    
+    @validator('full_name')
+    def validate_name(cls, v):
+        v = v.strip()
+        if len(v) < 2:
+            raise ValueError('Name must be at least 2 characters')
+        return v
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+class UserResponse(BaseModel):
+    id: str
+    email: EmailStr
+    full_name: str
+    is_active: bool
+    is_verified: bool
+    subscription_tier: str
+    created_at: datetime
+    last_login: Optional[datetime] = None
+    usage_stats: dict
+
+class TokenResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str
+    expires_in: int
+
+class UserProfileUpdate(BaseModel):
+    full_name: Optional[str] = None
+    current_password: Optional[str] = None
+    new_password: Optional[str] = None
+    
+    @validator('new_password')
+    def validate_new_password(cls, v):
+        if v and len(v) < 8:
+            raise ValueError('Password must be at least 8 characters long')
+        return v
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+class PasswordReset(BaseModel):
+    token: str
+    new_password: str
+    
+    @validator('new_password')
+    def validate_password(cls, v):
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters long')
+        return v
+
 
 # URL Processing Service
 class URLProcessor:
