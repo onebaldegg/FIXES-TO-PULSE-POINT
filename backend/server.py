@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 import pandas as pd
 import PyPDF2
+import pdfplumber
 import io
 import tempfile
 import json
