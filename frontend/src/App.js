@@ -1357,7 +1357,10 @@ const AppContent = () => {
                       <div className="relative">
                       <button
                         onClick={() => setShowUserMenu(!showUserMenu)}
-                        className="flex items-center space-x-2 bg-black/40 px-3 py-2 rounded-lg border border-green-500/30 hover:border-green-500/50 transition-colors"
+                        className="flex items-center space-x-2 bg-black/40 px-3 py-2 rounded-lg border transition-colors"
+                        style={{borderColor: '#42DF50'}}
+                        onMouseEnter={(e) => e.target.style.borderColor = '#42DF50'}
+                        onMouseLeave={(e) => e.target.style.borderColor = '#42DF50'}
                       >
                         <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full flex items-center justify-center">
                           <User className="h-4 w-4 text-white" />
