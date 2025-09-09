@@ -358,8 +358,8 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm text-green-300">Member since</p>
-                      <p className="text-green-100">{new Date(user.created_at).toLocaleDateString()}</p>
+                      <p className="text-sm" style={{color: '#42DF50'}}>Member since</p>
+                      <p style={{color: '#42DF50'}}>{new Date(user.created_at).toLocaleDateString()}</p>
                       {user.last_login && (
                         <>
                           <p className="text-sm text-green-300 mt-2">Last login</p>
