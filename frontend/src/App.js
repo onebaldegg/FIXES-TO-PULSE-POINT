@@ -738,7 +738,25 @@ const AppContent = () => {
 
     return (
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md shadow-2xl border-0 bg-black/80 backdrop-blur-lg border border-green-500/20">
+        {/* Matrix Video Background for Login */}
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="fixed inset-0 w-full h-full object-cover z-0"
+          style={{ filter: 'brightness(0.5) opacity(1.0)' }}
+        >
+          <source 
+            src="https://customer-assets.emergentagent.com/job_brand-monitor-2/artifacts/qlgtor1l_medium-vecteezy_looping-matrix-style-cyrillic-alphabet-code-rain-effect_6102172_medium%20%281%29.mp4" 
+            type="video/mp4" 
+          />
+        </video>
+
+        {/* Dark Overlay for Better Readability */}
+        <div className="fixed inset-0 bg-black/20 z-10"></div>
+
+        <Card className="w-full max-w-md shadow-2xl border-0 bg-black/80 backdrop-blur-lg border border-green-500/20 relative z-20">
           <CardHeader className="text-center pb-4">
             <div className="mx-auto flex flex-col items-center">
               <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-16 w-16" />
