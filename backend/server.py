@@ -181,22 +181,86 @@ async def extract_text_from_file(file: UploadFile) -> List[dict]:
                     })
                     
         elif file_extension == 'pdf':
-            # Process PDF files
+            # Process PDF files with improved text extraction
             content = await file.read()
-            pdf_reader = PyPDF2.PdfReader(io.BytesIO(content))
+            pdf_stream = io.BytesIO(content)
             
-            for page_num, page in enumerate(pdf_reader.pages, 1):
-                text_content = page.extract_text().strip()
-                if text_content:
-                    # Split into paragraphs for better analysis
-                    paragraphs = [p.strip() for p in text_content.split('\n\n') if p.strip()]
-                    for para_num, paragraph in enumerate(paragraphs, 1):
-                        if len(paragraph) > 10:  # Only process substantial text
-                            extracted_texts.append({
-                                "text": paragraph,
-                                "row_number": f"page_{page_num}_para_{para_num}",
-                                "metadata": {"source": f"PDF page {page_num}"}
-                            })
+            # Try pdfplumber first (more reliable)
+            try:
+                with pdfplumber.open(pdf_stream) as pdf:
+                    for page_num, page in enumerate(pdf.pages, 1):
+                        text_content = page.extract_text()
+                        if text_content and text_content.strip():
+                            # Clean up the text
+                            text_content = text_content.strip()
+                            
+                            # Split into paragraphs for better analysis
+                            paragraphs = [p.strip() for p in text_content.split('\n\n') if p.strip()]
+                            
+                            if not paragraphs:
+                                # If no double newlines, split by single newlines but filter longer chunks
+                                lines = [line.strip() for line in text_content.split('\n') if line.strip()]
+                                # Group lines into meaningful chunks
+                                current_chunk = []
+                                for line in lines:
+                                    current_chunk.append(line)
+                                    # If chunk is substantial, add it
+                                    if len(' '.join(current_chunk)) > 50:
+                                        paragraphs.append(' '.join(current_chunk))
+                                        current_chunk = []
+                                # Add remaining chunk if any
+                                if current_chunk and len(' '.join(current_chunk)) > 20:
+                                    paragraphs.append(' '.join(current_chunk))
+                            
+                            for para_num, paragraph in enumerate(paragraphs, 1):
+                                if len(paragraph) > 20:  # Only process substantial text
+                                    # Clean up the paragraph text
+                                    paragraph = ' '.join(paragraph.split())  # Normalize whitespace
+                                    extracted_texts.append({
+                                        "text": paragraph,
+                                        "row_number": f"page_{page_num}_para_{para_num}",
+                                        "metadata": {
+                                            "source": f"PDF page {page_num}",
+                                            "extractor": "pdfplumber"
+                                        }
+                                    })
+                        
+            except Exception as e:
+                logger.warning(f"pdfplumber failed for {file.filename}, trying PyPDF2: {e}")
+                
+                # Fallback to PyPDF2
+                try:
+                    pdf_stream.seek(0)  # Reset stream
+                    pdf_reader = PyPDF2.PdfReader(pdf_stream)
+                    
+                    for page_num, page in enumerate(pdf_reader.pages, 1):
+                        text_content = page.extract_text()
+                        if text_content and text_content.strip():
+                            text_content = text_content.strip()
+                            
+                            # Clean and split text
+                            paragraphs = [p.strip() for p in text_content.split('\n\n') if p.strip()]
+                            
+                            if not paragraphs:
+                                # Single paragraph from the page
+                                text_content = ' '.join(text_content.split())  # Normalize whitespace
+                                if len(text_content) > 20:
+                                    paragraphs = [text_content]
+                            
+                            for para_num, paragraph in enumerate(paragraphs, 1):
+                                if len(paragraph) > 20:
+                                    extracted_texts.append({
+                                        "text": paragraph,
+                                        "row_number": f"page_{page_num}_para_{para_num}",
+                                        "metadata": {
+                                            "source": f"PDF page {page_num}",
+                                            "extractor": "PyPDF2"
+                                        }
+                                    })
+                except Exception as e2:
+                    logger.error(f"Both PDF extractors failed for {file.filename}: pdfplumber={e}, PyPDF2={e2}")
+                    # Still allow the file to be processed, just with no extracted text
+                    pass
         else:
             raise HTTPException(status_code=400, detail=f"Unsupported file type: {file_extension}")
             
