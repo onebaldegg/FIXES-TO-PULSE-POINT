@@ -1544,11 +1544,11 @@ const AppContent = () => {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-6xl mx-auto px-6 pb-16">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 pb-8 sm:pb-16">
           {/* Tab Navigation */}
-          <div className="flex justify-center mb-8">
-            <div className="bg-black/60 backdrop-blur-lg rounded-xl p-1 border border-green-500/20">
-              <div className="flex space-x-1">
+          <div className="flex justify-center mb-4 sm:mb-8">
+            <div className="bg-black/60 backdrop-blur-lg rounded-xl p-1 border border-green-500/20 w-full sm:w-auto overflow-x-auto">
+              <div className="flex space-x-1 min-w-max sm:min-w-0">
                 <button
                   onClick={() => setActiveTab("text")}
                   className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
