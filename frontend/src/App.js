@@ -917,14 +917,21 @@ const App = () => {
             <Card className="shadow-2xl border-0 bg-black/60 backdrop-blur-lg border border-green-500/20">
               <CardHeader className="pb-4">
                 <CardTitle className="text-2xl font-semibold text-green-100">
-                  Recent Analysis
+                  {activeTab === "text" ? "Recent Analysis" : "Batch Analysis Results"}
                 </CardTitle>
                 <CardDescription className="text-green-200">
-                  Your sentiment analysis history
+                  {activeTab === "text" 
+                    ? "Your sentiment analysis history"
+                    : batchResults 
+                      ? "Detailed results from your uploaded file"
+                      : "Upload a file to see detailed batch analysis results"
+                  }
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4 max-h-96 overflow-y-auto">
+                {activeTab === "text" ? (
+                  // Text Analysis History
+                  <div className="space-y-4 max-h-96 overflow-y-auto">
                   {history.length === 0 ? (
                     <div className="text-center py-8 text-green-300">
                       <BarChart3 className="h-12 w-12 mx-auto mb-3 opacity-50" />
