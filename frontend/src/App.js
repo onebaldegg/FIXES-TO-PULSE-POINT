@@ -1304,7 +1304,7 @@ const AppContent = () => {
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold" style={{color: '#42DF50'}}>PULSE POINT</h1>
-                  <p className="text-green-300">Advanced Sentiment Analysis Platform</p>
+                  <p className="text-green-300" style={{color: '#42DF50'}}>Advanced Sentiment Analysis Platform</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
