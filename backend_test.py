@@ -1111,6 +1111,471 @@ class BrandWatchAPITester:
         
         return success, response
 
+    # URL ANALYSIS TESTS - NEW FEATURE
+    def test_analyze_single_url_news_article(self):
+        """Test single URL analysis with a news article"""
+        # Using a reliable news URL that should work
+        url_data = {
+            "url": "https://www.bbc.com/news",
+            "extract_full_content": True,
+            "include_metadata": True
+        }
+        
+        return self.run_test(
+            "Single URL Analysis - News Article",
+            "POST",
+            "analyze-url",
+            200,
+            data=url_data,
+            timeout=90  # URL processing can take longer
+        )
+
+    def test_analyze_single_url_blog_post(self):
+        """Test single URL analysis with a blog post"""
+        # Using a reliable blog URL
+        url_data = {
+            "url": "https://blog.github.com",
+            "extract_full_content": True,
+            "include_metadata": True
+        }
+        
+        return self.run_test(
+            "Single URL Analysis - Blog Post",
+            "POST",
+            "analyze-url",
+            200,
+            data=url_data,
+            timeout=90
+        )
+
+    def test_analyze_url_invalid_format(self):
+        """Test URL analysis with invalid URL format"""
+        url_data = {
+            "url": "not-a-valid-url",
+            "extract_full_content": True,
+            "include_metadata": True
+        }
+        
+        return self.run_test(
+            "URL Analysis - Invalid Format",
+            "POST",
+            "analyze-url",
+            400,
+            data=url_data
+        )
+
+    def test_analyze_url_unsupported_protocol(self):
+        """Test URL analysis with unsupported protocol"""
+        url_data = {
+            "url": "ftp://example.com/file.txt",
+            "extract_full_content": True,
+            "include_metadata": True
+        }
+        
+        return self.run_test(
+            "URL Analysis - Unsupported Protocol",
+            "POST",
+            "analyze-url",
+            400,
+            data=url_data
+        )
+
+    def test_analyze_url_nonexistent_domain(self):
+        """Test URL analysis with non-existent domain"""
+        url_data = {
+            "url": "https://this-domain-definitely-does-not-exist-12345.com",
+            "extract_full_content": True,
+            "include_metadata": True
+        }
+        
+        return self.run_test(
+            "URL Analysis - Non-existent Domain",
+            "POST",
+            "analyze-url",
+            500,  # Should return server error for inaccessible URLs
+            data=url_data,
+            timeout=60
+        )
+
+    def test_batch_url_analysis(self):
+        """Test batch URL analysis with multiple URLs"""
+        batch_data = {
+            "urls": [
+                "https://www.bbc.com/news",
+                "https://blog.github.com",
+                "https://stackoverflow.com"
+            ],
+            "extract_full_content": True,
+            "include_metadata": True
+        }
+        
+        return self.run_test(
+            "Batch URL Analysis - Multiple URLs",
+            "POST",
+            "analyze-batch-urls",
+            200,
+            data=batch_data,
+            timeout=180  # Batch processing takes longer
+        )
+
+    def test_batch_url_analysis_empty_list(self):
+        """Test batch URL analysis with empty URL list"""
+        batch_data = {
+            "urls": [],
+            "extract_full_content": True,
+            "include_metadata": True
+        }
+        
+        return self.run_test(
+            "Batch URL Analysis - Empty List",
+            "POST",
+            "analyze-batch-urls",
+            400,
+            data=batch_data
+        )
+
+    def test_batch_url_analysis_too_many_urls(self):
+        """Test batch URL analysis with too many URLs (>20)"""
+        # Create 21 URLs to exceed the limit
+        urls = [f"https://example{i}.com" for i in range(21)]
+        batch_data = {
+            "urls": urls,
+            "extract_full_content": True,
+            "include_metadata": True
+        }
+        
+        return self.run_test(
+            "Batch URL Analysis - Too Many URLs",
+            "POST",
+            "analyze-batch-urls",
+            400,
+            data=batch_data
+        )
+
+    def test_batch_url_analysis_mixed_results(self):
+        """Test batch URL analysis with mix of valid and invalid URLs"""
+        batch_data = {
+            "urls": [
+                "https://www.bbc.com/news",  # Should work
+                "https://invalid-domain-12345.com",  # Should fail
+                "https://blog.github.com"  # Should work
+            ],
+            "extract_full_content": True,
+            "include_metadata": True
+        }
+        
+        return self.run_test(
+            "Batch URL Analysis - Mixed Valid/Invalid",
+            "POST",
+            "analyze-batch-urls",
+            200,  # Should return 200 with partial results
+            data=batch_data,
+            timeout=120
+        )
+
+    def validate_url_analysis_response(self, response_data):
+        """Validate URL analysis response structure"""
+        required_fields = [
+            'id', 'url', 'extracted_text', 'text_length', 'sentiment', 
+            'confidence', 'analysis', 'emotions', 'dominant_emotion',
+            'sarcasm_detected', 'topics_detected', 'aspects_analysis',
+            'metadata', 'processing_time', 'timestamp'
+        ]
+        
+        print(f"\n🔍 Validating URL analysis response structure...")
+        
+        for field in required_fields:
+            if field not in response_data:
+                print(f"❌ Missing required field: {field}")
+                return False
+        
+        # Validate URL field
+        if not isinstance(response_data['url'], str) or not response_data['url'].startswith('http'):
+            print(f"❌ Invalid URL format: {response_data['url']}")
+            return False
+        
+        # Validate extracted text
+        if not isinstance(response_data['extracted_text'], str):
+            print(f"❌ extracted_text must be string")
+            return False
+        
+        if len(response_data['extracted_text']) < 10:
+            print(f"❌ Insufficient extracted text: {len(response_data['extracted_text'])} characters")
+            return False
+        
+        # Validate text length matches
+        if response_data['text_length'] != len(response_data['extracted_text']):
+            print(f"❌ text_length mismatch: {response_data['text_length']} vs {len(response_data['extracted_text'])}")
+            return False
+        
+        # Validate sentiment analysis fields (same as regular sentiment analysis)
+        if response_data['sentiment'] not in ['positive', 'negative', 'neutral']:
+            print(f"❌ Invalid sentiment: {response_data['sentiment']}")
+            return False
+        
+        if not (0 <= response_data['confidence'] <= 1):
+            print(f"❌ Invalid confidence: {response_data['confidence']}")
+            return False
+        
+        # Validate metadata structure
+        metadata = response_data.get('metadata', {})
+        if not isinstance(metadata, dict):
+            print(f"❌ metadata must be dictionary")
+            return False
+        
+        # Validate processing time
+        if not isinstance(response_data['processing_time'], (int, float)) or response_data['processing_time'] < 0:
+            print(f"❌ Invalid processing_time: {response_data['processing_time']}")
+            return False
+        
+        print(f"✅ URL analysis response structure is valid")
+        print(f"   URL: {response_data['url']}")
+        print(f"   Title: {response_data.get('title', 'N/A')}")
+        print(f"   Author: {response_data.get('author', 'N/A')}")
+        print(f"   Text Length: {response_data['text_length']} characters")
+        print(f"   Sentiment: {response_data['sentiment']} ({response_data['confidence']:.2f})")
+        print(f"   Processing Time: {response_data['processing_time']:.2f}s")
+        print(f"   Topics: {len(response_data.get('topics_detected', []))} detected")
+        print(f"   Aspects: {len(response_data.get('aspects_analysis', []))} detected")
+        
+        if metadata:
+            print(f"   Metadata fields: {list(metadata.keys())}")
+            if 'extraction_method' in metadata:
+                print(f"   Extraction Method: {metadata['extraction_method']}")
+        
+        return True
+
+    def validate_batch_url_analysis_response(self, response_data):
+        """Validate batch URL analysis response structure"""
+        required_fields = [
+            'batch_id', 'total_requested', 'total_processed', 'total_failed',
+            'results', 'failed_urls', 'processing_time', 'timestamp'
+        ]
+        
+        print(f"\n🔍 Validating batch URL analysis response structure...")
+        
+        for field in required_fields:
+            if field not in response_data:
+                print(f"❌ Missing required field: {field}")
+                return False
+        
+        # Validate counts
+        total_requested = response_data['total_requested']
+        total_processed = response_data['total_processed']
+        total_failed = response_data['total_failed']
+        
+        if total_processed + total_failed != total_requested:
+            print(f"❌ Count mismatch: processed({total_processed}) + failed({total_failed}) != requested({total_requested})")
+            return False
+        
+        # Validate results array
+        results = response_data['results']
+        if not isinstance(results, list):
+            print(f"❌ results must be list")
+            return False
+        
+        if len(results) != total_processed:
+            print(f"❌ Results count mismatch: {len(results)} vs {total_processed}")
+            return False
+        
+        # Validate failed_urls array
+        failed_urls = response_data['failed_urls']
+        if not isinstance(failed_urls, list):
+            print(f"❌ failed_urls must be list")
+            return False
+        
+        if len(failed_urls) != total_failed:
+            print(f"❌ Failed URLs count mismatch: {len(failed_urls)} vs {total_failed}")
+            return False
+        
+        # Validate each result has proper URL analysis structure
+        for i, result in enumerate(results):
+            if not self.validate_url_analysis_response(result):
+                print(f"❌ Invalid result structure at index {i}")
+                return False
+        
+        # Validate failed URL structure
+        for i, failed_url in enumerate(failed_urls):
+            if not isinstance(failed_url, dict):
+                print(f"❌ failed_urls[{i}] must be dict")
+                return False
+            
+            if 'url' not in failed_url or 'error' not in failed_url:
+                print(f"❌ failed_urls[{i}] missing required fields")
+                return False
+        
+        print(f"✅ Batch URL analysis response structure is valid")
+        print(f"   Batch ID: {response_data['batch_id']}")
+        print(f"   Total Requested: {total_requested}")
+        print(f"   Successfully Processed: {total_processed}")
+        print(f"   Failed: {total_failed}")
+        print(f"   Processing Time: {response_data['processing_time']:.2f}s")
+        
+        if failed_urls:
+            print(f"   Failed URLs:")
+            for failed in failed_urls:
+                print(f"     {failed['url']}: {failed['error']}")
+        
+        return True
+
+    def test_url_content_extraction_quality(self):
+        """Test quality of content extraction from URLs"""
+        # Test with a known content-rich URL
+        url_data = {
+            "url": "https://www.bbc.com/news",
+            "extract_full_content": True,
+            "include_metadata": True
+        }
+        
+        success, response = self.run_test(
+            "URL Content Extraction Quality",
+            "POST",
+            "analyze-url",
+            200,
+            data=url_data,
+            timeout=90
+        )
+        
+        if success:
+            extracted_text = response.get('extracted_text', '')
+            text_length = len(extracted_text)
+            
+            print(f"   Content Quality Assessment:")
+            print(f"     Text Length: {text_length} characters")
+            
+            # Check for reasonable content length
+            if text_length < 100:
+                print(f"⚠️  Very short extracted text ({text_length} chars)")
+            elif text_length < 500:
+                print(f"⚠️  Short extracted text ({text_length} chars)")
+            else:
+                print(f"✅ Good text length ({text_length} chars)")
+            
+            # Check for common web artifacts that should be cleaned
+            artifacts = ['javascript', 'cookie', 'advertisement', '©', 'privacy policy']
+            artifact_count = sum(1 for artifact in artifacts if artifact.lower() in extracted_text.lower())
+            
+            if artifact_count > 2:
+                print(f"⚠️  Many web artifacts detected ({artifact_count})")
+            else:
+                print(f"✅ Clean content extraction (few artifacts)")
+            
+            # Check if title was extracted
+            title = response.get('title', '')
+            if title and len(title) > 5:
+                print(f"✅ Title extracted: {title[:50]}...")
+            else:
+                print(f"⚠️  No meaningful title extracted")
+            
+            # Check metadata
+            metadata = response.get('metadata', {})
+            if metadata and 'extraction_method' in metadata:
+                print(f"✅ Extraction method: {metadata['extraction_method']}")
+            else:
+                print(f"⚠️  No extraction method metadata")
+        
+        return success, response
+
+    def test_url_sentiment_analysis_integration(self):
+        """Test that URL analysis includes full sentiment analysis"""
+        url_data = {
+            "url": "https://blog.github.com",
+            "extract_full_content": True,
+            "include_metadata": True
+        }
+        
+        success, response = self.run_test(
+            "URL Sentiment Analysis Integration",
+            "POST",
+            "analyze-url",
+            200,
+            data=url_data,
+            timeout=90
+        )
+        
+        if success:
+            print(f"   Sentiment Analysis Integration Check:")
+            
+            # Check all sentiment analysis features are present
+            sentiment_features = {
+                'sentiment': response.get('sentiment'),
+                'emotions': response.get('emotions', {}),
+                'sarcasm_detected': response.get('sarcasm_detected'),
+                'topics_detected': response.get('topics_detected', []),
+                'aspects_analysis': response.get('aspects_analysis', [])
+            }
+            
+            for feature, value in sentiment_features.items():
+                if feature == 'emotions' and isinstance(value, dict) and len(value) > 0:
+                    print(f"     ✅ {feature}: {len(value)} emotions detected")
+                elif feature == 'topics_detected' and isinstance(value, list):
+                    print(f"     ✅ {feature}: {len(value)} topics detected")
+                elif feature == 'aspects_analysis' and isinstance(value, list):
+                    print(f"     ✅ {feature}: {len(value)} aspects detected")
+                elif value is not None:
+                    print(f"     ✅ {feature}: {value}")
+                else:
+                    print(f"     ⚠️  {feature}: Not present or empty")
+            
+            # Validate using existing sentiment validation
+            if not self.validate_sentiment_response(response):
+                print(f"❌ URL response failed sentiment validation")
+                return False, response
+            
+            print(f"✅ URL analysis includes complete sentiment analysis")
+        
+        return success, response
+
+    def test_web_scraping_dependencies(self):
+        """Test that web scraping dependencies are available"""
+        print(f"\n🔍 Testing Web Scraping Dependencies...")
+        
+        dependencies_available = True
+        
+        try:
+            import requests
+            print(f"✅ requests: {requests.__version__}")
+        except ImportError:
+            print(f"❌ requests: Not available")
+            dependencies_available = False
+        
+        try:
+            import bs4
+            print(f"✅ beautifulsoup4: {bs4.__version__}")
+        except ImportError:
+            print(f"❌ beautifulsoup4: Not available")
+            dependencies_available = False
+        
+        try:
+            import newspaper
+            print(f"✅ newspaper3k: Available")
+        except ImportError:
+            print(f"❌ newspaper3k: Not available")
+            dependencies_available = False
+        
+        try:
+            import lxml
+            print(f"✅ lxml: {lxml.__version__}")
+        except ImportError:
+            print(f"❌ lxml: Not available")
+            dependencies_available = False
+        
+        try:
+            import html5lib
+            print(f"✅ html5lib: {html5lib.__version__}")
+        except ImportError:
+            print(f"❌ html5lib: Not available")
+            dependencies_available = False
+        
+        if dependencies_available:
+            print(f"✅ All web scraping dependencies are available")
+            self.tests_passed += 1
+        else:
+            print(f"❌ Some web scraping dependencies are missing")
+        
+        self.tests_run += 1
+        return dependencies_available, {}
+
     # FILE UPLOAD AND BATCH PROCESSING TESTS - NEW FEATURE
     def run_file_upload_test(self, name, file_content, filename, expected_status, timeout=30):
         """Run a file upload test"""
