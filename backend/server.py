@@ -1514,9 +1514,10 @@ async def analyze_batch(
             results=results
         )
         
-        # Store batch results in database
+        # Store batch results in database with user association
         batch_data = batch_response.dict()
         batch_data['timestamp'] = batch_data['timestamp'].isoformat()
+        batch_data['user_id'] = current_user["id"]
         await db.batch_analyses.insert_one(batch_data)
         
         logger.info(f"Batch analysis completed: {processed_count} texts processed")
