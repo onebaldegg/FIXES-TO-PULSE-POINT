@@ -448,8 +448,8 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                         {Object.entries(dashboardStats.sentimentCounts).map(([sentiment, count]) => (
                           <div key={sentiment} className="space-y-2">
                             <div className="flex justify-between text-sm">
-                              <span className="text-green-300 capitalize">{sentiment}</span>
-                              <span className="text-green-100">{count} analyses</span>
+                              <span style={{color: '#42DF50'}} className="capitalize">{sentiment}</span>
+                              <span style={{color: '#42DF50'}}>{count} analyses</span>
                             </div>
                             <div className="w-full bg-green-800/30 rounded-full h-2">
                               <div 
