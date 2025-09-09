@@ -2179,6 +2179,9 @@ const AppContent = () => {
         </div>
       </div>
 
+      {/* Authentication Modal */}
+      <AuthModal />
+
       <Toaster />
     </div>
   );
