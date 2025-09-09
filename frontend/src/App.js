@@ -748,7 +748,7 @@ const AppContent = () => {
           style={{ filter: 'brightness(0.5) opacity(1.0)' }}
         >
           <source 
-            src="https://customer-assets.emergentagent.com/job_brand-monitor-2/artifacts/qlgtor1l_medium-vecteezy_looping-matrix-style-cyrillic-alphabet-code-rain-effect_6102172_medium%20%281%29.mp4" 
+            src="https://customer-assets.emergentagent.com/job_prinsight/artifacts/qlgtor1l_medium-vecteezy_looping-matrix-style-cyrillic-alphabet-code-rain-effect_6102172_medium%20%281%29.mp4" 
             type="video/mp4" 
           />
         </video>
