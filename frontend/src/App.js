@@ -474,8 +474,8 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                     <CardContent>
                       <div className="space-y-4">
                         <div className="flex items-center justify-between p-3 bg-green-950/30 rounded-lg">
-                          <span className="text-green-300">Total Analyses</span>
-                          <span className="text-green-100 font-bold">{dashboardStats.totalAnalyses}</span>
+                          <span style={{color: '#42DF50'}}>Total Analyses</span>
+                          <span style={{color: '#42DF50'}} className="font-bold">{dashboardStats.totalAnalyses}</span>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-green-950/30 rounded-lg">
                           <span className="text-green-300">This Week</span>
