@@ -1801,14 +1801,14 @@ const AppContent = () => {
                             e.target.style.boxShadow = 'none';
                           }}
                         />
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
                           <p className="text-xs" style={{color: '#42DF50'}}>
                             Maximum 20 URLs per batch
                           </p>
                           <Button 
                             onClick={analyzeBatchUrls}
                             disabled={batchUrlLoading || !urls.trim()}
-                            className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border border-cyan-500/20"
+                            className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border border-cyan-500/20 w-full sm:w-auto"
                           >
                             {batchUrlLoading ? (
                               <>
