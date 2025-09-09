@@ -1403,9 +1403,9 @@ class BrandWatchAPITester:
         print("\n2️⃣ STEP 2: Test login with different password variations")
         
         password_variations = [
-            "Testing1",     # Updated 8-character password
+            "Testing123",   # Correct working password
             "testing",      # From review request (7 chars - should fail validation)
-            "Testing123",   # Previous test password
+            "Testing1",     # 8-character password attempt
             "Testing",      # Capitalized version
             "testing123",   # Lowercase with numbers
         ]
