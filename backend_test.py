@@ -14,6 +14,9 @@ class BrandWatchAPITester:
         self.tests_run = 0
         self.tests_passed = 0
         self.test_results = []
+        self.access_token = None
+        self.refresh_token = None
+        self.test_user_id = None
 
     def run_test(self, name, method, endpoint, expected_status, data=None, timeout=30):
         """Run a single API test"""
