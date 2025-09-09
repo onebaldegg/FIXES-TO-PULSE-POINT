@@ -1551,7 +1551,7 @@ const AppContent = () => {
               <div className="flex space-x-1 min-w-max sm:min-w-0">
                 <button
                   onClick={() => setActiveTab("text")}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                     activeTab === "text"
                       ? "text-black shadow-lg"
                       : "hover:text-white"
@@ -1560,12 +1560,12 @@ const AppContent = () => {
                     ? {backgroundColor: '#42DF50'} 
                     : {color: '#42DF50', backgroundColor: 'rgba(66, 223, 80, 0.1)'}}
                 >
-                  <FileText className="mr-2 h-4 w-4 inline" />
+                  <FileText className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 inline" />
                   Text Analysis
                 </button>
                 <button
                   onClick={() => setActiveTab("file")}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                     activeTab === "file"
                       ? "text-black shadow-lg"
                       : "hover:text-white"
@@ -1574,12 +1574,12 @@ const AppContent = () => {
                     ? {backgroundColor: '#42DF50'} 
                     : {color: '#42DF50', backgroundColor: 'rgba(66, 223, 80, 0.1)'}}
                 >
-                  <Upload className="mr-2 h-4 w-4 inline" />
+                  <Upload className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 inline" />
                   File Analysis
                 </button>
                 <button
                   onClick={() => setActiveTab("url")}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                     activeTab === "url"
                       ? "text-black shadow-lg"
                       : "hover:text-white"
@@ -1588,7 +1588,7 @@ const AppContent = () => {
                     ? {backgroundColor: '#42DF50'} 
                     : {color: '#42DF50', backgroundColor: 'rgba(66, 223, 80, 0.1)'}}
                 >
-                  <Monitor className="mr-2 h-4 w-4 inline" />
+                  <Monitor className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 inline" />
                   URL Analysis
                 </button>
               </div>
