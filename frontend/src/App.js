@@ -1336,8 +1336,24 @@ const AppContent = () => {
                       </div>
                     </div>
                     
-                    {/* User Menu */}
-                    <div className="relative">
+                    {/* Header Buttons */}
+                    <div className="flex items-center space-x-3">
+                      {/* Dashboard Button */}
+                      <button
+                        onClick={(e) => {
+                          console.log("Dashboard button clicked!");
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setShowDashboard(true);
+                        }}
+                        className="flex items-center space-x-2 bg-black/40 px-3 py-2 rounded-lg border border-green-500/30 hover:border-green-500/50 transition-colors text-green-300 hover:text-green-200"
+                      >
+                        <BarChart3 className="h-4 w-4" />
+                        <span className="text-sm">Dashboard</span>
+                      </button>
+
+                      {/* User Menu */}
+                      <div className="relative">
                       <button
                         onClick={() => setShowUserMenu(!showUserMenu)}
                         className="flex items-center space-x-2 bg-black/40 px-3 py-2 rounded-lg border border-green-500/30 hover:border-green-500/50 transition-colors"
