@@ -20,6 +20,14 @@ const App = () => {
   const [history, setHistory] = useState([]);
   const { toast } = useToast();
 
+  // File upload states
+  const [activeTab, setActiveTab] = useState("text"); // "text" or "file"
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [batchLoading, setBatchLoading] = useState(false);
+  const [batchResults, setBatchResults] = useState(null);
+  const [isDragActive, setIsDragActive] = useState(false);
+
   const fetchHistory = async () => {
     try {
       const response = await axios.get(`${API}/sentiment-history`);
