@@ -1719,7 +1719,7 @@ const AppContent = () => {
                           className="min-h-[100px] resize-none bg-black/40 border-green-500/30 text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50"
                         />
                         <div className="flex items-center justify-between">
-                          <p className="text-xs text-green-400/80">
+                          <p className="text-xs" style={{color: '#42DF50'}}>
                             Maximum 20 URLs per batch
                           </p>
                           <Button 
