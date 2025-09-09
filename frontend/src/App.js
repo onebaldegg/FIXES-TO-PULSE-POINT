@@ -462,7 +462,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
 
               {/* Analytics Overview */}
               {dashboardStats && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-6">
                   {/* Sentiment Distribution */}
                   <Card className="bg-black/60 border-green-500/20">
                     <CardHeader>
