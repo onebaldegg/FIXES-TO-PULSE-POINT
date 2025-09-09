@@ -509,8 +509,8 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                             .slice(0, 5)
                             .map(([topic, count]) => (
                               <div key={topic} className="flex items-center justify-between p-2 bg-green-950/30 rounded">
-                                <span className="text-green-300 text-sm capitalize">{topic.replace('_', ' ')}</span>
-                                <span className="text-green-100 text-sm font-medium">{count}</span>
+                                <span style={{color: '#42DF50'}} className="text-sm capitalize">{topic.replace('_', ' ')}</span>
+                                <span style={{color: '#42DF50'}} className="text-sm font-medium">{count}</span>
                               </div>
                             ))}
                         </div>
