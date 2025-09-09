@@ -1299,11 +1299,11 @@ const AppContent = () => {
           <div className="max-w-7xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-xl shadow-xl">
-                  <Brain className="h-8 w-8 text-white" />
+                <div className="bg-gradient-to-r from-[#42DF50] to-[#42DF50] p-3 rounded-xl shadow-xl">
+                  <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-8 w-8" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-green-100">Brand Watch AI</h1>
+                  <h1 className="text-3xl font-bold" style={{color: '#42DF50'}}>PULSE POINT</h1>
                   <p className="text-green-300">Advanced Sentiment Analysis Platform</p>
                 </div>
               </div>
