@@ -13,6 +13,162 @@ import { useToast } from "./hooks/use-toast";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Authentication Context
+const AuthContext = createContext(null);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refreshToken'));
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Set up axios interceptor for authentication
+  useEffect(() => {
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common['Authorization'];
+    }
+  }, [token]);
+
+  // Load user data on app start
+  useEffect(() => {
+    if (token) {
+      loadUserData();
+    } else {
+      setLoading(false);
+    }
+  }, [token]);
+
+  const loadUserData = async () => {
+    try {
+      const response = await axios.get(`${API}/auth/me`);
+      setUser(response.data);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error('Error loading user data:', error);
+      // Token might be expired, try to refresh
+      if (refreshToken) {
+        await tryRefreshToken();
+      } else {
+        logout();
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const tryRefreshToken = async () => {
+    try {
+      const response = await axios.post(`${API}/auth/refresh`, {
+        refresh_token: refreshToken
+      });
+      
+      const newToken = response.data.access_token;
+      setToken(newToken);
+      localStorage.setItem('token', newToken);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+      
+      // Try loading user data again
+      await loadUserData();
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      logout();
+    }
+  };
+
+  const login = async (email, password) => {
+    try {
+      const formData = new FormData();
+      formData.append('username', email);
+      formData.append('password', password);
+
+      const response = await axios.post(`${API}/auth/login`, formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+
+      const { access_token, refresh_token } = response.data;
+      
+      setToken(access_token);
+      setRefreshToken(refresh_token);
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('refreshToken', refresh_token);
+      
+      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+      
+      // Load user data
+      await loadUserData();
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Login error:', error);
+      return { 
+        success: false, 
+        error: error.response?.data?.detail || 'Login failed' 
+      };
+    }
+  };
+
+  const register = async (email, password, fullName) => {
+    try {
+      const response = await axios.post(`${API}/auth/register`, {
+        email,
+        password,
+        full_name: fullName
+      });
+
+      return { 
+        success: true, 
+        message: response.data.message 
+      };
+    } catch (error) {
+      console.error('Registration error:', error);
+      return { 
+        success: false, 
+        error: error.response?.data?.detail || 'Registration failed' 
+      };
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    setRefreshToken(null);
+    setIsAuthenticated(false);
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    delete axios.defaults.headers.common['Authorization'];
+  };
+
+  const value = {
+    user,
+    token,
+    loading,
+    isAuthenticated,
+    login,
+    register,
+    logout,
+    loadUserData
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
 const App = () => {
   const [text, setText] = useState("");
   const [analysis, setAnalysis] = useState(null);
