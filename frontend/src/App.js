@@ -1522,7 +1522,7 @@ const AppContent = () => {
                   // Text Analysis Mode
                   <>
                     <div className="space-y-3">
-                      <label className="text-sm font-medium text-green-200">
+                      <label className="text-sm font-medium" style={{color: '#42DF50'}}>
                         Text to Analyze
                       </label>
                       <Textarea
