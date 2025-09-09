@@ -1625,7 +1625,7 @@ const AppContent = () => {
                           <CheckCircle className="h-5 w-5 text-green-400" />
                           <div className="flex-1">
                             <p className="text-green-200 font-medium">{uploadedFile.filename}</p>
-                            <p className="text-green-300 text-sm">
+                            <p className="text-sm" style={{color: '#42DF50'}}>
                               {uploadedFile.total_entries} text entries extracted • {uploadedFile.file_type.toUpperCase()} file
                             </p>
                           </div>
