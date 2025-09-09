@@ -1593,6 +1593,135 @@ const App = () => {
                       ))
                     )}
                   </div>
+                ) : (
+                  // URL Analysis Detailed Results
+                  <div className="space-y-4 max-h-96 overflow-y-auto">
+                    {!batchUrlResults && !urlResults ? (
+                      <div className="text-center py-8 text-green-300">
+                        <Monitor className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                        <p>No URL analysis results yet</p>
+                        <p className="text-sm">Analyze URLs to see detailed results here</p>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Display single URL result if available */}
+                        {urlResults && (
+                          <div className="p-4 rounded-xl border border-blue-500/20 hover:border-blue-500/40 transition-colors bg-black/40 backdrop-blur-sm">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center space-x-2 flex-wrap">
+                                <Badge variant={getSentimentBadgeVariant(urlResults.sentiment)} className="text-xs">
+                                  {urlResults.sentiment}
+                                </Badge>
+                                <span className="text-xs text-blue-300">
+                                  Single URL
+                                </span>
+                                {urlResults.dominant_emotion && (
+                                  <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getEmotionColor(urlResults.dominant_emotion)}`}>
+                                    {getEmotionIcon(urlResults.dominant_emotion)}
+                                    <span>{formatEmotionName(urlResults.dominant_emotion)}</span>
+                                  </div>
+                                )}
+                                {urlResults.sarcasm_detected && (
+                                  <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getSarcasmBadgeColor()}`}>
+                                    <AlertTriangle className="h-3 w-3" />
+                                    <span>SARCASM</span>
+                                  </div>
+                                )}
+                                {urlResults.aspects_analysis && urlResults.aspects_analysis.length > 0 && (
+                                  <div className="inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs bg-emerald-500/20 text-emerald-300">
+                                    <Tag className="h-3 w-3" />
+                                    <span>{urlResults.aspects_analysis.length} aspects</span>
+                                  </div>
+                                )}
+                              </div>
+                              <span className="text-xs text-blue-300">
+                                {Math.round(urlResults.confidence * 100)}%
+                              </span>
+                            </div>
+                            <p className="text-sm text-blue-200 mb-2 font-medium line-clamp-1">
+                              {urlResults.title || 'Untitled'}
+                            </p>
+                            <p className="text-xs text-blue-300 mb-2 line-clamp-1">
+                              {urlResults.url}
+                            </p>
+                            <p className="text-xs text-blue-300">
+                              {urlResults.text_length} characters • {urlResults.processing_time.toFixed(2)}s processing
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Display batch URL results if available */}
+                        {batchUrlResults && batchUrlResults.results.map((result, index) => (
+                          <div key={index} className="p-4 rounded-xl border border-cyan-500/20 hover:border-cyan-500/40 transition-colors bg-black/40 backdrop-blur-sm">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center space-x-2 flex-wrap">
+                                <Badge variant={getSentimentBadgeVariant(result.sentiment)} className="text-xs">
+                                  {result.sentiment}
+                                </Badge>
+                                <span className="text-xs text-cyan-300">
+                                  URL #{index + 1}
+                                </span>
+                                {result.dominant_emotion && (
+                                  <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getEmotionColor(result.dominant_emotion)}`}>
+                                    {getEmotionIcon(result.dominant_emotion)}
+                                    <span>{formatEmotionName(result.dominant_emotion)}</span>
+                                  </div>
+                                )}
+                                {result.sarcasm_detected && (
+                                  <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getSarcasmBadgeColor()}`}>
+                                    <AlertTriangle className="h-3 w-3" />
+                                    <span>SARCASM</span>
+                                  </div>
+                                )}
+                                {result.aspects_analysis && result.aspects_analysis.length > 0 && (
+                                  <div className="inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs bg-emerald-500/20 text-emerald-300">
+                                    <Tag className="h-3 w-3" />
+                                    <span>{result.aspects_analysis.length} aspects</span>
+                                  </div>
+                                )}
+                              </div>
+                              <span className="text-xs text-cyan-300">
+                                {Math.round(result.confidence * 100)}%
+                              </span>
+                            </div>
+                            
+                            <p className="text-sm text-cyan-200 mb-2 font-medium line-clamp-1">
+                              {result.title || 'Untitled'}
+                            </p>
+                            <p className="text-xs text-cyan-300 mb-2 line-clamp-1">
+                              {result.url}
+                            </p>
+                            
+                            {/* Sarcasm warning in batch results */}
+                            {result.sarcasm_detected && result.adjusted_sentiment !== result.sentiment && (
+                              <div className="text-xs text-orange-300 mb-2 italic">
+                                ⚠️ Appears {result.sentiment} but actually {result.adjusted_sentiment} (sarcastic)
+                              </div>
+                            )}
+                            
+                            {/* Aspects summary in batch results */}
+                            {result.aspects_summary && (
+                              <div className="text-xs text-emerald-300 mb-2 italic">
+                                🎯 {result.aspects_summary}
+                              </div>
+                            )}
+
+                            {/* Topic summary in batch results */}
+                            {result.topic_summary && (
+                              <div className="text-xs text-green-300 mb-2 italic">
+                                📋 {result.topic_summary}
+                              </div>
+                            )}
+                            
+                            <div className="flex justify-between items-center text-xs text-cyan-300">
+                              <span>{result.text_length} characters</span>
+                              <span>{result.processing_time.toFixed(2)}s</span>
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                  </div>
                 )}
               </CardContent>
             </Card>
