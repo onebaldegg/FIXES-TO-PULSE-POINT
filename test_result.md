@@ -106,7 +106,9 @@ user_problem_statement: "COMPLETED: Implement Aspect-Based Sentiment Analysis fe
 
 COMPLETED: Implement File Upload Support for Brand Watch AI tool. Allow users to upload files (CSV, Excel, PDF, TXT) for batch sentiment analysis instead of only manual text input. This should include file parsing, batch processing endpoints, drag & drop UI, and results management while maintaining the Matrix theme.
 
-NEW FEATURE: Implement URL Analysis functionality for Brand Watch AI tool. Enable users to analyze any web content by providing URLs - including news articles, blog posts, reviews, and competitor websites. Features should include: web scraping and text extraction, article analysis with metadata, batch URL processing for multiple pages, content monitoring to track changes over time, and instant analysis of any web content while maintaining the Matrix theme."
+COMPLETED: Implement URL Analysis functionality for Brand Watch AI tool. Enable users to analyze any web content by providing URLs - including news articles, blog posts, reviews, and competitor websites. Features should include: web scraping and text extraction, article analysis with metadata, batch URL processing for multiple pages, content monitoring to track changes over time, and instant analysis of any web content while maintaining the Matrix theme.
+
+NEW FEATURE: Implement User Accounts & Authentication system for Brand Watch AI tool. Enable user registration, login, password reset functionality. Create personalized user dashboards with analysis history and settings. Implement data persistence for user-specific analyses and projects. Add usage limits foundation for freemium model. Features should include secure authentication, user session management, personal dashboards, data association with users, and Matrix-themed authentication UI."
 
 backend:
   - task: "Add aspect-based sentiment analysis to LLM prompt"
