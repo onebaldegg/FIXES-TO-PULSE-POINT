@@ -345,8 +345,8 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                         <User className="h-8 w-8 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold text-green-100">{user.full_name}</h3>
-                        <p className="text-green-300">{user.email}</p>
+                        <h3 className="text-xl font-bold" style={{color: '#42DF50'}}>{user.full_name}</h3>
+                        <p style={{color: '#42DF50'}}>{user.email}</p>
                         <div className="flex items-center space-x-2 mt-2">
                           <Badge variant={user.subscription_tier === 'pro' ? 'default' : 'secondary'}>
                             {user.subscription_tier.toUpperCase()} PLAN
