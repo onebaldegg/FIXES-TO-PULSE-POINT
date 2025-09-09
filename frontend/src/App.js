@@ -2284,8 +2284,6 @@ const AppContent = () => {
 
       {/* Authentication Modal */}
       <AuthModal />
-
-      <Toaster />
     </div>
   );
 };
