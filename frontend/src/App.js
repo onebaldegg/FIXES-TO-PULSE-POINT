@@ -1389,15 +1389,15 @@ const AppContent = () => {
         
         {/* Header */}
         <header className="bg-black/90 backdrop-blur-lg border-b border-green-500/20 shadow-2xl">
-          <div className="max-w-7xl mx-auto px-6 py-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="p-3 rounded-xl">
-                  <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-14 w-14" />
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-6">
+            <div className="flex items-center justify-between flex-wrap gap-2 sm:gap-4">
+              <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+                <div className="p-1 sm:p-3 rounded-xl">
+                  <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-8 w-8 sm:h-14 sm:w-14" />
                 </div>
-                <div>
-                  <h1 className="text-3xl font-bold" style={{color: '#42DF50'}}>PULSE POINT</h1>
-                  <p className="text-green-300" style={{color: '#42DF50'}}>Advanced Sentiment Analysis Platform</p>
+                <div className="min-w-0">
+                  <h1 className="text-lg sm:text-3xl font-bold truncate" style={{color: '#42DF50'}}>PULSE POINT</h1>
+                  <p className="text-xs sm:text-base truncate" style={{color: '#42DF50'}}>Advanced Sentiment Analysis Platform</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
