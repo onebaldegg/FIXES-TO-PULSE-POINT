@@ -579,7 +579,9 @@ const AppContent = () => {
 
   // Load user-specific data when user logs in
   useEffect(() => {
+    console.log("useEffect [isAuthenticated, user] triggered:", { isAuthenticated, user: user?.email, authLoading });
     if (isAuthenticated && user) {
+      console.log("Calling fetchHistory from useEffect");
       fetchHistory(); // Reload history for the authenticated user
     }
   }, [isAuthenticated, user]);
