@@ -873,6 +873,107 @@ const AppContent = () => {
 
       {/* Content Container */}
       <div className="relative z-20">
+        {/* Header */}
+        <header className="bg-black/90 backdrop-blur-lg border-b border-green-500/20 shadow-2xl">
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-xl shadow-xl">
+                  <Brain className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-green-100">Brand Watch AI</h1>
+                  <p className="text-green-300">Advanced Sentiment Analysis Platform</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                {user && (
+                  <div className="flex items-center space-x-4">
+                    {/* Usage Statistics */}
+                    <div className="bg-green-950/50 px-4 py-2 rounded-lg border border-green-500/30">
+                      <div className="flex items-center space-x-2">
+                        <Badge 
+                          variant={user.subscription_tier === 'pro' ? 'default' : 'secondary'} 
+                          className={`text-xs ${user.subscription_tier === 'pro' ? 'bg-gradient-to-r from-yellow-600 to-orange-600' : 'bg-green-600'}`}
+                        >
+                          {user.subscription_tier.toUpperCase()}
+                        </Badge>
+                        <span className="text-sm text-green-200">
+                          {user.usage_stats?.analyses_this_month || 0} analyses
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {/* User Menu */}
+                    <div className="relative">
+                      <button
+                        onClick={() => setShowUserMenu(!showUserMenu)}
+                        className="flex items-center space-x-2 bg-black/40 px-3 py-2 rounded-lg border border-green-500/30 hover:border-green-500/50 transition-colors"
+                      >
+                        <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full flex items-center justify-center">
+                          <User className="h-4 w-4 text-white" />
+                        </div>
+                        <span className="text-green-200 text-sm">{user.full_name}</span>
+                        <span className="text-green-400">▼</span>
+                      </button>
+                      
+                      {showUserMenu && (
+                        <div className="absolute right-0 mt-2 w-64 bg-black/90 backdrop-blur-lg border border-green-500/20 rounded-lg shadow-2xl z-50">
+                          <div className="p-4 border-b border-green-500/20">
+                            <p className="text-green-100 font-medium">{user.full_name}</p>
+                            <p className="text-green-300 text-sm">{user.email}</p>
+                            <div className="flex items-center space-x-2 mt-2">
+                              <Badge variant={user.subscription_tier === 'pro' ? 'default' : 'secondary'}>
+                                {user.subscription_tier.toUpperCase()}
+                              </Badge>
+                              <span className="text-xs text-green-400">
+                                {user.is_verified ? "✅ Verified" : "⚠️ Unverified"}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="p-2">
+                            <div className="px-3 py-2 text-sm text-green-200">
+                              <p className="font-medium mb-1">Usage This Month:</p>
+                              <div className="space-y-1 text-xs">
+                                <div className="flex justify-between">
+                                  <span>Text Analyses:</span>
+                                  <span>{user.usage_stats?.analyses_this_month || 0}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>Files Uploaded:</span>
+                                  <span>{user.usage_stats?.files_uploaded || 0}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>URLs Analyzed:</span>
+                                  <span>{user.usage_stats?.urls_analyzed || 0}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => {
+                                logout();
+                                setShowUserMenu(false);
+                                toast({
+                                  title: "Logged Out",
+                                  description: "You have been successfully logged out.",
+                                });
+                              }}
+                              className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-red-400 hover:bg-red-950/30 rounded transition-colors"
+                            >
+                              <LogOut className="h-4 w-4" />
+                              <span>Sign Out</span>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </header>
+
         {/* Hero Section */}
         <div className="relative">
           <div className="relative z-10 px-6 py-16">
