@@ -1421,7 +1421,7 @@ const AppContent = () => {
           <div className="relative z-10 px-6 py-16 pointer-events-none">
             <div className="max-w-4xl mx-auto text-center pointer-events-auto">
               <div className="flex flex-col items-center justify-center text-center mb-6">
-                <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-24 w-24 mb-4" />
+                <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-40 w-40 mb-4" />
                 <div className="flex justify-center w-full">
                   <img src="/pulse-point-logo.png" alt="Pulse Point Logo" className="h-30 w-auto mx-auto ml-8" />
                 </div>
