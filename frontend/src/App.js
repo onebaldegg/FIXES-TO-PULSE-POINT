@@ -1632,7 +1632,7 @@ const AppContent = () => {
                     {/* Single URL Analysis */}
                     <div className="space-y-4">
                       <div className="space-y-3">
-                        <label className="text-sm font-medium text-green-200">
+                        <label className="text-sm font-medium" style={{color: '#42DF50'}}>
                           Website URL to Analyze
                         </label>
                         <div className="flex space-x-2">
