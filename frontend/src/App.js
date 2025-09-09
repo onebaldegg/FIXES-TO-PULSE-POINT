@@ -1457,9 +1457,12 @@ const AppContent = () => {
                   onClick={() => setActiveTab("text")}
                   className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                     activeTab === "text"
-                      ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg"
-                      : "text-green-300 hover:text-green-100 hover:bg-green-500/20"
+                      ? "text-white shadow-lg"
+                      : "hover:text-white"
                   }`}
+                  style={activeTab === "text" 
+                    ? {backgroundColor: '#42DF50'} 
+                    : {color: '#42DF50', backgroundColor: 'rgba(66, 223, 80, 0.1)'}}
                 >
                   <FileText className="mr-2 h-4 w-4 inline" />
                   Text Analysis
@@ -1468,9 +1471,12 @@ const AppContent = () => {
                   onClick={() => setActiveTab("file")}
                   className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                     activeTab === "file"
-                      ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg"
-                      : "text-green-300 hover:text-green-100 hover:bg-green-500/20"
+                      ? "text-white shadow-lg"
+                      : "hover:text-white"
                   }`}
+                  style={activeTab === "file" 
+                    ? {backgroundColor: '#42DF50'} 
+                    : {color: '#42DF50', backgroundColor: 'rgba(66, 223, 80, 0.1)'}}
                 >
                   <Upload className="mr-2 h-4 w-4 inline" />
                   File Analysis
@@ -1479,9 +1485,12 @@ const AppContent = () => {
                   onClick={() => setActiveTab("url")}
                   className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                     activeTab === "url"
-                      ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg"
-                      : "text-green-300 hover:text-green-100 hover:bg-green-500/20"
+                      ? "text-white shadow-lg"
+                      : "hover:text-white"
                   }`}
+                  style={activeTab === "url" 
+                    ? {backgroundColor: '#42DF50'} 
+                    : {color: '#42DF50', backgroundColor: 'rgba(66, 223, 80, 0.1)'}}
                 >
                   <Monitor className="mr-2 h-4 w-4 inline" />
                   URL Analysis
