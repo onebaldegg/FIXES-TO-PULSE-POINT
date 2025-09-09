@@ -1415,8 +1415,8 @@ const AppContent = () => {
 
         {/* Hero Section */}
         <div className="relative">
-          <div className="relative z-10 px-6 py-16">
-            <div className="max-w-4xl mx-auto text-center">
+          <div className="relative z-10 px-6 py-16 pointer-events-none">
+            <div className="max-w-4xl mx-auto text-center pointer-events-auto">
               <div className="flex items-center justify-center mb-6">
                 <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-3 rounded-2xl shadow-lg backdrop-blur-sm border border-green-500/20">
                   <Brain className="h-8 w-8 text-white" />
