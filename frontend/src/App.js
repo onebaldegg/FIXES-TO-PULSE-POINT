@@ -1426,20 +1426,20 @@ const AppContent = () => {
                   <img src="/pulse-point-logo.png" alt="Pulse Point Logo" className="h-30 w-auto mx-auto ml-8" />
                 </div>
               </div>
-              <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+              <p className="text-xl mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md" style={{color: '#42DF50'}}>
                 Advanced sentiment analysis for PR and marketing professionals. Analyze brand mentions, customer feedback, and campaign performance with AI-powered insights.
               </p>
-              <div className="flex items-center justify-center space-x-8 text-sm text-green-200">
+              <div className="flex items-center justify-center space-x-8 text-sm" style={{color: '#42DF50'}}>
                 <div className="flex items-center space-x-2">
-                  <Zap className="h-4 w-4 text-green-400" />
+                  <Zap className="h-4 w-4" style={{color: '#42DF50'}} />
                   <span>Real-time Analysis</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <BarChart3 className="h-4 w-4 text-emerald-400" />
+                  <BarChart3 className="h-4 w-4" style={{color: '#42DF50'}} />
                   <span>Professional Insights</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Brain className="h-4 w-4 text-green-300" />
+                  <Brain className="h-4 w-4" style={{color: '#42DF50'}} />
                   <span>AI-Powered</span>
                 </div>
               </div>
