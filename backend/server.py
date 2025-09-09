@@ -1645,6 +1645,279 @@ async def analyze_batch_urls(request: BatchURLRequest):
         logger.error(f"Error in batch URL analysis: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
+# Authentication Router
+auth_router = APIRouter(prefix="/auth", tags=["authentication"])
+
+@auth_router.post("/register", response_model=dict)
+async def register_user(user_data: UserCreate):
+    """Register new user and send verification email."""
+    try:
+        user = await create_user(user_data)
+        return {
+            "message": "User registered successfully. Please check your email for verification instructions.",
+            "user_id": user["id"],
+            "email": user["email"]
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error registering user: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
+
+@auth_router.post("/login", response_model=TokenResponse)
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    """Authenticate user and return tokens."""
+    user = await authenticate_user(form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    if not user["is_active"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Account is deactivated"
+        )
+    
+    # Update last login
+    await db.users.update_one(
+        {"id": user["id"]},
+        {"$set": {"last_login": datetime.now(timezone.utc)}}
+    )
+    
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user["email"]}, expires_delta=access_token_expires
+    )
+    refresh_token = create_refresh_token(data={"sub": user["email"]})
+    
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60
+    }
+
+@auth_router.post("/refresh", response_model=dict)
+async def refresh_token(refresh_token: str):
+    """Generate new access token using refresh token."""
+    try:
+        payload = await verify_token(refresh_token, "refresh")
+        email = payload.get("sub")
+        
+        user = await get_user_by_email(email)
+        if not user or not user["is_active"]:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid refresh token"
+            )
+        
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": user["email"]}, expires_delta=access_token_expires
+        )
+        
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        }
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid refresh token"
+        )
+
+@auth_router.post("/verify-email")
+async def verify_email(token: str):
+    """Verify user email using verification token."""
+    try:
+        token_data = token_service.verify_token(token, max_age=86400)  # 24 hours
+        
+        if token_data.get("purpose") != "email_verification":
+            raise ValueError("Invalid token purpose")
+        
+        user_id = token_data.get("user_id")
+        email = token_data.get("email")
+        
+        # Find and update user
+        user = await get_user_by_id(user_id)
+        if not user or user["email"] != email:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+        
+        if user["is_verified"]:
+            return {"message": "Email already verified"}
+        
+        await db.users.update_one(
+            {"id": user_id},
+            {"$set": {"is_verified": True}}
+        )
+        
+        return {"message": "Email verified successfully. Your account is now fully active."}
+        
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Error verifying email: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
+
+@auth_router.post("/forgot-password")
+async def forgot_password(request: PasswordResetRequest):
+    """Request password reset for user account."""
+    try:
+        user = await get_user_by_email(request.email)
+        if not user:
+            # Return success message even if user doesn't exist for security
+            return {"message": "If your email is registered, you will receive reset instructions."}
+        
+        if not user["is_active"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Account is deactivated"
+            )
+        
+        # Generate reset token
+        reset_token = token_service.generate_reset_token(user["id"], user["email"])
+        reset_url = f"{FRONTEND_URL}/reset-password?token={reset_token}"
+        
+        # Send reset email
+        html_content = email_service.render_template(
+            "password_reset",
+            user_name=user["full_name"],
+            reset_url=reset_url,
+            expiry_minutes=30
+        )
+        
+        await email_service.send_email(
+            to_email=user["email"],
+            subject="Brand Watch AI - Password Reset Request",
+            html_content=html_content
+        )
+        
+        return {"message": "If your email is registered, you will receive reset instructions."}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error processing password reset: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
+
+@auth_router.post("/reset-password")
+async def reset_password(request: PasswordReset):
+    """Reset user password using valid reset token."""
+    try:
+        token_data = token_service.verify_token(request.token, max_age=1800)  # 30 minutes
+        
+        if token_data.get("purpose") != "password_reset":
+            raise ValueError("Invalid token purpose")
+        
+        user_id = token_data.get("user_id")
+        email = token_data.get("email")
+        
+        # Find user
+        user = await get_user_by_id(user_id)
+        if not user or user["email"] != email:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+        
+        # Update password
+        hashed_password = hash_password(request.new_password)
+        await db.users.update_one(
+            {"id": user_id},
+            {"$set": {
+                "hashed_password": hashed_password,
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        
+        return {"message": "Password reset successfully. Please log in with your new password."}
+        
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Error resetting password: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
+
+@auth_router.get("/me", response_model=UserResponse)
+async def get_current_user_info(current_user = Depends(get_current_active_user)):
+    """Get current user information."""
+    return {
+        "id": current_user["id"],
+        "email": current_user["email"],
+        "full_name": current_user["full_name"],
+        "is_active": current_user["is_active"],
+        "is_verified": current_user["is_verified"],
+        "subscription_tier": current_user["subscription_tier"],
+        "created_at": current_user["created_at"],
+        "last_login": current_user.get("last_login"),
+        "usage_stats": current_user.get("usage_stats", {})
+    }
+
+@auth_router.put("/profile")
+async def update_profile(
+    update_data: UserProfileUpdate,
+    current_user = Depends(get_current_verified_user)
+):
+    """Update user profile information."""
+    try:
+        update_fields = {}
+        
+        if update_data.full_name:
+            update_fields["full_name"] = update_data.full_name.strip()
+        
+        if update_data.new_password and update_data.current_password:
+            # Verify current password
+            if not verify_password(update_data.current_password, current_user["hashed_password"]):
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Current password is incorrect"
+                )
+            
+            update_fields["hashed_password"] = hash_password(update_data.new_password)
+        
+        if update_fields:
+            update_fields["updated_at"] = datetime.now(timezone.utc)
+            await db.users.update_one(
+                {"id": current_user["id"]},
+                {"$set": update_fields}
+            )
+        
+        return {"message": "Profile updated successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating profile: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
+
 
 # Include the router in the main app
 app.include_router(api_router)
