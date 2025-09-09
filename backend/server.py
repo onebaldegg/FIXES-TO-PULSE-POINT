@@ -450,6 +450,132 @@ email_templates = {
 
 template_env = Environment(loader=DictLoader(email_templates))
 
+# Authentication Utilities
+def hash_password(password: str) -> str:
+    """Hash a password using BCrypt algorithm."""
+    return pwd_context.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify a password against its hash."""
+    return pwd_context.verify(plain_password, hashed_password)
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    """Create a JWT access token with expiration."""
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    to_encode.update({"exp": expire, "type": "access"})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def create_refresh_token(data: dict):
+    """Create a refresh token with longer expiration."""
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    to_encode.update({"exp": expire, "type": "refresh"})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+async def verify_token(token: str, token_type: str = "access"):
+    """Verify JWT token and return payload if valid."""
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        token_type_claim: str = payload.get("type")
+        
+        if email is None or token_type_claim != token_type:
+            raise credentials_exception
+            
+        return payload
+    except JWTError:
+        raise credentials_exception
+
+# Email Service
+class EmailService:
+    def __init__(self):
+        self.smtp_server = SMTP_SERVER
+        self.smtp_port = SMTP_PORT
+        self.username = SMTP_USERNAME
+        self.password = SMTP_PASSWORD
+        self.from_email = FROM_EMAIL
+    
+    async def send_email(self, to_email: str, subject: str, html_content: str):
+        """Send email using SMTP configuration."""
+        if not self.username or not self.password:
+            logger.warning("Email credentials not configured - email not sent")
+            return True  # Return True in development to avoid blocking
+        
+        message = MIMEMultipart("alternative")
+        message["Subject"] = subject
+        message["From"] = self.from_email
+        message["To"] = to_email
+        
+        html_part = MIMEText(html_content, "html")
+        message.attach(html_part)
+        
+        try:
+            server = smtplib.SMTP(self.smtp_server, self.smtp_port)
+            server.starttls()
+            server.login(self.username, self.password)
+            server.sendmail(self.from_email, to_email, message.as_string())
+            server.quit()
+            logger.info(f"Email sent successfully to {to_email}")
+            return True
+        except Exception as e:
+            logger.error(f"Email sending failed: {str(e)}")
+            return False
+    
+    def render_template(self, template_name: str, **kwargs):
+        """Render email template with provided data."""
+        template = template_env.get_template(template_name)
+        return template.render(**kwargs)
+
+# Token Service for email verification and password reset
+class TokenService:
+    def __init__(self):
+        self.secret_key = os.getenv("VERIFICATION_SECRET_KEY", SECRET_KEY)
+        self.serializer = URLSafeTimedSerializer(self.secret_key)
+    
+    def generate_verification_token(self, user_id: str, email: str) -> str:
+        """Generate secure verification token for email confirmation."""
+        token_data = {
+            "user_id": user_id,
+            "email": email,
+            "purpose": "email_verification"
+        }
+        return self.serializer.dumps(token_data)
+    
+    def generate_reset_token(self, user_id: str, email: str) -> str:
+        """Generate secure password reset token."""
+        token_data = {
+            "user_id": user_id,
+            "email": email,
+            "purpose": "password_reset",
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+        return self.serializer.dumps(token_data)
+    
+    def verify_token(self, token: str, max_age: int = 86400) -> dict:
+        """Verify and decode token."""
+        try:
+            data = self.serializer.loads(token, max_age=max_age)
+            return data
+        except Exception as e:
+            raise ValueError(f"Invalid or expired token: {str(e)}")
+
+# Initialize services
+email_service = EmailService()
+token_service = TokenService()
+
 # File Processing Utilities
 async def extract_text_from_file(file: UploadFile) -> List[dict]:
     """Extract text from uploaded files based on file type"""
