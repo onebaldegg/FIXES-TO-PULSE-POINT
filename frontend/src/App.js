@@ -438,7 +438,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                   {/* Sentiment Distribution */}
                   <Card className="bg-black/60 border-green-500/20">
                     <CardHeader>
-                      <CardTitle className="text-green-100 flex items-center space-x-2">
+                      <CardTitle style={{color: '#42DF50'}} className="flex items-center space-x-2">
                         <TrendingUp className="h-5 w-5" />
                         <span>Sentiment Distribution</span>
                       </CardTitle>
