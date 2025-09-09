@@ -21,12 +21,20 @@ const App = () => {
   const { toast } = useToast();
 
   // File upload states
-  const [activeTab, setActiveTab] = useState("text"); // "text" or "file"
+  const [activeTab, setActiveTab] = useState("text"); // "text" or "file" or "url"
   const [uploadedFile, setUploadedFile] = useState(null);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [batchLoading, setBatchLoading] = useState(false);
   const [batchResults, setBatchResults] = useState(null);
   const [isDragActive, setIsDragActive] = useState(false);
+
+  // URL analysis states  
+  const [url, setUrl] = useState("");
+  const [urls, setUrls] = useState("");
+  const [urlLoading, setUrlLoading] = useState(false);
+  const [batchUrlLoading, setBatchUrlLoading] = useState(false);
+  const [urlResults, setUrlResults] = useState(null);
+  const [batchUrlResults, setBatchUrlResults] = useState(null);
 
   const fetchHistory = async () => {
     try {
