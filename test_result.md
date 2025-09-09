@@ -297,6 +297,18 @@ frontend:
           agent: "main"
           comment: "Initial task creation - need to create table/grid view for batch analysis results with filtering and export options"
 
+  - task: "Add navigation tabs for File Analysis"
+    implemented: false
+    working: "NA"
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to add tab navigation to switch between Text Analysis and File Analysis modes"
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
