@@ -169,12 +169,18 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-const App = () => {
+const AppContent = () => {
+  const { user, loading: authLoading, isAuthenticated, logout } = useAuth();
   const [text, setText] = useState("");
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
   const { toast } = useToast();
+  
+  // Authentication UI states
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState("login"); // "login" or "register"
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   // File upload states
   const [activeTab, setActiveTab] = useState("text"); // "text" or "file" or "url"
