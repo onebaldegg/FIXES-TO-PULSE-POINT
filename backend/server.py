@@ -1693,18 +1693,22 @@ async def analyze_batch_urls(
             processing_time=total_processing_time
         )
         
-        # Store batch metadata
+        # Increment usage counter for successful URLs
+        await increment_usage(current_user["id"], "urls_analyzed", len(results))
+        
+        # Store batch metadata with user association
         batch_data = {
             "batch_id": batch_response.batch_id,
             "total_requested": batch_response.total_requested,
             "total_processed": batch_response.total_processed,
             "total_failed": batch_response.total_failed,
             "processing_time": batch_response.processing_time,
+            "user_id": current_user["id"],
             "timestamp": batch_response.timestamp.isoformat()
         }
         await db.url_batch_analyses.insert_one(batch_data)
         
-        logger.info(f"Batch URL analysis completed: {len(results)}/{len(request.urls)} URLs processed successfully")
+        logger.info(f"Batch URL analysis completed for user {current_user['email']}: {len(results)}/{len(request.urls)} URLs processed successfully")
         return batch_response
         
     except HTTPException:
