@@ -807,19 +807,31 @@ const AppContent = () => {
             </form>
             
             <div className="mt-4 text-center">
-              <button
-                onClick={() => {
-                  setAuthMode(authMode === "login" ? "register" : "login");
-                  setFormData({ email: "", password: "", fullName: "", confirmPassword: "" });
-                  setErrors({});
-                }}
-                className="text-sm text-green-400 hover:text-green-300 underline"
-              >
-                {authMode === "login" 
-                  ? "Don't have an account? Sign up" 
-                  : "Already have an account? Sign in"
-                }
-              </button>
+              <p className="text-center mt-6" style={{color: '#42DF50'}}>
+                {authMode === "login" ? (
+                  <>
+                    Don't have an account?{" "}
+                    <button
+                      onClick={() => setAuthMode("register")}
+                      className="font-medium hover:underline"
+                      style={{color: '#42DF50'}}
+                    >
+                      Sign up
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    Already have an account?{" "}
+                    <button
+                      onClick={() => setAuthMode("login")}
+                      className="font-medium hover:underline"
+                      style={{color: '#42DF50'}}
+                    >
+                      Sign in
+                    </button>
+                  </>
+                )}
+              </p>
             </div>
           </CardContent>
         </Card>
