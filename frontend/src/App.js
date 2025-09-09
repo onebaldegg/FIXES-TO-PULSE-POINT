@@ -542,12 +542,16 @@ const App = () => {
             <Card className="shadow-2xl border-0 bg-black/60 backdrop-blur-lg border border-green-500/20">
               <CardHeader className="pb-4">
                 <CardTitle className="text-2xl font-semibold text-green-100">
-                  {activeTab === "text" ? "Sentiment Analysis" : "File Upload & Analysis"}
+                  {activeTab === "text" ? "Sentiment Analysis" : 
+                   activeTab === "file" ? "File Upload & Analysis" :
+                   "URL Analysis & Web Scraping"}
                 </CardTitle>
                 <CardDescription className="text-green-200">
                   {activeTab === "text" 
                     ? "Enter your text below to analyze sentiment and get professional insights"
-                    : "Upload TXT, CSV, Excel, or PDF files for batch sentiment analysis"
+                    : activeTab === "file"
+                    ? "Upload TXT, CSV, Excel, or PDF files for batch sentiment analysis"
+                    : "Analyze sentiment from any webpage - news articles, blogs, reviews, and more"
                   }
                 </CardDescription>
               </CardHeader>
