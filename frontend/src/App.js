@@ -316,8 +316,8 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
               <BarChart3 className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-green-100">User Dashboard</h2>
-              <p className="text-green-300">Analytics and Account Overview</p>
+              <h2 className="text-2xl font-bold" style={{color: '#42DF50'}}>User Dashboard</h2>
+              <p style={{color: '#42DF50'}}>Analytics and Account Overview</p>
             </div>
           </div>
           <button
