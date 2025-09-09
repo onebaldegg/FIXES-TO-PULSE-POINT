@@ -105,6 +105,53 @@ class BatchAnalysisResponse(BaseModel):
     results: List[dict]  # List of sentiment analysis results with metadata
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+class URLAnalysisRequest(BaseModel):
+    url: str
+    extract_full_content: bool = True
+    include_metadata: bool = True
+
+class URLAnalysisResponse(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    url: str
+    title: Optional[str] = None
+    author: Optional[str] = None
+    publish_date: Optional[str] = None
+    extracted_text: str
+    text_length: int
+    sentiment: str
+    confidence: float
+    analysis: str
+    emotions: Optional[dict] = {}
+    dominant_emotion: Optional[str] = ""
+    sarcasm_detected: Optional[bool] = False
+    sarcasm_confidence: Optional[float] = 0.0
+    sarcasm_explanation: Optional[str] = ""
+    adjusted_sentiment: Optional[str] = ""
+    sarcasm_indicators: Optional[List[str]] = []
+    topics_detected: Optional[List[dict]] = []
+    primary_topic: Optional[str] = ""
+    topic_summary: Optional[str] = ""
+    aspects_analysis: Optional[List[dict]] = []
+    aspects_summary: Optional[str] = ""
+    metadata: Optional[dict] = {}
+    processing_time: Optional[float] = 0.0
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class BatchURLRequest(BaseModel):
+    urls: List[str]
+    extract_full_content: bool = True
+    include_metadata: bool = True
+
+class BatchURLResponse(BaseModel):
+    batch_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    total_requested: int
+    total_processed: int
+    total_failed: int
+    results: List[URLAnalysisResponse]
+    failed_urls: List[dict]  # [{url: str, error: str}]
+    processing_time: float
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 
 # File Processing Utilities
 async def extract_text_from_file(file: UploadFile) -> List[dict]:
