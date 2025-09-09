@@ -1445,7 +1445,10 @@ async def upload_file(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @api_router.post("/analyze-batch", response_model=BatchAnalysisResponse)
-async def analyze_batch(request: BatchAnalysisRequest):
+async def analyze_batch(
+    request: BatchAnalysisRequest,
+    current_user = Depends(get_current_verified_user)
+):
     """Perform batch sentiment analysis on extracted texts"""
     try:
         if not request.texts:
