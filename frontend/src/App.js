@@ -356,10 +356,10 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
               <span className="ml-2" style={{color: '#42DF50'}}>Loading dashboard...</span>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* User Info Card */}
               <Card className="bg-black/60 border-green-500/20">
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{background: '#42DF50'}}>
