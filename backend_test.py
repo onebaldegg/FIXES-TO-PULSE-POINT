@@ -1369,6 +1369,140 @@ class BrandWatchAPITester:
             401
         )
 
+    def debug_authentication_credentials(self):
+        """Debug authentication credential issue for test account"""
+        print("🔍 DEBUGGING AUTHENTICATION CREDENTIAL ISSUE")
+        print("="*80)
+        print("Focus: onebaldegg@gmail.com authentication failure")
+        print("Issue: Login returns 401 'Incorrect email or password'")
+        print("="*80)
+        
+        # Step 1: Check if user exists by attempting registration
+        print("\n1️⃣ STEP 1: Check if test user exists in database")
+        registration_data = {
+            "email": "onebaldegg@gmail.com",
+            "password": "Testing1",  # Updated to 8-character password
+            "full_name": "Test User Debug"
+        }
+        
+        reg_success, reg_response = self.run_test(
+            "Check User Exists (Registration Attempt)",
+            "POST",
+            "auth/register",
+            400,  # Expect 400 if user already exists
+            data=registration_data
+        )
+        
+        if reg_success and reg_response.get('detail') == 'Email already registered':
+            print("✅ User exists in database (confirmed by 'Email already registered' error)")
+        else:
+            print("❌ Unexpected registration response - user may not exist")
+            print(f"   Response: {reg_response}")
+        
+        # Step 2: Test login with various password combinations
+        print("\n2️⃣ STEP 2: Test login with different password variations")
+        
+        password_variations = [
+            "Testing1",     # Updated 8-character password
+            "testing",      # From review request (7 chars - should fail validation)
+            "Testing123",   # Previous test password
+            "Testing",      # Capitalized version
+            "testing123",   # Lowercase with numbers
+        ]
+        
+        for password in password_variations:
+            print(f"\n   Testing password: '{password}' (length: {len(password)})")
+            login_data = {
+                "username": "onebaldegg@gmail.com",
+                "password": password
+            }
+            
+            login_success, login_response = self.run_oauth2_login_test(
+                f"Login Test - Password: {password}",
+                login_data,
+                200  # Hope for success
+            )
+            
+            if login_success:
+                print(f"✅ SUCCESS! Working password found: '{password}'")
+                self.access_token = login_response.get('access_token')
+                break
+            else:
+                print(f"❌ Failed with password: '{password}'")
+                if login_response.get('detail'):
+                    print(f"   Error: {login_response.get('detail')}")
+        
+        # Step 3: Check backend logs for more details
+        print("\n3️⃣ STEP 3: Check backend service logs")
+        try:
+            import subprocess
+            result = subprocess.run(['tail', '-n', '50', '/var/log/supervisor/backend.err.log'], 
+                                  capture_output=True, text=True, timeout=10)
+            if result.stdout:
+                print("Backend error logs (last 50 lines):")
+                print(result.stdout)
+            else:
+                print("No recent backend error logs found")
+        except Exception as e:
+            print(f"Could not read backend logs: {e}")
+        
+        # Step 4: Try creating a new test user with known credentials
+        print("\n4️⃣ STEP 4: Create new test user with known credentials")
+        new_user_data = {
+            "email": "testdebug@example.com",
+            "password": "TestDebug123",
+            "full_name": "Debug Test User"
+        }
+        
+        new_reg_success, new_reg_response = self.run_test(
+            "Create New Test User",
+            "POST",
+            "auth/register",
+            201,
+            data=new_user_data
+        )
+        
+        if new_reg_success:
+            print("✅ New test user created successfully")
+            
+            # Try to login with new user immediately
+            new_login_data = {
+                "username": "testdebug@example.com",
+                "password": "TestDebug123"
+            }
+            
+            new_login_success, new_login_response = self.run_oauth2_login_test(
+                "Login with New Test User",
+                new_login_data,
+                200
+            )
+            
+            if new_login_success:
+                print("✅ New user login successful - authentication system working")
+                print("❌ Issue is specific to onebaldegg@gmail.com credentials")
+            else:
+                print("❌ New user login also failed - broader authentication issue")
+        else:
+            print("❌ Failed to create new test user")
+            print(f"   Error: {new_reg_response}")
+        
+        # Step 5: Summary and recommendations
+        print("\n5️⃣ STEP 5: Debug Summary and Recommendations")
+        print("-" * 60)
+        
+        if hasattr(self, 'access_token') and self.access_token:
+            print("✅ RESOLVED: Found working credentials for onebaldegg@gmail.com")
+        else:
+            print("❌ UNRESOLVED: Authentication issue persists")
+            print("\nRecommendations:")
+            print("1. Check if password was hashed correctly during user creation")
+            print("2. Verify BCrypt password verification logic")
+            print("3. Check database user record for onebaldegg@gmail.com")
+            print("4. Consider recreating the test user with correct password hash")
+            print("5. Test with a fresh user account to isolate the issue")
+        
+        return hasattr(self, 'access_token') and self.access_token is not None
+
     # URL ANALYSIS TESTS - NEW FEATURE
     def test_analyze_single_url_news_article(self):
         """Test single URL analysis with a news article"""
