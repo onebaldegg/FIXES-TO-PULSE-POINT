@@ -1667,9 +1667,10 @@ async def analyze_batch_urls(
                 
                 results.append(url_response)
                 
-                # Store in database
+                # Store in database with user association
                 url_analysis_data = url_response.dict()
                 url_analysis_data['timestamp'] = url_analysis_data['timestamp'].isoformat()
+                url_analysis_data['user_id'] = current_user["id"]
                 await db.url_analyses.insert_one(url_analysis_data)
                 
             except Exception as e:
