@@ -646,6 +646,149 @@ class TokenService:
 email_service = EmailService()
 token_service = TokenService()
 
+# User Management Functions
+async def get_user_by_email(email: str):
+    """Get user by email from database."""
+    user = await db.users.find_one({"email": email})
+    return user
+
+async def get_user_by_id(user_id: str):
+    """Get user by ID from database."""
+    user = await db.users.find_one({"id": user_id})
+    return user
+
+async def create_user(user_data: UserCreate):
+    """Create new user account with proper validation."""
+    # Check if user already exists
+    existing_user = await get_user_by_email(user_data.email)
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+    
+    # Hash password and create user
+    hashed_password = hash_password(user_data.password)
+    
+    # Check if this is the test account for PRO access
+    subscription_tier = "pro" if user_data.email == "onebaldegg@gmail.com" else "free"
+    
+    user_doc = {
+        "id": str(uuid.uuid4()),
+        "email": user_data.email,
+        "hashed_password": hashed_password,
+        "full_name": user_data.full_name,
+        "is_active": True,
+        "is_verified": False,
+        "subscription_tier": subscription_tier,
+        "created_at": datetime.now(timezone.utc),
+        "last_login": None,
+        "usage_stats": {
+            "analyses_this_month": 0,
+            "files_uploaded": 0,
+            "urls_analyzed": 0,
+            "monthly_reset_date": datetime.now(timezone.utc).replace(day=1)
+        },
+        "settings": {
+            "email_notifications": True,
+            "theme_preference": "matrix"
+        }
+    }
+    
+    result = await db.users.insert_one(user_doc)
+    
+    # Send verification email
+    verification_token = token_service.generate_verification_token(user_doc["id"], user_doc["email"])
+    verification_url = f"{FRONTEND_URL}/verify-email?token={verification_token}"
+    
+    html_content = email_service.render_template(
+        "verification_email",
+        user_name=user_doc["full_name"],
+        verification_url=verification_url
+    )
+    
+    await email_service.send_email(
+        to_email=user_doc["email"],
+        subject="Verify Your Brand Watch AI Account",
+        html_content=html_content
+    )
+    
+    return user_doc
+
+async def authenticate_user(email: str, password: str):
+    """Authenticate user credentials and return user if valid."""
+    user = await get_user_by_email(email)
+    if not user or not verify_password(password, user["hashed_password"]):
+        return False
+    return user
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    """Extract and validate current user from JWT token."""
+    payload = await verify_token(token)
+    email = payload.get("sub")
+    
+    user = await get_user_by_email(email)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found"
+        )
+    
+    return user
+
+async def get_current_active_user(current_user = Depends(get_current_user)):
+    """Ensure user account is active and verified."""
+    if not current_user["is_active"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Inactive user account"
+        )
+    
+    return current_user
+
+async def get_current_verified_user(current_user = Depends(get_current_active_user)):
+    """Ensure user account is verified."""
+    if not current_user["is_verified"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email verification required"
+        )
+    
+    return current_user
+
+# Usage Tracking
+async def check_usage_limits(user: dict, operation: str) -> bool:
+    """Check if user is within usage limits for the operation."""
+    usage_stats = user.get("usage_stats", {})
+    subscription_tier = user.get("subscription_tier", "free")
+    
+    # Define limits per tier
+    limits = {
+        "free": {
+            "analyses_this_month": 50,
+            "files_uploaded": 5,
+            "urls_analyzed": 10
+        },
+        "pro": {
+            "analyses_this_month": 10000,
+            "files_uploaded": 1000,
+            "urls_analyzed": 5000
+        }
+    }
+    
+    tier_limits = limits.get(subscription_tier, limits["free"])
+    current_usage = usage_stats.get(operation, 0)
+    limit = tier_limits.get(operation, 0)
+    
+    return current_usage < limit
+
+async def increment_usage(user_id: str, operation: str):
+    """Increment usage counter for user."""
+    await db.users.update_one(
+        {"id": user_id},
+        {"$inc": {f"usage_stats.{operation}": 1}}
+    )
+
 # File Processing Utilities
 async def extract_text_from_file(file: UploadFile) -> List[dict]:
     """Extract text from uploaded files based on file type"""
