@@ -1381,7 +1381,7 @@ class BrandWatchAPITester:
         print("\n1️⃣ STEP 1: Check if test user exists in database")
         registration_data = {
             "email": "onebaldegg@gmail.com",
-            "password": "Testing1",  # Updated to 8-character password
+            "password": "Testing123",  # Correct working password
             "full_name": "Test User Debug"
         }
         
