@@ -1716,7 +1716,19 @@ const AppContent = () => {
                           placeholder={`https://example.com/article1\nhttps://example.com/article2\nhttps://example.com/article3`}
                           value={urls}
                           onChange={(e) => setUrls(e.target.value)}
-                          className="min-h-[100px] resize-none bg-black/40 border-green-500/30 text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50"
+                          className="min-h-[100px] resize-none bg-black/40 border text-green-100 placeholder:text-green-300/60 focus:ring-green-400/50 focus:outline-none"
+                          style={{
+                            borderColor: '#42DF50',
+                            color: '#42DF50'
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.borderColor = '#42DF50';
+                            e.target.style.boxShadow = '0 0 0 1px rgba(66, 223, 80, 0.5)';
+                          }}
+                          onBlur={(e) => {
+                            e.target.style.borderColor = '#42DF50';
+                            e.target.style.boxShadow = 'none';
+                          }}
                         />
                         <div className="flex items-center justify-between">
                           <p className="text-xs" style={{color: '#42DF50'}}>
