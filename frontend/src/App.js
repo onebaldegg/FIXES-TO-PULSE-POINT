@@ -1365,7 +1365,7 @@ const AppContent = () => {
                         <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{background: '#42DF50'}}>
                           <User className="h-4 w-4 text-white" />
                         </div>
-                        <span className="text-green-200 text-sm">{user.full_name}</span>
+                        <span className="text-sm" style={{color: '#42DF50'}}>{user.full_name}</span>
                         <span className="text-green-400">▼</span>
                       </button>
                       
