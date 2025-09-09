@@ -1585,11 +1585,13 @@ const AppContent = () => {
                       onDrop={handleDrop}
                       onDragOver={handleDragOver}
                       onDragLeave={handleDragLeave}
-                      className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
-                        isDragActive
-                          ? "border-green-400 bg-green-500/10"
-                          : "border-green-500/30 hover:border-green-500/50"
-                      }`}
+                      className="border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200"
+                      style={{
+                        borderColor: isDragActive ? '#42DF50' : '#42DF50',
+                        backgroundColor: isDragActive ? 'rgba(66, 223, 80, 0.1)' : 'transparent'
+                      }}
+                      onMouseEnter={(e) => e.target.style.borderColor = '#42DF50'}
+                      onMouseLeave={(e) => e.target.style.borderColor = '#42DF50'}
                     >
                       <FileUp className={`mx-auto h-12 w-12 mb-4`} style={{color: '#42DF50'}} />
                       <div className="space-y-2">
