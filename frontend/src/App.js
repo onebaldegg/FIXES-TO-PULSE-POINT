@@ -1270,7 +1270,12 @@ const AppContent = () => {
       {/* Content Container */}
       <div className="relative z-20">
         <AuthModal />
-        <UserDashboard />
+        <UserDashboard 
+          showDashboard={showDashboard} 
+          setShowDashboard={setShowDashboard} 
+          user={user}
+          toast={toast}
+        />
         
         {/* Header */}
         <header className="bg-black/90 backdrop-blur-lg border-b border-green-500/20 shadow-2xl">
