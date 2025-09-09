@@ -589,7 +589,7 @@ const App = () => {
                       )}
                     </Button>
                   </>
-                ) : (
+                ) : activeTab === "file" ? (
                   // File Analysis Mode
                   <>
                     {/* File Upload Drop Zone */}
