@@ -392,47 +392,159 @@ const App = () => {
 
         {/* Main Content */}
         <div className="max-w-6xl mx-auto px-6 pb-16">
+          {/* Tab Navigation */}
+          <div className="flex justify-center mb-8">
+            <div className="bg-black/60 backdrop-blur-lg rounded-xl p-1 border border-green-500/20">
+              <div className="flex space-x-1">
+                <button
+                  onClick={() => setActiveTab("text")}
+                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    activeTab === "text"
+                      ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg"
+                      : "text-green-300 hover:text-green-100 hover:bg-green-500/20"
+                  }`}
+                >
+                  <FileText className="mr-2 h-4 w-4 inline" />
+                  Text Analysis
+                </button>
+                <button
+                  onClick={() => setActiveTab("file")}
+                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    activeTab === "file"
+                      ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg"
+                      : "text-green-300 hover:text-green-100 hover:bg-green-500/20"
+                  }`}
+                >
+                  <Upload className="mr-2 h-4 w-4 inline" />
+                  File Analysis
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Analysis Panel */}
             <Card className="shadow-2xl border-0 bg-black/60 backdrop-blur-lg border border-green-500/20">
               <CardHeader className="pb-4">
                 <CardTitle className="text-2xl font-semibold text-green-100">
-                  Sentiment Analysis
+                  {activeTab === "text" ? "Sentiment Analysis" : "File Upload & Analysis"}
                 </CardTitle>
                 <CardDescription className="text-green-200">
-                  Enter your text below to analyze sentiment and get professional insights
+                  {activeTab === "text" 
+                    ? "Enter your text below to analyze sentiment and get professional insights"
+                    : "Upload TXT, CSV, Excel, or PDF files for batch sentiment analysis"
+                  }
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-3">
-                  <label className="text-sm font-medium text-green-200">
-                    Text to Analyze
-                  </label>
-                  <Textarea
-                    placeholder="Enter customer feedback, social media mentions, reviews, or any text you want to analyze..."
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    className="min-h-[120px] resize-none bg-black/40 border-green-500/30 text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50"
-                  />
-                </div>
-                
-                <Button 
-                  onClick={analyzeSentiment}
-                  disabled={loading || !text.trim()}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl border border-green-500/20"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Analyzing...
-                    </>
-                  ) : (
-                    <>
-                      <Brain className="mr-2 h-4 w-4" />
-                      Analyze Sentiment
-                    </>
-                  )}
-                </Button>
+                {activeTab === "text" ? (
+                  // Text Analysis Mode
+                  <>
+                    <div className="space-y-3">
+                      <label className="text-sm font-medium text-green-200">
+                        Text to Analyze
+                      </label>
+                      <Textarea
+                        placeholder="Enter customer feedback, social media mentions, reviews, or any text you want to analyze..."
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        className="min-h-[120px] resize-none bg-black/40 border-green-500/30 text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50"
+                      />
+                    </div>
+                    
+                    <Button 
+                      onClick={analyzeSentiment}
+                      disabled={loading || !text.trim()}
+                      className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl border border-green-500/20"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Analyzing...
+                        </>
+                      ) : (
+                        <>
+                          <Brain className="mr-2 h-4 w-4" />
+                          Analyze Sentiment
+                        </>
+                      )}
+                    </Button>
+                  </>
+                ) : (
+                  // File Analysis Mode
+                  <>
+                    {/* File Upload Drop Zone */}
+                    <div
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
+                        isDragActive
+                          ? "border-green-400 bg-green-500/10"
+                          : "border-green-500/30 hover:border-green-500/50"
+                      }`}
+                    >
+                      <FileUp className={`mx-auto h-12 w-12 mb-4 ${isDragActive ? "text-green-400" : "text-green-300"}`} />
+                      <div className="space-y-2">
+                        <p className="text-green-100 font-medium">
+                          {isDragActive ? "Drop your file here" : "Drag & drop your file here"}
+                        </p>
+                        <p className="text-green-300 text-sm">
+                          or click to browse files
+                        </p>
+                        <p className="text-green-400/80 text-xs">
+                          Supports TXT, CSV, Excel, and PDF files (max 5MB)
+                        </p>
+                      </div>
+                      <input
+                        type="file"
+                        accept=".txt,.csv,.xls,.xlsx,.pdf"
+                        onChange={(e) => e.target.files[0] && handleFileUpload(e.target.files[0])}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                    </div>
+
+                    {/* File Upload Status */}
+                    {uploadLoading && (
+                      <div className="flex items-center justify-center space-x-2 p-4 bg-blue-950/30 border border-blue-500/30 rounded-lg">
+                        <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
+                        <span className="text-blue-300">Uploading and processing file...</span>
+                      </div>
+                    )}
+
+                    {uploadedFile && (
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-2 p-4 bg-green-950/30 border border-green-500/30 rounded-lg">
+                          <CheckCircle className="h-5 w-5 text-green-400" />
+                          <div className="flex-1">
+                            <p className="text-green-200 font-medium">{uploadedFile.filename}</p>
+                            <p className="text-green-300 text-sm">
+                              {uploadedFile.total_entries} text entries extracted • {uploadedFile.file_type.toUpperCase()} file
+                            </p>
+                          </div>
+                        </div>
+
+                        <Button 
+                          onClick={handleBatchAnalysis}
+                          disabled={batchLoading}
+                          className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-medium py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl border border-emerald-500/20"
+                        >
+                          {batchLoading ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Analyzing {uploadedFile.total_entries} entries...
+                            </>
+                          ) : (
+                            <>
+                              <BarChart3 className="mr-2 h-4 w-4" />
+                              Analyze All Entries
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    )}
+                  </>
+                )}
 
                 {/* Current Analysis Result */}
                 {analysis && (
