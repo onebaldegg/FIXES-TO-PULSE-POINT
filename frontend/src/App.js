@@ -1508,7 +1508,7 @@ const AppContent = () => {
                    activeTab === "file" ? "File Upload & Analysis" :
                    "URL Analysis & Web Scraping"}
                 </CardTitle>
-                <CardDescription className="text-green-200" style={{color: '#42DF50'}}>
+                <CardDescription style={{color: '#42DF50'}}>
                   {activeTab === "text" 
                     ? "Enter your text below to analyze sentiment and get professional insights"
                     : activeTab === "file"
