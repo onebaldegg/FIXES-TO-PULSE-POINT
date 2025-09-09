@@ -1421,12 +1421,12 @@ const AppContent = () => {
           <div className="relative z-10 px-6 py-16 pointer-events-none">
             <div className="max-w-4xl mx-auto text-center pointer-events-auto">
               <div className="flex items-center justify-center mb-6">
-                <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-3 rounded-2xl shadow-lg backdrop-blur-sm border border-green-500/20">
-                  <Brain className="h-8 w-8 text-white" />
+                <div className="bg-gradient-to-r from-[#42DF50] to-[#42DF50] p-3 rounded-2xl shadow-lg backdrop-blur-sm border border-[#42DF50]/20">
+                  <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-8 w-8" />
                 </div>
               </div>
-              <h1 className="text-5xl font-bold bg-gradient-to-r from-green-400 via-emerald-300 to-green-500 bg-clip-text text-transparent mb-4 drop-shadow-lg">
-                Brand Watch AI
+              <h1 className="text-5xl font-bold mb-4 drop-shadow-lg" style={{color: '#42DF50'}}>
+                PULSE POINT
               </h1>
               <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
                 Advanced sentiment analysis for PR and marketing professionals. Analyze brand mentions, customer feedback, and campaign performance with AI-powered insights.
