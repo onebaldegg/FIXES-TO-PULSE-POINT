@@ -478,8 +478,8 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                           <span style={{color: '#42DF50'}} className="font-bold">{dashboardStats.totalAnalyses}</span>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-green-950/30 rounded-lg">
-                          <span className="text-green-300">This Week</span>
-                          <span className="text-green-100 font-bold">{dashboardStats.weeklyAnalyses}</span>
+                          <span style={{color: '#42DF50'}}>This Week</span>
+                          <span style={{color: '#42DF50'}} className="font-bold">{dashboardStats.weeklyAnalyses}</span>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-green-950/30 rounded-lg">
                           <span className="text-green-300">This Month</span>
