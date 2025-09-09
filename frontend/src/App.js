@@ -1596,7 +1596,7 @@ const AppContent = () => {
                         <p className="font-medium" style={{color: '#42DF50'}}>
                           {isDragActive ? "Drop your file here" : "Drag & drop your file here"}
                         </p>
-                        <p className="text-green-300 text-sm">
+                        <p className="text-sm" style={{color: '#42DF50'}}>
                           or click to browse files
                         </p>
                         <p className="text-green-400/80 text-xs">
