@@ -793,7 +793,8 @@ const AppContent = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-400 hover:text-green-300"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 hover:opacity-80"
+                    style={{color: '#42DF50'}}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
