@@ -191,6 +191,13 @@ const AppContent = () => {
     }
   }, [authLoading, isAuthenticated]);
 
+  // Load user-specific data when user logs in
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      fetchHistory(); // Reload history for the authenticated user
+    }
+  }, [isAuthenticated, user]);
+
   // Authentication Modal Component
   const AuthModal = () => {
     const { login, register } = useAuth();
