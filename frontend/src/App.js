@@ -2184,4 +2184,12 @@ const AppContent = () => {
   );
 };
 
+const App = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+};
+
 export default App;
