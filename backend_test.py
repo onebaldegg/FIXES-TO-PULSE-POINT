@@ -2060,6 +2060,58 @@ def main():
         print("\n❌ Basic API connectivity failed. Stopping tests.")
         return 1
 
+    # NEW: Test web scraping dependencies - MAIN FOCUS
+    print("\n🌐 Testing Web Scraping Dependencies - NEW FEATURE")
+    print("-" * 55)
+    web_deps_success, _ = tester.test_web_scraping_dependencies()
+    if not web_deps_success:
+        print("\n⚠️  Some web scraping dependencies missing, but continuing with tests...")
+
+    # NEW: Test URL analysis functionality - MAIN FOCUS
+    print("\n🌐 Testing URL Analysis Functionality - NEW FEATURE")
+    print("-" * 55)
+    
+    # Test single URL analysis with different content types
+    news_success, news_response = tester.test_analyze_single_url_news_article()
+    if news_success:
+        tester.validate_url_analysis_response(news_response)
+    
+    blog_success, blog_response = tester.test_analyze_single_url_blog_post()
+    if blog_success:
+        tester.validate_url_analysis_response(blog_response)
+    
+    # Test content extraction quality
+    quality_success, quality_response = tester.test_url_content_extraction_quality()
+    
+    # Test sentiment analysis integration
+    integration_success, integration_response = tester.test_url_sentiment_analysis_integration()
+    
+    # Test URL validation and error handling
+    print("\n🚨 Testing URL Analysis Error Handling")
+    print("-" * 45)
+    tester.test_analyze_url_invalid_format()
+    tester.test_analyze_url_unsupported_protocol()
+    tester.test_analyze_url_nonexistent_domain()
+    
+    # Test batch URL analysis
+    print("\n⚡ Testing Batch URL Analysis - NEW FEATURE")
+    print("-" * 50)
+    
+    batch_url_success, batch_url_response = tester.test_batch_url_analysis()
+    if batch_url_success:
+        tester.validate_batch_url_analysis_response(batch_url_response)
+    
+    # Test batch URL analysis with mixed results
+    mixed_batch_success, mixed_batch_response = tester.test_batch_url_analysis_mixed_results()
+    if mixed_batch_success:
+        tester.validate_batch_url_analysis_response(mixed_batch_response)
+    
+    # Test batch URL analysis error cases
+    print("\n🚨 Testing Batch URL Analysis Error Handling")
+    print("-" * 50)
+    tester.test_batch_url_analysis_empty_list()
+    tester.test_batch_url_analysis_too_many_urls()
+
     # NEW: Test file processing dependencies first - MAIN FOCUS
     print("\n📦 Testing File Processing Dependencies - NEW FEATURE")
     print("-" * 55)
