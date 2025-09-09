@@ -1114,6 +1114,234 @@ class BrandWatchAPITester:
         
         return success, response
 
+    # OAUTH2 AUTHENTICATION TESTS - NEW FEATURE
+    def test_user_registration_test_credentials(self):
+        """Test user registration with test credentials (should get PRO access)"""
+        registration_data = {
+            "email": "onebaldegg@gmail.com",
+            "password": "testing",
+            "full_name": "Test Pro User"
+        }
+        
+        return self.run_test(
+            "User Registration - Test Credentials (PRO)",
+            "POST",
+            "auth/register",
+            201,
+            data=registration_data,
+            timeout=30
+        )
+
+    def test_user_login_valid_credentials(self):
+        """Test user login with valid credentials"""
+        login_data = {
+            "username": "onebaldegg@gmail.com",  # OAuth2PasswordRequestForm uses 'username'
+            "password": "testing"
+        }
+        
+        # Use form data for OAuth2PasswordRequestForm
+        success, response = self.run_oauth2_login_test(
+            "User Login - Valid Credentials",
+            login_data,
+            200
+        )
+        
+        if success and response:
+            # Store tokens for subsequent tests
+            self.access_token = response.get('access_token')
+            self.refresh_token = response.get('refresh_token')
+            print(f"   Access token stored for authenticated tests")
+        
+        return success, response
+
+    def run_oauth2_login_test(self, name, login_data, expected_status, timeout=30):
+        """Run OAuth2 login test with form data"""
+        url = f"{self.api_url}/auth/login"
+        
+        self.tests_run += 1
+        print(f"\n🔍 Testing {name}...")
+        print(f"   URL: {url}")
+        
+        try:
+            # OAuth2PasswordRequestForm expects form data, not JSON
+            response = requests.post(url, data=login_data, timeout=timeout)
+            print(f"   Status Code: {response.status_code}")
+            
+            success = response.status_code == expected_status
+            if success:
+                self.tests_passed += 1
+                print(f"✅ Passed - Expected {expected_status}, got {response.status_code}")
+                try:
+                    response_data = response.json()
+                    print(f"   Response: {json.dumps(response_data, indent=2)[:200]}...")
+                    return True, response_data
+                except:
+                    return True, response.text
+            else:
+                print(f"❌ Failed - Expected {expected_status}, got {response.status_code}")
+                try:
+                    error_data = response.json()
+                    print(f"   Error: {error_data}")
+                except:
+                    print(f"   Error: {response.text}")
+                return False, {}
+
+        except requests.exceptions.Timeout:
+            print(f"❌ Failed - Request timed out after {timeout} seconds")
+            return False, {}
+        except Exception as e:
+            print(f"❌ Failed - Error: {str(e)}")
+            return False, {}
+
+    def test_user_profile_authenticated(self):
+        """Test getting user profile with authentication"""
+        if not self.access_token:
+            print("⚠️  No access token available, skipping authenticated test")
+            return False, {}
+        
+        return self.run_authenticated_test(
+            "Get User Profile - Authenticated",
+            "GET",
+            "auth/me",
+            200
+        )
+
+    def run_authenticated_test(self, name, method, endpoint, expected_status, data=None, timeout=30):
+        """Run a test with authentication headers"""
+        url = f"{self.api_url}/{endpoint}" if endpoint else self.api_url
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {self.access_token}'
+        }
+
+        self.tests_run += 1
+        print(f"\n🔍 Testing {name}...")
+        print(f"   URL: {url}")
+        print(f"   Using Bearer token authentication")
+        
+        try:
+            if method == 'GET':
+                response = requests.get(url, headers=headers, timeout=timeout)
+            elif method == 'POST':
+                response = requests.post(url, json=data, headers=headers, timeout=timeout)
+
+            print(f"   Status Code: {response.status_code}")
+            
+            success = response.status_code == expected_status
+            if success:
+                self.tests_passed += 1
+                print(f"✅ Passed - Expected {expected_status}, got {response.status_code}")
+                try:
+                    response_data = response.json()
+                    print(f"   Response: {json.dumps(response_data, indent=2)[:200]}...")
+                    return True, response_data
+                except:
+                    return True, response.text
+            else:
+                print(f"❌ Failed - Expected {expected_status}, got {response.status_code}")
+                try:
+                    error_data = response.json()
+                    print(f"   Error: {error_data}")
+                except:
+                    print(f"   Error: {response.text}")
+                return False, {}
+
+        except requests.exceptions.Timeout:
+            print(f"❌ Failed - Request timed out after {timeout} seconds")
+            return False, {}
+        except Exception as e:
+            print(f"❌ Failed - Error: {str(e)}")
+            return False, {}
+
+    def test_protected_sentiment_analysis(self):
+        """Test that sentiment analysis requires authentication"""
+        if not self.access_token:
+            print("⚠️  No access token available, testing unauthenticated access")
+            # Test without authentication (should fail)
+            return self.run_test(
+                "Sentiment Analysis - Unauthenticated",
+                "POST",
+                "analyze-sentiment",
+                401,
+                data={"text": "This is a test"}
+            )
+        else:
+            # Test with authentication (should work)
+            return self.run_authenticated_test(
+                "Sentiment Analysis - Authenticated",
+                "POST",
+                "analyze-sentiment",
+                200,
+                data={"text": "This is a test for authenticated sentiment analysis"}
+            )
+
+    def test_usage_tracking_and_limits(self):
+        """Test usage tracking and subscription limits"""
+        if not self.access_token:
+            print("⚠️  No access token available, skipping usage tracking test")
+            return False, {}
+        
+        print(f"\n🔍 Testing Usage Tracking and Limits...")
+        
+        # First, get user profile to check subscription tier
+        profile_success, profile_response = self.run_authenticated_test(
+            "Get Profile for Usage Check",
+            "GET",
+            "auth/me",
+            200
+        )
+        
+        if not profile_success:
+            print("❌ Failed to get user profile for usage tracking test")
+            return False, {}
+        
+        subscription_tier = profile_response.get('subscription_tier', 'free')
+        usage_stats = profile_response.get('usage_stats', {})
+        
+        print(f"   Subscription Tier: {subscription_tier}")
+        print(f"   Current Usage: {usage_stats}")
+        
+        # Test a few sentiment analyses to increment usage
+        for i in range(3):
+            success, response = self.run_authenticated_test(
+                f"Usage Tracking Test {i+1}",
+                "POST",
+                "analyze-sentiment",
+                200,
+                data={"text": f"This is usage tracking test number {i+1}"}
+            )
+            
+            if not success:
+                print(f"❌ Usage tracking test {i+1} failed")
+                return False, {}
+            
+            time.sleep(0.5)  # Brief pause between requests
+        
+        # Check updated usage stats
+        updated_profile_success, updated_profile_response = self.run_authenticated_test(
+            "Get Updated Profile for Usage Check",
+            "GET",
+            "auth/me",
+            200
+        )
+        
+        if updated_profile_success:
+            updated_usage_stats = updated_profile_response.get('usage_stats', {})
+            print(f"   Updated Usage: {updated_usage_stats}")
+            
+            # Check if usage counter increased
+            old_analyses = usage_stats.get('analyses_this_month', 0)
+            new_analyses = updated_usage_stats.get('analyses_this_month', 0)
+            
+            if new_analyses > old_analyses:
+                print(f"✅ Usage tracking working - analyses increased from {old_analyses} to {new_analyses}")
+                return True, updated_profile_response
+            else:
+                print(f"⚠️  Usage tracking may not be working - analyses: {old_analyses} -> {new_analyses}")
+                return False, {}
+        
+        return False, {}
+
     # URL ANALYSIS TESTS - NEW FEATURE
     def test_analyze_single_url_news_article(self):
         """Test single URL analysis with a news article"""
