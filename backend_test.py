@@ -1119,7 +1119,7 @@ class BrandWatchAPITester:
         """Test user registration with test credentials (should get PRO access)"""
         registration_data = {
             "email": "onebaldegg@gmail.com",
-            "password": "testing",
+            "password": "Testing123",
             "full_name": "Test Pro User"
         }
         
