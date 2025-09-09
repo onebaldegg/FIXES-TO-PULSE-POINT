@@ -486,8 +486,8 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                           <span style={{color: '#42DF50'}} className="font-bold">{dashboardStats.monthlyAnalyses}</span>
                         </div>
                         <div className="flex items-center justify-between p-3 bg-green-950/30 rounded-lg">
-                          <span className="text-green-300">Avg. Confidence</span>
-                          <span className="text-green-100 font-bold">{dashboardStats.averageConfidence}%</span>
+                          <span style={{color: '#42DF50'}}>Avg. Confidence</span>
+                          <span style={{color: '#42DF50'}} className="font-bold">{dashboardStats.averageConfidence}%</span>
                         </div>
                       </div>
                     </CardContent>
