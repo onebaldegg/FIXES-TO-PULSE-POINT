@@ -2298,4 +2298,14 @@ const App = () => {
   );
 };
 
+// Main App component with AuthProvider
+const App = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+      <Toaster />
+    </AuthProvider>
+  );
+};
+
 export default App;
