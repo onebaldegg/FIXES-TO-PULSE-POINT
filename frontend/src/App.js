@@ -1470,7 +1470,7 @@ const AppContent = () => {
                       </button>
                       
                       {showUserMenu && (
-                        <div className="absolute right-0 mt-2 w-64 bg-black/90 backdrop-blur-lg border border-green-500/20 rounded-lg shadow-2xl z-[9999]">
+                        <div className="absolute right-0 mt-2 w-64 bg-black backdrop-blur-xl border border-green-500/30 rounded-lg shadow-2xl z-[9999]">
                           <div className="p-4 border-b border-green-500/20">
                             <p style={{color: '#42DF50'}} className="font-medium">{user.full_name}</p>
                             <p className="text-sm" style={{color: '#42DF50'}}>{user.email}</p>
