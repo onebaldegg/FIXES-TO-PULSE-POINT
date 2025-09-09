@@ -2308,8 +2308,8 @@ const AppContent = () => {
                   // Text Analysis History
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                   {history.length === 0 ? (
-                    <div className="text-center py-8 text-green-300">
-                      <BarChart3 className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                    <div className="text-center py-8" style={{color: '#42DF50'}}>
+                      <BarChart3 className="h-12 w-12 mx-auto mb-3 opacity-50" style={{color: '#42DF50'}} />
                       <p>No analysis history yet</p>
                       <p className="text-sm" style={{color: '#42DF50'}}>Start analyzing text to see results here</p>
                     </div>
