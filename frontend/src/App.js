@@ -422,7 +422,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                     }
                   ].map((stat, index) => (
                     <Card key={index} className="bg-black/60 border-green-500/20">
-                      <CardContent className="p-6">
+                      <CardContent className="p-4 sm:p-6">
                         <div className="flex items-center justify-between mb-4">
                           <div className="w-12 h-12 rounded-xl flex items-center justify-center" 
                                style={{
