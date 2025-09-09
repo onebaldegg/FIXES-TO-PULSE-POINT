@@ -1354,7 +1354,10 @@ const AppContent = () => {
                           </div>
                           <div className="p-2">
                             <button
-                              onClick={() => {
+                              onClick={(e) => {
+                                console.log("Dashboard button clicked!");
+                                e.preventDefault();
+                                e.stopPropagation();
                                 setShowDashboard(true);
                                 setShowUserMenu(false);
                               }}
