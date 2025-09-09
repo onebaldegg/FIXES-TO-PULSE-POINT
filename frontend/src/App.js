@@ -413,8 +413,8 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                         </div>
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-green-300">{stat.label}</span>
-                            <span className="text-green-400">{Math.round((stat.current / stat.limit) * 100)}%</span>
+                            <span style={{color: '#42DF50'}}>{stat.label}</span>
+                            <span style={{color: '#42DF50'}}>{Math.round((stat.current / stat.limit) * 100)}%</span>
                           </div>
                           <div className="w-full bg-green-800/30 rounded-full h-2">
                             <div 
