@@ -177,7 +177,23 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
   useEffect(() => {
     if (showDashboard && user) {
       loadDashboardStats();
+      // Prevent body scrolling on mobile when dashboard is open
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      // Restore body scrolling
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     }
+    
+    return () => {
+      // Cleanup: restore body scrolling
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
   }, [showDashboard, user]);
 
   const loadDashboardStats = async () => {
