@@ -1426,12 +1426,16 @@ async def upload_file(
             extracted_texts=extracted_texts
         )
         
-        # Store file metadata in database
+        # Store file metadata in database with user association
         file_metadata = response.dict()
         file_metadata['timestamp'] = file_metadata['timestamp'].isoformat()
+        file_metadata['user_id'] = current_user["id"]
         await db.uploaded_files.insert_one(file_metadata)
         
-        logger.info(f"Successfully processed file {file.filename}: {len(extracted_texts)} texts extracted")
+        # Increment usage counter
+        await increment_usage(current_user["id"], "files_uploaded")
+        
+        logger.info(f"Successfully processed file {file.filename} for user {current_user['email']}: {len(extracted_texts)} texts extracted")
         return response
         
     except HTTPException:
