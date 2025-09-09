@@ -423,8 +423,13 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                           </div>
                           <div className="w-full bg-green-800/30 rounded-full h-2">
                             <div 
-                              className={`h-2 bg-gradient-to-r ${stat.color} rounded-full transition-all duration-300`}
-                              style={{ width: `${Math.min((stat.current / stat.limit) * 100, 100)}%` }}
+                              className="h-2 rounded-full transition-all duration-300"
+                              style={{ 
+                                width: `${Math.min((stat.current / stat.limit) * 100, 100)}%`,
+                                background: stat.label === 'Files Uploaded' ? '#42DF50' : 
+                                           stat.label === 'Text Analyses' ? '#3B82F6' : 
+                                           '#06B6D4'
+                              }}
                             />
                           </div>
                           {stat.current / stat.limit > 0.8 && (
