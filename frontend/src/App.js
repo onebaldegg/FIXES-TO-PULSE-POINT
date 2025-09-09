@@ -1299,7 +1299,7 @@ const AppContent = () => {
           <div className="max-w-7xl mx-auto px-6 py-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className="bg-gradient-to-r from-[#42DF50] to-[#42DF50] p-3 rounded-xl shadow-xl">
+                <div className="p-3 rounded-xl">
                   <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-8 w-8" />
                 </div>
                 <div>
