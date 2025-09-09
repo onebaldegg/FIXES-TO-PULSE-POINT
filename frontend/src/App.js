@@ -709,7 +709,7 @@ const AppContent = () => {
                 PULSE POINT
               </CardTitle>
             </div>
-            <CardDescription className="text-green-200 mt-4">
+            <CardDescription className="mt-4" style={{color: '#42DF50'}}>
               {authMode === "login" ? "Sign in to your account" : "Create your account"}
             </CardDescription>
           </CardHeader>
