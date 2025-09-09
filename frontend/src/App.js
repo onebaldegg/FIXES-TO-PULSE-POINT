@@ -845,11 +845,25 @@ const AppContent = () => {
   const [showDashboard, setShowDashboard] = useState(false);
 
   const fetchHistory = async () => {
+    // Only fetch history if user is authenticated
+    if (!isAuthenticated || !user) {
+      console.log("Skipping history fetch - user not authenticated");
+      return;
+    }
+    
     try {
       const response = await axios.get(`${API}/sentiment-history`);
       setHistory(response.data);
     } catch (error) {
       console.error("Error fetching history:", error);
+      // Only show toast for non-authentication errors
+      if (error.response?.status !== 401) {
+        toast({
+          title: "Error",
+          description: "Failed to load analysis history",
+          variant: "destructive"
+        });
+      }
     }
   };
 
