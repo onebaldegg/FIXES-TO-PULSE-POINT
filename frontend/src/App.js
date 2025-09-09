@@ -1362,7 +1362,7 @@ const AppContent = () => {
                         onMouseEnter={(e) => e.target.style.borderColor = '#42DF50'}
                         onMouseLeave={(e) => e.target.style.borderColor = '#42DF50'}
                       >
-                        <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{background: '#42DF50'}}>
                           <User className="h-4 w-4 text-white" />
                         </div>
                         <span className="text-green-200 text-sm">{user.full_name}</span>
