@@ -1035,6 +1035,162 @@ async def analyze_batch(request: BatchAnalysisRequest):
         logger.error(f"Error in batch analysis: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
+@api_router.post("/analyze-url", response_model=URLAnalysisResponse)
+async def analyze_url(request: URLAnalysisRequest):
+    """Analyze sentiment of content from a single URL"""
+    try:
+        # Process URL and extract content
+        url_data = await url_processor.process_url(
+            request.url, 
+            request.extract_full_content, 
+            request.include_metadata
+        )
+        
+        # Perform sentiment analysis on extracted text
+        analysis_result = await analyze_sentiment(url_data['extracted_text'])
+        
+        # Create response
+        response = URLAnalysisResponse(
+            url=url_data['url'],
+            title=url_data.get('title'),
+            author=url_data.get('author'),
+            publish_date=url_data.get('publish_date'),
+            extracted_text=url_data['extracted_text'],
+            text_length=url_data['text_length'],
+            sentiment=analysis_result["sentiment"],
+            confidence=analysis_result["confidence"],
+            analysis=analysis_result["analysis"],
+            emotions=analysis_result.get("emotions", {}),
+            dominant_emotion=analysis_result.get("dominant_emotion", ""),
+            sarcasm_detected=analysis_result.get("sarcasm_detected", False),
+            sarcasm_confidence=analysis_result.get("sarcasm_confidence", 0.0),
+            sarcasm_explanation=analysis_result.get("sarcasm_explanation", ""),
+            adjusted_sentiment=analysis_result.get("adjusted_sentiment", analysis_result["sentiment"]),
+            sarcasm_indicators=analysis_result.get("sarcasm_indicators", []),
+            topics_detected=analysis_result.get("topics_detected", []),
+            primary_topic=analysis_result.get("primary_topic", ""),
+            topic_summary=analysis_result.get("topic_summary", ""),
+            aspects_analysis=analysis_result.get("aspects_analysis", []),
+            aspects_summary=analysis_result.get("aspects_summary", ""),
+            metadata=url_data.get('metadata', {}),
+            processing_time=url_data.get('processing_time', 0.0)
+        )
+        
+        # Store URL analysis in database
+        url_analysis_data = response.dict()
+        url_analysis_data['timestamp'] = url_analysis_data['timestamp'].isoformat()
+        await db.url_analyses.insert_one(url_analysis_data)
+        
+        logger.info(f"Successfully analyzed URL: {request.url[:100]}...")
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error analyzing URL {request.url}: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@api_router.post("/analyze-batch-urls", response_model=BatchURLResponse)
+async def analyze_batch_urls(request: BatchURLRequest):
+    """Analyze sentiment of content from multiple URLs"""
+    start_time = time.time()
+    
+    try:
+        if not request.urls:
+            raise HTTPException(status_code=400, detail="No URLs provided for analysis")
+        
+        if len(request.urls) > 20:  # Limit batch size
+            raise HTTPException(status_code=400, detail="Maximum 20 URLs allowed per batch")
+        
+        results = []
+        failed_urls = []
+        
+        for url in request.urls:
+            try:
+                # Process URL and extract content
+                url_data = await url_processor.process_url(
+                    url, 
+                    request.extract_full_content, 
+                    request.include_metadata
+                )
+                
+                # Perform sentiment analysis
+                analysis_result = await analyze_sentiment(url_data['extracted_text'])
+                
+                # Create URL analysis response
+                url_response = URLAnalysisResponse(
+                    url=url_data['url'],
+                    title=url_data.get('title'),
+                    author=url_data.get('author'),
+                    publish_date=url_data.get('publish_date'),
+                    extracted_text=url_data['extracted_text'],
+                    text_length=url_data['text_length'],
+                    sentiment=analysis_result["sentiment"],
+                    confidence=analysis_result["confidence"],
+                    analysis=analysis_result["analysis"],
+                    emotions=analysis_result.get("emotions", {}),
+                    dominant_emotion=analysis_result.get("dominant_emotion", ""),
+                    sarcasm_detected=analysis_result.get("sarcasm_detected", False),
+                    sarcasm_confidence=analysis_result.get("sarcasm_confidence", 0.0),
+                    sarcasm_explanation=analysis_result.get("sarcasm_explanation", ""),
+                    adjusted_sentiment=analysis_result.get("adjusted_sentiment", analysis_result["sentiment"]),
+                    sarcasm_indicators=analysis_result.get("sarcasm_indicators", []),
+                    topics_detected=analysis_result.get("topics_detected", []),
+                    primary_topic=analysis_result.get("primary_topic", ""),
+                    topic_summary=analysis_result.get("topic_summary", ""),
+                    aspects_analysis=analysis_result.get("aspects_analysis", []),
+                    aspects_summary=analysis_result.get("aspects_summary", ""),
+                    metadata=url_data.get('metadata', {}),
+                    processing_time=url_data.get('processing_time', 0.0)
+                )
+                
+                results.append(url_response)
+                
+                # Store in database
+                url_analysis_data = url_response.dict()
+                url_analysis_data['timestamp'] = url_analysis_data['timestamp'].isoformat()
+                await db.url_analyses.insert_one(url_analysis_data)
+                
+            except Exception as e:
+                logger.error(f"Error processing URL {url}: {e}")
+                failed_urls.append({
+                    "url": url,
+                    "error": str(e)
+                })
+                continue
+        
+        total_processing_time = time.time() - start_time
+        
+        # Create batch response
+        batch_response = BatchURLResponse(
+            total_requested=len(request.urls),
+            total_processed=len(results),
+            total_failed=len(failed_urls),
+            results=results,
+            failed_urls=failed_urls,
+            processing_time=total_processing_time
+        )
+        
+        # Store batch metadata
+        batch_data = {
+            "batch_id": batch_response.batch_id,
+            "total_requested": batch_response.total_requested,
+            "total_processed": batch_response.total_processed,
+            "total_failed": batch_response.total_failed,
+            "processing_time": batch_response.processing_time,
+            "timestamp": batch_response.timestamp.isoformat()
+        }
+        await db.url_batch_analyses.insert_one(batch_data)
+        
+        logger.info(f"Batch URL analysis completed: {len(results)}/{len(request.urls)} URLs processed successfully")
+        return batch_response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in batch URL analysis: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
 
 # Include the router in the main app
 app.include_router(api_router)
