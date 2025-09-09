@@ -723,9 +723,19 @@ const AppContent = () => {
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 bg-black/40 border rounded-lg text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50 focus:outline-none ${
-                      errors.fullName ? 'border-red-500' : 'border-green-500/30'
-                    }`}
+                    className="w-full px-3 py-2 bg-black/40 border rounded-lg placeholder:text-green-300/60 focus:outline-none"
+                    style={{
+                      color: '#42DF50',
+                      borderColor: errors.fullName ? '#ef4444' : '#42DF50'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#42DF50';
+                      e.target.style.boxShadow = '0 0 0 1px rgba(66, 223, 80, 0.5)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = errors.fullName ? '#ef4444' : '#42DF50';
+                      e.target.style.boxShadow = 'none';
+                    }}
                     placeholder="Enter your full name"
                   />
                   {errors.fullName && <p className="text-xs text-red-400">{errors.fullName}</p>}
