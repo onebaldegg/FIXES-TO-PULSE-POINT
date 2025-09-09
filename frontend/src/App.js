@@ -1323,7 +1323,7 @@ const AppContent = () => {
                 {user && (
                   <div className="flex items-center space-x-4">
                     {/* Usage Statistics */}
-                    <div className="bg-green-950/50 px-4 py-2 rounded-lg border border-green-500/30">
+                    <div className="bg-green-950/50 px-4 py-2 rounded-lg border" style={{borderColor: '#42DF50'}}>
                       <div className="flex items-center space-x-2">
                         <Badge 
                           variant={user.subscription_tier === 'pro' ? 'default' : 'secondary'} 
