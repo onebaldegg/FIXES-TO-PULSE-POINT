@@ -2291,6 +2291,44 @@ def main():
         print("\n❌ Basic API connectivity failed. Stopping tests.")
         return 1
 
+    # NEW: Test OAuth2 Authentication System - MAIN FOCUS
+    print("\n🔐 Testing OAuth2 Authentication System - NEW FEATURE")
+    print("-" * 60)
+    
+    # Test user registration with test credentials (PRO access)
+    reg_success, reg_response = tester.test_user_registration_test_credentials()
+    if reg_success:
+        print("✅ User registration successful")
+    else:
+        print("⚠️  User registration failed (may already exist)")
+    
+    # Test user login with test credentials
+    login_success, login_response = tester.test_user_login_valid_credentials()
+    if login_success and login_response:
+        print("✅ User login successful - tokens obtained")
+        
+        # Test authenticated user profile
+        profile_success, profile_response = tester.test_user_profile_authenticated()
+        if profile_success:
+            print("✅ Authenticated user profile access working")
+        
+        # Test usage tracking and limits
+        usage_success, usage_response = tester.test_usage_tracking_and_limits()
+        if usage_success:
+            print("✅ Usage tracking and limits working")
+        
+        # Test protected endpoints with authentication
+        protected_sentiment_success, _ = tester.test_protected_sentiment_analysis()
+        if protected_sentiment_success:
+            print("✅ Protected sentiment analysis working with authentication")
+    else:
+        print("❌ User login failed - testing unauthenticated access")
+        
+        # Test that endpoints are properly protected
+        unauth_sentiment_success, _ = tester.test_protected_sentiment_analysis()
+        if unauth_sentiment_success:
+            print("✅ Sentiment analysis properly protected (returns 401)")
+
     # NEW: Test web scraping dependencies - MAIN FOCUS
     print("\n🌐 Testing Web Scraping Dependencies - NEW FEATURE")
     print("-" * 55)
