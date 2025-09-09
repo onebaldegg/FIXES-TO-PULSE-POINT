@@ -853,10 +853,6 @@ const AppContent = () => {
     }
   };
 
-  useEffect(() => {
-    fetchHistory();
-  }, []);
-
   const analyzeSentiment = async () => {
     if (!text.trim()) {
       toast({
