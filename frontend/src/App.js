@@ -693,13 +693,13 @@ const AppContent = () => {
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <Card className="w-full max-w-md shadow-2xl border-0 bg-black/80 backdrop-blur-lg border border-green-500/20">
           <CardHeader className="text-center pb-4">
-            <div className="mx-auto w-16 h-16 flex items-center justify-center mb-4">
-              <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-12 w-12" />
+            <div className="mx-auto flex flex-col items-center">
+              <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-16 w-16" />
+              <CardTitle className="text-3xl font-bold mt-2" style={{color: '#42DF50'}}>
+                PULSE POINT
+              </CardTitle>
             </div>
-            <CardTitle className="text-2xl font-bold" style={{color: '#42DF50'}}>
-              PULSE POINT
-            </CardTitle>
-            <CardDescription className="text-green-200">
+            <CardDescription className="text-green-200 mt-4">
               {authMode === "login" ? "Sign in to your account" : "Create your account"}
             </CardDescription>
           </CardHeader>
