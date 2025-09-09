@@ -1689,7 +1689,7 @@ const AppContent = () => {
                         <Button 
                           onClick={handleBatchAnalysis}
                           disabled={batchLoading}
-                          className="w-full font-medium py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl border text-white"
+                          className="w-full font-medium py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl border text-black"
                           style={{
                             background: '#42DF50',
                             borderColor: '#42DF50'
