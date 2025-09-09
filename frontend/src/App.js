@@ -1514,28 +1514,28 @@ const AppContent = () => {
 
         {/* Hero Section */}
         <div className="relative">
-          <div className="relative z-10 px-6 py-16 pointer-events-none">
+          <div className="relative z-10 px-3 sm:px-6 py-8 sm:py-16 pointer-events-none">
             <div className="max-w-4xl mx-auto text-center pointer-events-auto">
-              <div className="flex flex-col items-center justify-center text-center mb-6">
-                <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-40 w-40 mb-4" />
+              <div className="flex flex-col items-center justify-center text-center mb-4 sm:mb-6">
+                <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-24 w-24 sm:h-40 sm:w-40 mb-4" />
                 <div className="flex justify-center w-full">
-                  <img src="/pulse-point-logo.png" alt="Pulse Point Logo" className="h-30 w-auto mx-auto ml-8" />
+                  <img src="/pulse-point-logo.png" alt="Pulse Point Logo" className="h-20 sm:h-30 w-auto mx-auto ml-2 sm:ml-8" />
                 </div>
               </div>
-              <p className="text-xl mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md" style={{color: '#42DF50'}}>
+              <p className="text-sm sm:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md" style={{color: '#42DF50'}}>
                 Advanced sentiment analysis for PR and marketing professionals. Analyze brand mentions, customer feedback, and campaign performance with AI-powered insights.
               </p>
-              <div className="flex items-center justify-center space-x-8 text-sm" style={{color: '#42DF50'}}>
+              <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-8 text-xs sm:text-sm" style={{color: '#42DF50'}}>
                 <div className="flex items-center space-x-2">
-                  <Zap className="h-4 w-4" style={{color: '#42DF50'}} />
+                  <Zap className="h-3 w-3 sm:h-4 sm:w-4" style={{color: '#42DF50'}} />
                   <span>Real-time Analysis</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <BarChart3 className="h-4 w-4" style={{color: '#42DF50'}} />
+                  <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" style={{color: '#42DF50'}} />
                   <span>Professional Insights</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Brain className="h-4 w-4" style={{color: '#42DF50'}} />
+                  <Brain className="h-3 w-3 sm:h-4 sm:w-4" style={{color: '#42DF50'}} />
                   <span>AI-Powered</span>
                 </div>
               </div>
