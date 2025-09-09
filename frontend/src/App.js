@@ -502,7 +502,7 @@ const App = () => {
               <div className="flex space-x-1">
                 <button
                   onClick={() => setActiveTab("text")}
-                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                     activeTab === "text"
                       ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg"
                       : "text-green-300 hover:text-green-100 hover:bg-green-500/20"
@@ -513,7 +513,7 @@ const App = () => {
                 </button>
                 <button
                   onClick={() => setActiveTab("file")}
-                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                     activeTab === "file"
                       ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg"
                       : "text-green-300 hover:text-green-100 hover:bg-green-500/20"
@@ -521,6 +521,17 @@ const App = () => {
                 >
                   <Upload className="mr-2 h-4 w-4 inline" />
                   File Analysis
+                </button>
+                <button
+                  onClick={() => setActiveTab("url")}
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    activeTab === "url"
+                      ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg"
+                      : "text-green-300 hover:text-green-100 hover:bg-green-500/20"
+                  }`}
+                >
+                  <Monitor className="mr-2 h-4 w-4 inline" />
+                  URL Analysis
                 </button>
               </div>
             </div>
