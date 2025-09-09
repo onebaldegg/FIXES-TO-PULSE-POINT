@@ -832,7 +832,19 @@ const AppContent = () => {
               <Button
                 type="submit"
                 disabled={formLoading}
-                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl border border-green-500/20"
+                className="w-full text-white font-medium py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl border"
+                style={{
+                  background: '#42DF50',
+                  borderColor: '#42DF50'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = '#3BC642';
+                  e.target.style.borderColor = '#3BC642';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = '#42DF50';
+                  e.target.style.borderColor = '#42DF50';
+                }}
               >
                 {formLoading ? (
                   <>
