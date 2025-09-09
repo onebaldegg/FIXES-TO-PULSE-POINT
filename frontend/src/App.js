@@ -33,6 +33,17 @@ const AuthProvider = ({ children }) => {
 
   // Set up axios interceptor for authentication
   useEffect(() => {
+    // Force logout all users - clear all authentication data
+    localStorage.clear();
+    sessionStorage.clear();
+    setUser(null);
+    setToken(null);
+    setRefreshToken(null);
+    delete axios.defaults.headers.common['Authorization'];
+    console.log("🚪 All users logged out - authentication cleared");
+  }, []); // Run once on app load
+
+  useEffect(() => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
