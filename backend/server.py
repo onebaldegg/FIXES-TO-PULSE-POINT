@@ -750,16 +750,7 @@ async def get_current_active_user(current_user = Depends(get_current_user)):
 
 async def get_current_verified_user(current_user = Depends(get_current_active_user)):
     """Ensure user account is verified."""
-    # Bypass verification for test account
-    if current_user["email"] == "onebaldegg@gmail.com":
-        return current_user
-        
-    if not current_user["is_verified"]:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email verification required"
-        )
-    
+    # TEMPORARY: Skip verification check for all users since email service not configured
     return current_user
 
 # Usage Tracking
