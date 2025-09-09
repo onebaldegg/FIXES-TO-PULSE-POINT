@@ -2057,7 +2057,7 @@ const AppContent = () => {
                                 )}
                               </div>
                             </div>
-                            <p className="text-sm text-green-200 line-clamp-2">
+                            <p className="text-sm" style={{color: '#42DF50'}} className="line-clamp-2">
                               "{result.text.length > 100 ? result.text.substring(0, 100) + "..." : result.text}"
                             </p>
                             {result.aspects_analysis && result.aspects_analysis.length > 0 && (
