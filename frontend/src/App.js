@@ -1599,7 +1599,7 @@ const AppContent = () => {
                         <p className="text-sm" style={{color: '#42DF50'}}>
                           or click to browse files
                         </p>
-                        <p className="text-green-400/80 text-xs">
+                        <p className="text-xs" style={{color: '#42DF50'}}>
                           Supports TXT, CSV, Excel, and PDF files (max 5MB)
                         </p>
                       </div>
