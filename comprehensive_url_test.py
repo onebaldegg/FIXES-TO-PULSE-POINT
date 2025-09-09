@@ -10,7 +10,7 @@ import time
 
 def test_real_world_urls():
     """Test URL analysis with real-world URLs"""
-    api_url = "https://sentimentmatrix.preview.emergentagent.com/api"
+    api_url = "https://prwatch-ai.preview.emergentagent.com/api"
     
     # Test cases with different types of content
     test_urls = [
@@ -108,7 +108,7 @@ def test_real_world_urls():
 
 def test_batch_url_analysis():
     """Test batch URL analysis with multiple URLs"""
-    api_url = "https://sentimentmatrix.preview.emergentagent.com/api"
+    api_url = "https://prwatch-ai.preview.emergentagent.com/api"
     
     print(f"\n⚡ Testing Batch URL Analysis")
     print("=" * 35)
@@ -172,7 +172,7 @@ def test_batch_url_analysis():
 
 def test_error_handling():
     """Test error handling scenarios"""
-    api_url = "https://sentimentmatrix.preview.emergentagent.com/api"
+    api_url = "https://prwatch-ai.preview.emergentagent.com/api"
     
     print(f"\n🚨 Testing Error Handling")
     print("=" * 30)
