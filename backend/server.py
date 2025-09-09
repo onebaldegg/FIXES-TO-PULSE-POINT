@@ -1454,8 +1454,11 @@ async def analyze_batch(
         if not request.texts:
             raise HTTPException(status_code=400, detail="No texts provided for analysis")
         
-        # Get file metadata
-        file_metadata = await db.uploaded_files.find_one({"file_id": request.file_id})
+        # Get file metadata (ensure it belongs to the current user)
+        file_metadata = await db.uploaded_files.find_one({
+            "file_id": request.file_id,
+            "user_id": current_user["id"]
+        })
         if not file_metadata:
             raise HTTPException(status_code=404, detail="File not found")
         
