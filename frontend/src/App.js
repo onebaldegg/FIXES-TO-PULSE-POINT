@@ -1295,7 +1295,18 @@ const AppContent = () => {
                             </div>
                           </div>
                           <div className="p-2">
-                            <div className="px-3 py-2 text-sm text-green-200">
+                            <button
+                              onClick={() => {
+                                setShowDashboard(true);
+                                setShowUserMenu(false);
+                              }}
+                              className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-green-300 hover:bg-green-950/30 rounded transition-colors"
+                            >
+                              <BarChart3 className="h-4 w-4" />
+                              <span>Dashboard & Analytics</span>
+                            </button>
+                            
+                            <div className="px-3 py-2 text-sm text-green-200 border-t border-green-500/20 mt-2">
                               <p className="font-medium mb-1">Usage This Month:</p>
                               <div className="space-y-1 text-xs">
                                 <div className="flex justify-between">
@@ -1312,6 +1323,7 @@ const AppContent = () => {
                                 </div>
                               </div>
                             </div>
+                            
                             <button
                               onClick={() => {
                                 logout();
@@ -1321,7 +1333,7 @@ const AppContent = () => {
                                   description: "You have been successfully logged out.",
                                 });
                               }}
-                              className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-red-400 hover:bg-red-950/30 rounded transition-colors"
+                              className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-red-400 hover:bg-red-950/30 rounded transition-colors mt-2"
                             >
                               <LogOut className="h-4 w-4" />
                               <span>Sign Out</span>
