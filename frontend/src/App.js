@@ -1400,26 +1400,26 @@ const AppContent = () => {
                   <p className="text-xs sm:text-base truncate" style={{color: '#42DF50'}}>Advanced Sentiment Analysis Platform</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 sm:space-x-4 flex-wrap">
                 {user && (
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2 sm:space-x-4 flex-wrap">
                     {/* Usage Statistics */}
-                    <div className="bg-green-950/50 px-4 py-2 rounded-lg border" style={{borderColor: '#42DF50'}}>
-                      <div className="flex items-center space-x-2">
+                    <div className="bg-green-950/50 px-2 sm:px-4 py-1 sm:py-2 rounded-lg border text-xs sm:text-sm" style={{borderColor: '#42DF50'}}>
+                      <div className="flex items-center space-x-1 sm:space-x-2">
                         <Badge 
                           variant={user.subscription_tier === 'pro' ? 'default' : 'secondary'} 
                           className={`text-xs ${user.subscription_tier === 'pro' ? 'bg-gradient-to-r from-yellow-600 to-orange-600' : 'bg-green-600'}`}
                         >
                           {user.subscription_tier.toUpperCase()}
                         </Badge>
-                        <span className="text-sm" style={{color: '#42DF50'}}>
+                        <span className="text-xs sm:text-sm whitespace-nowrap" style={{color: '#42DF50'}}>
                           {user.usage_stats?.analyses_this_month || 0} analyses
                         </span>
                       </div>
                     </div>
                     
                     {/* Header Buttons */}
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
                       {/* Dashboard Button */}
                       <button
                         onClick={(e) => {
@@ -1428,26 +1428,26 @@ const AppContent = () => {
                           e.stopPropagation();
                           setShowDashboard(true);
                         }}
-                        className="flex items-center space-x-2 bg-black/40 px-3 py-2 rounded-lg border hover:border-[#42DF50]/50 transition-colors hover:text-[#42DF50]"
+                        className="flex items-center space-x-1 sm:space-x-2 bg-black/40 px-2 sm:px-3 py-1 sm:py-2 rounded-lg border hover:border-[#42DF50]/50 transition-colors hover:text-[#42DF50]"
                         style={{borderColor: '#42DF50', color: '#42DF50'}}>
-                        <BarChart3 className="h-4 w-4" />
-                        <span className="text-sm">Dashboard</span>
+                        <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="text-xs sm:text-sm hidden sm:inline">Dashboard</span>
                       </button>
 
                       {/* User Menu */}
                       <div className="relative">
                       <button
                         onClick={() => setShowUserMenu(!showUserMenu)}
-                        className="flex items-center space-x-2 bg-black/40 px-3 py-2 rounded-lg border transition-colors"
+                        className="flex items-center space-x-1 sm:space-x-2 bg-black/40 px-2 sm:px-3 py-1 sm:py-2 rounded-lg border transition-colors"
                         style={{borderColor: '#42DF50'}}
                         onMouseEnter={(e) => e.target.style.borderColor = '#42DF50'}
                         onMouseLeave={(e) => e.target.style.borderColor = '#42DF50'}
                       >
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{background: '#42DF50'}}>
-                          <User className="h-4 w-4 text-white" />
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center" style={{background: '#42DF50'}}>
+                          <User className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                         </div>
-                        <span className="text-sm" style={{color: '#42DF50'}}>{user.full_name}</span>
-                        <span style={{color: '#42DF50'}}>▼</span>
+                        <span className="text-xs sm:text-sm hidden md:inline truncate max-w-20 sm:max-w-none" style={{color: '#42DF50'}}>{user.full_name}</span>
+                        <span className="hidden sm:inline" style={{color: '#42DF50'}}>▼</span>
                       </button>
                       
                       {showUserMenu && (
