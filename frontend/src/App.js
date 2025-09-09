@@ -1341,24 +1341,6 @@ const AppContent = () => {
                         <span className="text-sm">Dashboard</span>
                       </button>
 
-                      {/* Logout Button */}
-                      <button
-                        onClick={(e) => {
-                          console.log("Logout button clicked!");
-                          e.preventDefault();
-                          e.stopPropagation();
-                          logout();
-                          toast({
-                            title: "Logged Out",
-                            description: "You have been successfully logged out.",
-                          });
-                        }}
-                        className="flex items-center space-x-2 bg-black/40 px-3 py-2 rounded-lg border border-red-500/30 hover:border-red-500/50 transition-colors text-red-400 hover:text-red-300"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        <span className="text-sm">Logout</span>
-                      </button>
-
                       {/* User Menu */}
                       <div className="relative">
                       <button
