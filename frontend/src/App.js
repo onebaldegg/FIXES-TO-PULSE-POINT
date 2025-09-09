@@ -723,7 +723,7 @@ const AppContent = () => {
               )}
               
               <div className="space-y-2">
-                <label className="text-sm font-medium text-green-200">Email</label>
+                <label className="text-sm font-medium" style={{color: '#42DF50'}}>Email</label>
                 <input
                   type="email"
                   name="email"
