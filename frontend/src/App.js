@@ -1709,7 +1709,7 @@ const AppContent = () => {
                     {/* Batch URL Analysis */}
                     <div className="mt-6 pt-6 border-t border-green-500/20">
                       <div className="space-y-3">
-                        <label className="text-sm font-medium text-green-200">
+                        <label className="text-sm font-medium" style={{color: '#42DF50'}}>
                           Batch URL Analysis (One URL per line)
                         </label>
                         <Textarea
