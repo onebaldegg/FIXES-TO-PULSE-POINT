@@ -1307,11 +1307,21 @@ async def get_status_checks():
     return [StatusCheck(**status_check) for status_check in status_checks]
 
 @api_router.post("/analyze-sentiment", response_model=SentimentResponse)
-async def analyze_text_sentiment(request: SentimentRequest):
+async def analyze_text_sentiment(
+    request: SentimentRequest,
+    current_user = Depends(get_current_verified_user)
+):
     """Analyze sentiment of provided text"""
     try:
         if not request.text.strip():
             raise HTTPException(status_code=400, detail="Text cannot be empty")
+        
+        # Check usage limits
+        if not await check_usage_limits(current_user, "analyses_this_month"):
+            raise HTTPException(
+                status_code=status.HTTP_402_PAYMENT_REQUIRED,
+                detail="Monthly analysis limit reached. Please upgrade your plan."
+            )
         
         # Perform sentiment analysis
         analysis_result = await analyze_sentiment(request.text)
@@ -1336,11 +1346,16 @@ async def analyze_text_sentiment(request: SentimentRequest):
             aspects_summary=analysis_result.get("aspects_summary", "")
         )
         
-        # Store in database
+        # Store analysis in database with user association
         response_dict = response.dict()
         response_dict['timestamp'] = response_dict['timestamp'].isoformat()
+        response_dict['user_id'] = current_user["id"]
         await db.sentiment_analyses.insert_one(response_dict)
         
+        # Increment usage counter
+        await increment_usage(current_user["id"], "analyses_this_month")
+        
+        logger.info(f"Sentiment analysis completed for user {current_user['email']}: {request.text[:50]}...")
         return response
         
     except HTTPException:
