@@ -44,8 +44,8 @@ db = client[os.environ['DB_NAME']]
 # Create the main app without a prefix
 app = FastAPI()
 
-# Create a router with the /api prefix
-api_router = APIRouter(prefix="/api")
+# Create a router without prefix (will be added when including)
+api_router = APIRouter()
 
 
 # Define Models
