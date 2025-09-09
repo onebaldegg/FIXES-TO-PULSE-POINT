@@ -159,6 +159,182 @@ class BatchURLResponse(BaseModel):
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
+# URL Processing Service
+class URLProcessor:
+    def __init__(self):
+        self.session = requests.Session()
+        self.session.headers.update({
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        })
+        self.timeout = 30
+        self.max_content_length = 10 * 1024 * 1024  # 10MB limit
+    
+    def validate_url(self, url: str) -> tuple[bool, str]:
+        """Validate URL format and accessibility"""
+        try:
+            parsed = urlparse(url)
+            if not parsed.scheme or not parsed.netloc:
+                return False, "Invalid URL format"
+            
+            if parsed.scheme not in ['http', 'https']:
+                return False, "Only HTTP and HTTPS URLs are supported"
+                
+            return True, ""
+        except Exception as e:
+            return False, f"URL validation error: {str(e)}"
+    
+    def extract_with_newspaper(self, url: str) -> dict:
+        """Extract content using newspaper3k library"""
+        try:
+            article = Article(url)
+            article.download()
+            article.parse()
+            
+            return {
+                'title': article.title or '',
+                'text': article.text or '',
+                'authors': article.authors,
+                'publish_date': article.publish_date.isoformat() if article.publish_date else None,
+                'top_image': article.top_image or '',
+                'meta_keywords': article.meta_keywords,
+                'meta_description': article.meta_description or '',
+                'canonical_link': article.canonical_link or url,
+                'method': 'newspaper3k'
+            }
+        except Exception as e:
+            logger.warning(f"Newspaper3k extraction failed for {url}: {e}")
+            return None
+    
+    def extract_with_beautifulsoup(self, url: str) -> dict:
+        """Extract content using BeautifulSoup as fallback"""
+        try:
+            response = self.session.get(url, timeout=self.timeout)
+            response.raise_for_status()
+            
+            # Check content length
+            if len(response.content) > self.max_content_length:
+                raise Exception(f"Content too large: {len(response.content)} bytes")
+            
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            # Remove script and style elements
+            for script in soup(["script", "style", "nav", "header", "footer", "aside"]):
+                script.decompose()
+            
+            # Extract title
+            title = ''
+            if soup.title:
+                title = soup.title.string.strip()
+            elif soup.find('h1'):
+                title = soup.find('h1').get_text().strip()
+            
+            # Extract main content
+            content_selectors = [
+                'article', 'main', '.content', '.post-content', 
+                '.entry-content', '.article-body', '#content'
+            ]
+            
+            main_content = None
+            for selector in content_selectors:
+                main_content = soup.select_one(selector)
+                if main_content:
+                    break
+            
+            if not main_content:
+                main_content = soup.find('body')
+            
+            if main_content:
+                # Clean up the text
+                text = main_content.get_text(separator=' ', strip=True)
+                # Remove extra whitespace
+                text = re.sub(r'\s+', ' ', text).strip()
+            else:
+                text = soup.get_text(separator=' ', strip=True)
+                text = re.sub(r'\s+', ' ', text).strip()
+            
+            # Extract meta information
+            meta_description = ''
+            meta_desc = soup.find('meta', attrs={'name': 'description'})
+            if meta_desc:
+                meta_description = meta_desc.get('content', '')
+            
+            author = ''
+            author_meta = soup.find('meta', attrs={'name': 'author'})
+            if author_meta:
+                author = author_meta.get('content', '')
+            
+            return {
+                'title': title,
+                'text': text,
+                'authors': [author] if author else [],
+                'publish_date': None,
+                'top_image': '',
+                'meta_keywords': [],
+                'meta_description': meta_description,
+                'canonical_link': url,
+                'method': 'beautifulsoup'
+            }
+            
+        except Exception as e:
+            logger.error(f"BeautifulSoup extraction failed for {url}: {e}")
+            return None
+    
+    async def process_url(self, url: str, extract_full_content: bool = True, include_metadata: bool = True) -> dict:
+        """Process a single URL and extract content"""
+        start_time = time.time()
+        
+        # Validate URL
+        is_valid, error_msg = self.validate_url(url)
+        if not is_valid:
+            raise HTTPException(status_code=400, detail=error_msg)
+        
+        # Try newspaper3k first (better for articles)
+        extracted_data = self.extract_with_newspaper(url)
+        
+        # Fallback to BeautifulSoup if newspaper3k fails
+        if not extracted_data or not extracted_data.get('text'):
+            extracted_data = self.extract_with_beautifulsoup(url)
+        
+        if not extracted_data:
+            raise HTTPException(status_code=500, detail="Failed to extract content from URL")
+        
+        text_content = extracted_data.get('text', '')
+        if not text_content or len(text_content.strip()) < 50:
+            raise HTTPException(status_code=400, detail="Insufficient text content extracted from URL")
+        
+        # Limit text length for processing
+        if len(text_content) > 50000:  # 50k character limit
+            text_content = text_content[:50000] + "... [truncated]"
+        
+        processing_time = time.time() - start_time
+        
+        result = {
+            'url': url,
+            'title': extracted_data.get('title', ''),
+            'author': ', '.join(extracted_data.get('authors', [])) if extracted_data.get('authors') else None,
+            'publish_date': extracted_data.get('publish_date'),
+            'extracted_text': text_content,
+            'text_length': len(text_content),
+            'processing_time': processing_time
+        }
+        
+        if include_metadata:
+            result['metadata'] = {
+                'extraction_method': extracted_data.get('method', 'unknown'),
+                'top_image': extracted_data.get('top_image', ''),
+                'meta_description': extracted_data.get('meta_description', ''),
+                'meta_keywords': extracted_data.get('meta_keywords', []),
+                'canonical_link': extracted_data.get('canonical_link', url),
+                'domain': urlparse(url).netloc,
+                'word_count': len(text_content.split()),
+                'character_count': len(text_content)
+            }
+        
+        return result
+
+# Initialize URL processor
+url_processor = URLProcessor()
+
 # File Processing Utilities
 async def extract_text_from_file(file: UploadFile) -> List[dict]:
     """Extract text from uploaded files based on file type"""
