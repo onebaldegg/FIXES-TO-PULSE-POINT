@@ -1136,7 +1136,7 @@ class BrandWatchAPITester:
         """Test user login with valid credentials"""
         login_data = {
             "username": "onebaldegg@gmail.com",  # OAuth2PasswordRequestForm uses 'username'
-            "password": "Testing123"
+            "password": "Testing1"
         }
         
         # Use form data for OAuth2PasswordRequestForm
