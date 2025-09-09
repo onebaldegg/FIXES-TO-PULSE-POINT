@@ -1300,7 +1300,7 @@ const AppContent = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="p-3 rounded-xl">
-                  <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-8 w-8" />
+                  <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-14 w-14" />
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold" style={{color: '#42DF50'}}>PULSE POINT</h1>
