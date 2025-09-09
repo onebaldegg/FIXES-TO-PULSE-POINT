@@ -1548,8 +1548,10 @@ Fast delivery and good packaging."""
         
         # Step 3: Verify results make sense
         results = batch_response['results']
-        if len(results) != len(extracted_texts):
-            print(f"❌ Results count mismatch: {len(results)} vs {len(extracted_texts)}")
+        # Note: test_batch_analysis limits to first 3 entries for testing efficiency
+        expected_results = min(len(extracted_texts), 3)
+        if len(results) != expected_results:
+            print(f"❌ Results count mismatch: {len(results)} vs {expected_results} (limited from {len(extracted_texts)} total)")
             return False, {}
         
         # Check that different sentiments are detected
