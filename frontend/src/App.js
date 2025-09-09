@@ -2074,7 +2074,7 @@ const AppContent = () => {
                                 <Badge variant={getSentimentBadgeVariant(result.sentiment)} className="text-xs">
                                   {result.sentiment}
                                 </Badge>
-                                <span className="text-xs text-green-300">
+                                <span className="text-xs" style={{color: '#42DF50'}}>
                                   Row {result.row_number} • {Math.round(result.confidence * 100)}%
                                 </span>
                                 {result.aspects_analysis && result.aspects_analysis.length > 0 && (
