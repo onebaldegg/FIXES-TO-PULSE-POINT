@@ -1,14 +1,15 @@
-from fastapi import FastAPI, APIRouter, HTTPException, File, UploadFile
+from fastapi import FastAPI, APIRouter, HTTPException, File, UploadFile, Depends, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr, validator
 from typing import List, Optional
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 import pandas as pd
 import PyPDF2
@@ -22,6 +23,14 @@ from newspaper import Article
 import time
 from urllib.parse import urlparse, urljoin
 import re
+from passlib.context import CryptContext
+from jose import JWTError, jwt
+from itsdangerous import URLSafeTimedSerializer
+import secrets
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from jinja2 import Environment, DictLoader
 
 
 ROOT_DIR = Path(__file__).parent
