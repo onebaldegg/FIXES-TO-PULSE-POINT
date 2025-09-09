@@ -351,7 +351,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                           <Badge variant={user.subscription_tier === 'pro' ? 'default' : 'secondary'}>
                             {user.subscription_tier.toUpperCase()} PLAN
                           </Badge>
-                          <span className="text-xs text-green-400">
+                          <span className="text-xs" style={{color: '#42DF50'}}>
                             {user.is_verified ? "✅ Verified" : "⚠️ Email verification required"}
                           </span>
                         </div>
