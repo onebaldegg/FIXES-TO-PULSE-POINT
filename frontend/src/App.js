@@ -1331,7 +1331,7 @@ const AppContent = () => {
                         >
                           {user.subscription_tier.toUpperCase()}
                         </Badge>
-                        <span className="text-sm text-green-200">
+                        <span className="text-sm" style={{color: '#42DF50'}}>
                           {user.usage_stats?.analyses_this_month || 0} analyses
                         </span>
                       </div>
