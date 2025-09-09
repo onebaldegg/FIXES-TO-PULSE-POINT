@@ -1407,7 +1407,7 @@ const AppContent = () => {
         />
         
         {/* Header */}
-        <header className="bg-black/90 backdrop-blur-lg border-b border-green-500/20 shadow-2xl">
+        <header className="bg-black/90 backdrop-blur-lg border-b border-green-500/20 shadow-2xl relative z-50">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-6">
             <div className="flex items-center justify-between flex-wrap gap-2 sm:gap-4">
               <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
