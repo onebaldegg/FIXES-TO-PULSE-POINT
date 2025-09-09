@@ -1530,9 +1530,18 @@ async def analyze_batch(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @api_router.post("/analyze-url", response_model=URLAnalysisResponse)
-async def analyze_url(request: URLAnalysisRequest):
+async def analyze_url(
+    request: URLAnalysisRequest,
+    current_user = Depends(get_current_verified_user)
+):
     """Analyze sentiment of content from a single URL"""
     try:
+        # Check usage limits
+        if not await check_usage_limits(current_user, "urls_analyzed"):
+            raise HTTPException(
+                status_code=status.HTTP_402_PAYMENT_REQUIRED,
+                detail="Monthly URL analysis limit reached. Please upgrade your plan."
+            )
         # Process URL and extract content
         url_data = await url_processor.process_url(
             request.url, 
