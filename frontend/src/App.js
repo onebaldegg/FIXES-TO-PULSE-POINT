@@ -536,9 +536,9 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                               <div key={emotion} className="flex items-center justify-between p-2 bg-green-950/30 rounded">
                                 <div className="flex items-center space-x-2">
                                   {getEmotionIcon(emotion)}
-                                  <span className="text-green-300 text-sm capitalize">{formatEmotionName(emotion)}</span>
+                                  <span style={{color: '#42DF50'}} className="text-sm capitalize">{formatEmotionName(emotion)}</span>
                                 </div>
-                                <span className="text-green-100 text-sm font-medium">{count}</span>
+                                <span style={{color: '#42DF50'}} className="text-sm font-medium">{count}</span>
                               </div>
                             ))}
                         </div>
