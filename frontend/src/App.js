@@ -466,7 +466,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                   {/* Activity Summary */}
                   <Card className="bg-black/60 border-green-500/20">
                     <CardHeader>
-                      <CardTitle className="text-green-100 flex items-center space-x-2">
+                      <CardTitle style={{color: '#42DF50'}} className="flex items-center space-x-2">
                         <Clock className="h-5 w-5" />
                         <span>Activity Summary</span>
                       </CardTitle>
