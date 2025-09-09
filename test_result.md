@@ -513,9 +513,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Create authentication UI components"
     - "Implement user dashboard and data association"
-  stuck_tasks: []
+  stuck_tasks:
+    - "Create authentication UI components"
   test_all: false
   test_priority: "high_first"
 
