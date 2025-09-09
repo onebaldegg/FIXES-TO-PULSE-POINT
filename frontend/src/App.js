@@ -1423,7 +1423,7 @@ const AppContent = () => {
               <div className="flex flex-col items-center justify-center text-center mb-6">
                 <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-24 w-24 mb-4" />
                 <div className="flex justify-center w-full">
-                  <img src="/pulse-point-logo.png" alt="Pulse Point Logo" className="h-30 w-auto mx-auto" />
+                  <img src="/pulse-point-logo.png" alt="Pulse Point Logo" className="h-30 w-auto mx-auto ml-4" />
                 </div>
               </div>
               <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
