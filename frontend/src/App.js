@@ -181,6 +181,15 @@ const AppContent = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState("login"); // "login" or "register"
   const [showUserMenu, setShowUserMenu] = useState(false);
+  
+  // Show auth modal if not authenticated
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      setShowAuthModal(true);
+    } else {
+      setShowAuthModal(false);
+    }
+  }, [authLoading, isAuthenticated]);
 
   // File upload states
   const [activeTab, setActiveTab] = useState("text"); // "text" or "file" or "url"
