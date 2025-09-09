@@ -804,7 +804,7 @@ const AppContent = () => {
               
               {authMode === "register" && (
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-green-200">Confirm Password</label>
+                  <label className="text-sm font-medium" style={{color: '#42DF50'}}>Confirm Password</label>
                   <input
                     type="password"
                     name="confirmPassword"
