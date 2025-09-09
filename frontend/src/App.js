@@ -2305,7 +2305,7 @@ const AppContent = () => {
                    activeTab === "file" ? "Batch Analysis Results" :
                    "URL Analysis Results"}
                 </CardTitle>
-                <CardDescription className="text-green-200">
+                <CardDescription style={{color: '#42DF50'}}>
                   {activeTab === "text" 
                     ? "Your sentiment analysis history"
                     : activeTab === "file"
