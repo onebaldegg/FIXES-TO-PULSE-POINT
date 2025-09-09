@@ -2473,7 +2473,7 @@ const AppContent = () => {
                   // File Analysis Detailed Results
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                     {!batchResults ? (
-                      <div className="text-center py-8 text-green-300">
+                      <div className="text-center py-8" style={{color: '#42DF50'}}>
                         <FileUp className="h-12 w-12 mx-auto mb-3 opacity-50" />
                         <p>No batch analysis results yet</p>
                         <p className="text-sm">Upload a file to see detailed results here</p>
