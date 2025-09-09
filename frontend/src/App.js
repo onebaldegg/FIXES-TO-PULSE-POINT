@@ -1335,8 +1335,8 @@ const AppContent = () => {
                           e.stopPropagation();
                           setShowDashboard(true);
                         }}
-                        className="flex items-center space-x-2 bg-black/40 px-3 py-2 rounded-lg border border-green-500/30 hover:border-green-500/50 transition-colors text-green-300 hover:text-green-200"
-                      >
+                        className="flex items-center space-x-2 bg-black/40 px-3 py-2 rounded-lg border hover:border-[#42DF50]/50 transition-colors hover:text-[#42DF50]"
+                        style={{borderColor: '#42DF50', color: '#42DF50'}}>
                         <BarChart3 className="h-4 w-4" />
                         <span className="text-sm">Dashboard</span>
                       </button>
