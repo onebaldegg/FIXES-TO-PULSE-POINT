@@ -191,6 +191,247 @@ const AppContent = () => {
     }
   }, [authLoading, isAuthenticated]);
 
+  // Authentication Modal Component
+  const AuthModal = () => {
+    const { login, register } = useAuth();
+    const [formData, setFormData] = useState({
+      email: "",
+      password: "",
+      fullName: "",
+      confirmPassword: ""
+    });
+    const [formLoading, setFormLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [errors, setErrors] = useState({});
+
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setFormData(prev => ({ ...prev, [name]: value }));
+      // Clear error when user starts typing
+      if (errors[name]) {
+        setErrors(prev => ({ ...prev, [name]: "" }));
+      }
+    };
+
+    const validateForm = () => {
+      const newErrors = {};
+      
+      if (!formData.email) {
+        newErrors.email = "Email is required";
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = "Email is invalid";
+      }
+      
+      if (!formData.password) {
+        newErrors.password = "Password is required";
+      } else if (formData.password.length < 8) {
+        newErrors.password = "Password must be at least 8 characters";
+      }
+      
+      if (authMode === "register") {
+        if (!formData.fullName) {
+          newErrors.fullName = "Full name is required";
+        }
+        if (formData.password !== formData.confirmPassword) {
+          newErrors.confirmPassword = "Passwords do not match";
+        }
+      }
+      
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      
+      if (!validateForm()) return;
+      
+      setFormLoading(true);
+      
+      try {
+        if (authMode === "login") {
+          const result = await login(formData.email, formData.password);
+          if (result.success) {
+            toast({
+              title: "Welcome back!",
+              description: "You have been logged in successfully.",
+            });
+            setShowAuthModal(false);
+          } else {
+            toast({
+              title: "Login Failed",
+              description: result.error,
+              variant: "destructive"
+            });
+          }
+        } else {
+          const result = await register(formData.email, formData.password, formData.fullName);
+          if (result.success) {
+            toast({
+              title: "Registration Successful",
+              description: result.message,
+            });
+            setAuthMode("login");
+            setFormData({ email: formData.email, password: "", fullName: "", confirmPassword: "" });
+          } else {
+            toast({
+              title: "Registration Failed",
+              description: result.error,
+              variant: "destructive"
+            });
+          }
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred. Please try again.",
+          variant: "destructive"
+        });
+      } finally {
+        setFormLoading(false);
+      }
+    };
+
+    if (!showAuthModal) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md shadow-2xl border-0 bg-black/80 backdrop-blur-lg border border-green-500/20">
+          <CardHeader className="text-center pb-4">
+            <div className="mx-auto w-16 h-16 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl flex items-center justify-center mb-4">
+              <Lock className="h-8 w-8 text-white" />
+            </div>
+            <CardTitle className="text-2xl font-bold text-green-100">
+              Brand Watch AI
+            </CardTitle>
+            <CardDescription className="text-green-200">
+              {authMode === "login" ? "Sign in to your account" : "Create your account"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {authMode === "register" && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-green-200">Full Name</label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    className={`w-full px-3 py-2 bg-black/40 border rounded-lg text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50 focus:outline-none ${
+                      errors.fullName ? 'border-red-500' : 'border-green-500/30'
+                    }`}
+                    placeholder="Enter your full name"
+                  />
+                  {errors.fullName && <p className="text-xs text-red-400">{errors.fullName}</p>}
+                </div>
+              )}
+              
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-green-200">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className={`w-full px-3 py-2 bg-black/40 border rounded-lg text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50 focus:outline-none ${
+                    errors.email ? 'border-red-500' : 'border-green-500/30'
+                  }`}
+                  placeholder="Enter your email"
+                />
+                {errors.email && <p className="text-xs text-red-400">{errors.email}</p>}
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-green-200">Password</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className={`w-full px-3 py-2 pr-10 bg-black/40 border rounded-lg text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50 focus:outline-none ${
+                      errors.password ? 'border-red-500' : 'border-green-500/30'
+                    }`}
+                    placeholder="Enter your password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-400 hover:text-green-300"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+                {errors.password && <p className="text-xs text-red-400">{errors.password}</p>}
+              </div>
+              
+              {authMode === "register" && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-green-200">Confirm Password</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    className={`w-full px-3 py-2 bg-black/40 border rounded-lg text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50 focus:outline-none ${
+                      errors.confirmPassword ? 'border-red-500' : 'border-green-500/30'
+                    }`}
+                    placeholder="Confirm your password"
+                  />
+                  {errors.confirmPassword && <p className="text-xs text-red-400">{errors.confirmPassword}</p>}
+                </div>
+              )}
+              
+              <Button
+                type="submit"
+                disabled={formLoading}
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl border border-green-500/20"
+              >
+                {formLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {authMode === "login" ? "Signing In..." : "Creating Account..."}
+                  </>
+                ) : (
+                  <>
+                    {authMode === "login" ? (
+                      <>
+                        <Key className="mr-2 h-4 w-4" />
+                        Sign In
+                      </>
+                    ) : (
+                      <>
+                        <User className="mr-2 h-4 w-4" />
+                        Create Account
+                      </>
+                    )}
+                  </>
+                )}
+              </Button>
+            </form>
+            
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => {
+                  setAuthMode(authMode === "login" ? "register" : "login");
+                  setFormData({ email: "", password: "", fullName: "", confirmPassword: "" });
+                  setErrors({});
+                }}
+                className="text-sm text-green-400 hover:text-green-300 underline"
+              >
+                {authMode === "login" 
+                  ? "Don't have an account? Sign up" 
+                  : "Already have an account? Sign in"
+                }
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
   // File upload states
   const [activeTab, setActiveTab] = useState("text"); // "text" or "file" or "url"
   const [uploadedFile, setUploadedFile] = useState(null);
