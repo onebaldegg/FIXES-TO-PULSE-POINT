@@ -1365,10 +1365,15 @@ async def analyze_text_sentiment(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @api_router.get("/sentiment-history", response_model=List[SentimentAnalysis])
-async def get_sentiment_history(limit: int = 20):
-    """Get recent sentiment analysis history"""
+async def get_sentiment_history(
+    limit: int = 20,
+    current_user = Depends(get_current_verified_user)
+):
+    """Get user's sentiment analysis history"""
     try:
-        analyses = await db.sentiment_analyses.find().sort("timestamp", -1).limit(limit).to_list(limit)
+        analyses = await db.sentiment_analyses.find(
+            {"user_id": current_user["id"]}
+        ).sort("timestamp", -1).limit(limit).to_list(limit)
         return [SentimentAnalysis(**analysis) for analysis in analyses]
     except Exception as e:
         logger.error(f"Error fetching sentiment history: {e}")
