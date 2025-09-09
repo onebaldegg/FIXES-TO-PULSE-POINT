@@ -782,11 +782,11 @@ async def check_usage_limits(user: dict, operation: str) -> bool:
     
     return current_usage < limit
 
-async def increment_usage(user_id: str, operation: str):
+async def increment_usage(user_id: str, operation: str, amount: int = 1):
     """Increment usage counter for user."""
     await db.users.update_one(
         {"id": user_id},
-        {"$inc": {f"usage_stats.{operation}": 1}}
+        {"$inc": {f"usage_stats.{operation}": amount}}
     )
 
 # File Processing Utilities
