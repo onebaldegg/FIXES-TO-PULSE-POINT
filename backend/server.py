@@ -16,6 +16,12 @@ import pdfplumber
 import io
 import tempfile
 import json
+import requests
+from bs4 import BeautifulSoup
+from newspaper import Article
+import time
+from urllib.parse import urlparse, urljoin
+import re
 
 
 ROOT_DIR = Path(__file__).parent
