@@ -403,7 +403,12 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                     <Card key={index} className="bg-black/60 border-green-500/20">
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between mb-4">
-                          <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center`}>
+                          <div className="w-12 h-12 rounded-xl flex items-center justify-center" 
+                               style={{
+                                 background: stat.label === 'Files Uploaded' ? '#42DF50' : 
+                                            stat.label === 'Text Analyses' ? '#3B82F6' : 
+                                            '#06B6D4'
+                               }}>
                             <stat.icon className="h-6 w-6 text-white" />
                           </div>
                           <div className="text-right">
