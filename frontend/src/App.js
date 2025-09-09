@@ -26,23 +26,12 @@ export const useAuth = () => {
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null); // Force clear - was: useState(localStorage.getItem('token'))
-  const [refreshToken, setRefreshToken] = useState(null); // Force clear - was: useState(localStorage.getItem('refreshToken'))
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refreshToken'));
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Set up axios interceptor for authentication
-  useEffect(() => {
-    // Force logout all users - clear all authentication data
-    localStorage.clear();
-    sessionStorage.clear();
-    setUser(null);
-    setToken(null);
-    setRefreshToken(null);
-    delete axios.defaults.headers.common['Authorization'];
-    console.log("🚪 All users logged out - authentication cleared");
-  }, []); // Run once on app load
-
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
