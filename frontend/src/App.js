@@ -1323,14 +1323,20 @@ const App = () => {
             <Card className="shadow-2xl border-0 bg-black/60 backdrop-blur-lg border border-green-500/20">
               <CardHeader className="pb-4">
                 <CardTitle className="text-2xl font-semibold text-green-100">
-                  {activeTab === "text" ? "Recent Analysis" : "Batch Analysis Results"}
+                  {activeTab === "text" ? "Recent Analysis" : 
+                   activeTab === "file" ? "Batch Analysis Results" :
+                   "URL Analysis Results"}
                 </CardTitle>
                 <CardDescription className="text-green-200">
                   {activeTab === "text" 
                     ? "Your sentiment analysis history"
-                    : batchResults 
+                    : activeTab === "file"
+                    ? batchResults 
                       ? "Detailed results from your uploaded file"
                       : "Upload a file to see detailed batch analysis results"
+                    : batchUrlResults || urlResults
+                      ? "Detailed results from your URL analysis"
+                      : "Analyze URLs to see detailed results here"
                   }
                 </CardDescription>
               </CardHeader>
