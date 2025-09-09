@@ -33,4 +33,5 @@ requests>=2.31.0
 beautifulsoup4>=4.12.2
 newspaper3k>=0.2.8
 lxml>=4.9.3
+lxml_html_clean>=0.1.0
 html5lib>=1.1
