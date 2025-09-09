@@ -1357,7 +1357,7 @@ const AppContent = () => {
       </video>
 
       {/* Dark Overlay for Better Readability */}
-      <div className="fixed inset-0 bg-black/40 z-10"></div>
+      <div className="fixed inset-0 bg-black/20 z-10"></div>
 
       {/* Content Container */}
       <div className="relative z-20">
