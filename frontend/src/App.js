@@ -1386,7 +1386,10 @@ const AppContent = () => {
                             </div>
                             
                             <button
-                              onClick={() => {
+                              onClick={(e) => {
+                                console.log("Logout button clicked!");
+                                e.preventDefault();
+                                e.stopPropagation();
                                 logout();
                                 setShowUserMenu(false);
                                 toast({
