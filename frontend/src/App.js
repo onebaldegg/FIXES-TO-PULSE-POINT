@@ -194,6 +194,102 @@ const App = () => {
     setIsDragActive(false);
   };
 
+  // URL analysis functions
+  const analyzeUrl = async () => {
+    if (!url.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a URL to analyze",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUrlLoading(true);
+    try {
+      const response = await axios.post(`${API}/analyze-url`, {
+        url: url.trim(),
+        extract_full_content: true,
+        include_metadata: true
+      });
+      
+      setUrlResults(response.data);
+      setUrl("");
+      
+      toast({
+        title: "URL Analysis Complete",
+        description: `Analyzed ${response.data.text_length} characters from ${response.data.title || 'webpage'}`,
+      });
+    } catch (error) {
+      console.error("Error analyzing URL:", error);
+      toast({
+        title: "Analysis Failed",
+        description: error.response?.data?.detail || "Failed to analyze URL. Please check the URL and try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setUrlLoading(false);
+    }
+  };
+
+  const analyzeBatchUrls = async () => {
+    if (!urls.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter URLs to analyze",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Parse URLs from textarea (one per line)
+    const urlList = urls.trim().split('\n').map(u => u.trim()).filter(u => u);
+    
+    if (urlList.length === 0) {
+      toast({
+        title: "Error", 
+        description: "Please enter valid URLs",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (urlList.length > 20) {
+      toast({
+        title: "Too Many URLs",
+        description: "Maximum 20 URLs allowed per batch",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setBatchUrlLoading(true);
+    try {
+      const response = await axios.post(`${API}/analyze-batch-urls`, {
+        urls: urlList,
+        extract_full_content: true,
+        include_metadata: true
+      });
+      
+      setBatchUrlResults(response.data);
+      setUrls("");
+      
+      toast({
+        title: "Batch URL Analysis Complete",
+        description: `Analyzed ${response.data.total_processed}/${response.data.total_requested} URLs successfully`,
+      });
+    } catch (error) {
+      console.error("Error analyzing batch URLs:", error);
+      toast({
+        title: "Batch Analysis Failed",
+        description: error.response?.data?.detail || "Failed to analyze URLs. Please check your URLs and try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setBatchUrlLoading(false);
+    }
+  };
+
   const getSentimentIcon = (sentiment) => {
     switch (sentiment) {
       case "positive":
