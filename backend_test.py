@@ -2411,6 +2411,28 @@ def main():
     print("\n" + "=" * 70)
     print(f"📊 FINAL RESULTS: {tester.tests_passed}/{tester.tests_run} tests passed")
     
+    # Special focus on URL analysis results - MAIN FOCUS
+    print(f"\n🌐 URL ANALYSIS SUMMARY - NEW FEATURE:")
+    print(f"   Web scraping dependencies: {'✅ YES' if web_deps_success else '❌ NO'}")
+    print(f"   Single URL analysis (news): {'✅ WORKING' if news_success else '❌ FAILED'}")
+    print(f"   Single URL analysis (blog): {'✅ WORKING' if blog_success else '❌ FAILED'}")
+    print(f"   Content extraction quality: {'✅ TESTED' if quality_success else '❌ FAILED'}")
+    print(f"   Sentiment analysis integration: {'✅ WORKING' if integration_success else '❌ FAILED'}")
+    print(f"   Batch URL analysis: {'✅ WORKING' if batch_url_success else '❌ FAILED'}")
+    print(f"   Mixed batch results: {'✅ WORKING' if mixed_batch_success else '❌ FAILED'}")
+    
+    # Check if core URL analysis features are working
+    url_analysis_working = all([
+        web_deps_success,  # Dependencies must be available
+        news_success or blog_success,  # At least one single URL test must work
+        batch_url_success  # Batch processing must work
+    ])
+    
+    if url_analysis_working:
+        print(f"\n🎉 Core URL analysis functionality is working!")
+    else:
+        print(f"\n⚠️  Some core URL analysis features failed")
+    
     # Special focus on file upload and batch processing results - MAIN FOCUS
     print(f"\n📁 FILE UPLOAD & BATCH PROCESSING SUMMARY - NEW FEATURE:")
     print(f"   Dependencies available: {'✅ YES' if deps_success else '❌ NO'}")
