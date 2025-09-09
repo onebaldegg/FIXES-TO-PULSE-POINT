@@ -324,7 +324,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
             onClick={() => setShowDashboard(false)}
             className="p-2 hover:bg-green-500/20 rounded-lg transition-colors"
           >
-            <X className="h-6 w-6 text-green-300" />
+            <X className="h-6 w-6" style={{color: '#42DF50'}} />
           </button>
         </div>
 
