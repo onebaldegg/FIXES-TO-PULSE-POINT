@@ -2599,7 +2599,7 @@ const AppContent = () => {
                   // URL Analysis Detailed Results
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                     {!batchUrlResults && !urlResults ? (
-                      <div className="text-center py-8 text-green-300">
+                      <div className="text-center py-8" style={{color: '#42DF50'}}>
                         <Monitor className="h-12 w-12 mx-auto mb-3 opacity-50" />
                         <p>No URL analysis results yet</p>
                         <p className="text-sm">Analyze URLs to see detailed results here</p>
