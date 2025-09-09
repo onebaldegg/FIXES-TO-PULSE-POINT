@@ -1369,7 +1369,7 @@ const AppContent = () => {
                             </div>
                           </div>
                           <div className="p-2">
-                            <div className="px-3 py-2 text-sm text-green-200">
+                            <div className="px-3 py-2 text-sm" style={{color: '#42DF50'}}>
                               <p className="font-medium mb-1">Usage This Month:</p>
                               <div className="space-y-1 text-xs">
                                 <div className="flex justify-between">
