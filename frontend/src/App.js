@@ -802,6 +802,114 @@ const App = () => {
                     </div>
                   </Alert>
                 )}
+
+                {/* Batch Analysis Results */}
+                {batchResults && activeTab === "file" && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-emerald-950/30 border border-emerald-500/30 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="h-5 w-5 text-emerald-400" />
+                        <div>
+                          <p className="text-emerald-200 font-medium">Batch Analysis Complete</p>
+                          <p className="text-emerald-300 text-sm">
+                            {batchResults.total_processed} entries analyzed from {batchResults.filename}
+                          </p>
+                        </div>
+                      </div>
+                      <Button 
+                        size="sm"
+                        className="bg-emerald-600 hover:bg-emerald-700"
+                        onClick={() => {
+                          const csvContent = "data:text/csv;charset=utf-8," + 
+                            encodeURIComponent(
+                              "Row,Text,Sentiment,Confidence,Dominant Emotion,Primary Topic,Aspects Count\n" +
+                              batchResults.results.map(result => 
+                                `"${result.row_number}","${result.text.replace(/"/g, '""')}","${result.sentiment}","${result.confidence}","${result.dominant_emotion}","${result.primary_topic}","${result.aspects_analysis?.length || 0}"`
+                              ).join("\n")
+                            );
+                          const link = document.createElement("a");
+                          link.setAttribute("href", csvContent);
+                          link.setAttribute("download", `batch_analysis_${batchResults.filename}.csv`);
+                          link.click();
+                        }}
+                      >
+                        <Download className="mr-1 h-3 w-3" />
+                        Export CSV
+                      </Button>
+                    </div>
+
+                    {/* Batch Results Summary */}
+                    <div className="grid grid-cols-3 gap-4">
+                      {(() => {
+                        const sentimentCounts = batchResults.results.reduce((acc, result) => {
+                          acc[result.sentiment] = (acc[result.sentiment] || 0) + 1;
+                          return acc;
+                        }, {});
+                        return (
+                          <>
+                            <div className="text-center p-3 bg-green-950/30 border border-green-500/30 rounded-lg">
+                              <div className="text-2xl font-bold text-green-400">{sentimentCounts.positive || 0}</div>
+                              <div className="text-xs text-green-300">Positive</div>
+                            </div>
+                            <div className="text-center p-3 bg-red-950/30 border border-red-500/30 rounded-lg">
+                              <div className="text-2xl font-bold text-red-400">{sentimentCounts.negative || 0}</div>
+                              <div className="text-xs text-red-300">Negative</div>
+                            </div>
+                            <div className="text-center p-3 bg-slate-950/30 border border-slate-500/30 rounded-lg">
+                              <div className="text-2xl font-bold text-slate-400">{sentimentCounts.neutral || 0}</div>
+                              <div className="text-xs text-slate-300">Neutral</div>
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </div>
+
+                    {/* Sample Results Preview */}
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-green-200">Sample Results Preview:</p>
+                      <div className="max-h-64 overflow-y-auto space-y-2">
+                        {batchResults.results.slice(0, 5).map((result, index) => (
+                          <div key={index} className="p-3 bg-black/40 border border-green-500/20 rounded-lg">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center space-x-2">
+                                <Badge variant={getSentimentBadgeVariant(result.sentiment)} className="text-xs">
+                                  {result.sentiment}
+                                </Badge>
+                                <span className="text-xs text-green-300">
+                                  Row {result.row_number} • {Math.round(result.confidence * 100)}%
+                                </span>
+                                {result.aspects_analysis && result.aspects_analysis.length > 0 && (
+                                  <Badge className="text-xs bg-emerald-500/20 text-emerald-300">
+                                    {result.aspects_analysis.length} aspects
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+                            <p className="text-sm text-green-200 line-clamp-2">
+                              "{result.text.length > 100 ? result.text.substring(0, 100) + "..." : result.text}"
+                            </p>
+                            {result.aspects_analysis && result.aspects_analysis.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {result.aspects_analysis.slice(0, 3).map((aspect, aspIdx) => (
+                                  <span key={aspIdx} className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 rounded text-xs">
+                                    {aspect.aspect}: {aspect.sentiment}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                        {batchResults.results.length > 5 && (
+                          <div className="text-center py-2">
+                            <span className="text-sm text-green-300">
+                              ...and {batchResults.results.length - 5} more results
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
