@@ -832,7 +832,7 @@ const AppContent = () => {
               <Button
                 type="submit"
                 disabled={formLoading}
-                className="w-full text-white font-medium py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl border"
+                className="w-full text-black font-medium py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl border"
                 style={{
                   background: '#42DF50',
                   borderColor: '#42DF50'
