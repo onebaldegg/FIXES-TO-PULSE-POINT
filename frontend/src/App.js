@@ -1467,7 +1467,7 @@ const App = () => {
                     ))
                   )}
                   </div>
-                ) : (
+                ) : activeTab === "file" ? (
                   // File Analysis Detailed Results
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                     {!batchResults ? (
