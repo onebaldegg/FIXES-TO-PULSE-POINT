@@ -331,7 +331,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
         <div className="flex-1 overflow-y-auto p-6">
           {loading ? (
             <div className="flex items-center justify-center h-64">
-              <Loader2 className="h-8 w-8 animate-spin text-green-400" />
+              <Loader2 className="h-8 w-8 animate-spin" style={{color: '#42DF50'}} />
               <span className="ml-2" style={{color: '#42DF50'}}>Loading dashboard...</span>
             </div>
           ) : (
