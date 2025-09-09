@@ -1656,7 +1656,7 @@ const AppContent = () => {
                       onDrop={handleDrop}
                       onDragOver={handleDragOver}
                       onDragLeave={handleDragLeave}
-                      className="border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200"
+                      className="border-2 border-dashed rounded-xl p-4 sm:p-8 text-center transition-all duration-200"
                       style={{
                         borderColor: isDragActive ? '#42DF50' : '#42DF50',
                         backgroundColor: isDragActive ? 'rgba(66, 223, 80, 0.1)' : 'transparent'
