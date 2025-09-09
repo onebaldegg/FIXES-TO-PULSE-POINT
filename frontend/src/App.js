@@ -707,7 +707,7 @@ const AppContent = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               {authMode === "register" && (
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-green-200">Full Name</label>
+                  <label className="text-sm font-medium" style={{color: '#42DF50'}}>Full Name</label>
                   <input
                     type="text"
                     name="fullName"
