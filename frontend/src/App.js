@@ -873,6 +873,8 @@ const AppContent = () => {
 
       {/* Content Container */}
       <div className="relative z-20">
+        <AuthModal />
+        
         {/* Header */}
         <header className="bg-black/90 backdrop-blur-lg border-b border-green-500/20 shadow-2xl">
           <div className="max-w-7xl mx-auto px-6 py-6">
