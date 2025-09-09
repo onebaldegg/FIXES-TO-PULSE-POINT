@@ -1745,7 +1745,7 @@ const AppContent = () => {
                         <label className="text-sm font-medium" style={{color: '#42DF50'}}>
                           Website URL to Analyze
                         </label>
-                        <div className="flex space-x-2">
+                        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                           <input
                             type="url"
                             placeholder="https://example.com/article"
@@ -1756,7 +1756,7 @@ const AppContent = () => {
                           <Button 
                             onClick={analyzeUrl}
                             disabled={urlLoading || !url.trim()}
-                            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium px-6 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border border-blue-500/20"
+                            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium px-6 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border border-blue-500/20 w-full sm:w-auto"
                           >
                             {urlLoading ? (
                               <>
