@@ -672,7 +672,8 @@ async def create_user(user_data: UserCreate):
     
     # Check if this is the test account for PRO access
     subscription_tier = "pro" if user_data.email == "onebaldegg@gmail.com" else "free"
-    is_verified = True if user_data.email == "onebaldegg@gmail.com" else False  # Auto-verify test account
+    # TEMPORARY: Auto-verify all accounts for testing since email service not configured
+    is_verified = True  # Auto-verify all accounts temporarily
     
     user_doc = {
         "id": str(uuid.uuid4()),
