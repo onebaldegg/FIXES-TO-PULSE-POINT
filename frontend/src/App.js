@@ -547,7 +547,7 @@ const App = () => {
                 )}
 
                 {/* Current Analysis Result */}
-                {analysis && (
+                {analysis && activeTab === "text" && (
                   <Alert className="border-l-4 border-l-green-500 bg-green-950/50 backdrop-blur-sm border border-green-500/20">
                     <div className="flex items-start space-x-3">
                       <div className={`p-2 rounded-full ${getSentimentColor(analysis.sentiment)}`}>
