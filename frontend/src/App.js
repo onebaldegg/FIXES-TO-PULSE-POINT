@@ -1366,7 +1366,7 @@ const AppContent = () => {
                           <User className="h-4 w-4 text-white" />
                         </div>
                         <span className="text-sm" style={{color: '#42DF50'}}>{user.full_name}</span>
-                        <span className="text-green-400">▼</span>
+                        <span style={{color: '#42DF50'}}>▼</span>
                       </button>
                       
                       {showUserMenu && (
