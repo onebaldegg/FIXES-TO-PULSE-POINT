@@ -308,7 +308,25 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl h-full max-h-[90vh] bg-black/90 backdrop-blur-lg border border-green-500/20 rounded-xl overflow-hidden">
+      {/* Matrix Video Background for Dashboard */}
+      <video 
+        autoPlay 
+        muted 
+        loop 
+        playsInline
+        className="fixed inset-0 w-full h-full object-cover z-0"
+        style={{ filter: 'brightness(0.5) opacity(1.0)' }}
+      >
+        <source 
+          src="https://customer-assets.emergentagent.com/job_prinsight/artifacts/qlgtor1l_medium-vecteezy_looping-matrix-style-cyrillic-alphabet-code-rain-effect_6102172_medium%20%281%29.mp4" 
+          type="video/mp4" 
+        />
+      </video>
+
+      {/* Dark Overlay for Better Readability */}
+      <div className="fixed inset-0 bg-black/20 z-10"></div>
+
+      <div className="w-full max-w-6xl h-full max-h-[90vh] bg-black/90 backdrop-blur-lg border border-green-500/20 rounded-xl overflow-hidden relative z-20">
         {/* Dashboard Header */}
         <div className="flex items-center justify-between p-6 border-b border-green-500/20">
           <div className="flex items-center space-x-4">
