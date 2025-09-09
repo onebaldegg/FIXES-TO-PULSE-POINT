@@ -448,6 +448,9 @@ const AppContent = () => {
   const [urlResults, setUrlResults] = useState(null);
   const [batchUrlResults, setBatchUrlResults] = useState(null);
 
+  // Dashboard state
+  const [showDashboard, setShowDashboard] = useState(false);
+
   const fetchHistory = async () => {
     try {
       const response = await axios.get(`${API}/sentiment-history`);
