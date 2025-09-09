@@ -1598,11 +1598,25 @@ async def analyze_url(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 @api_router.post("/analyze-batch-urls", response_model=BatchURLResponse)
-async def analyze_batch_urls(request: BatchURLRequest):
+async def analyze_batch_urls(
+    request: BatchURLRequest,
+    current_user = Depends(get_current_verified_user)
+):
     """Analyze sentiment of content from multiple URLs"""
     start_time = time.time()
     
     try:
+        # Check usage limits (count each URL toward the limit)
+        urls_to_analyze = len(request.urls)
+        current_usage = current_user.get("usage_stats", {}).get("urls_analyzed", 0)
+        subscription_tier = current_user.get("subscription_tier", "free")
+        limit = 10 if subscription_tier == "free" else 5000
+        
+        if current_usage + urls_to_analyze > limit:
+            raise HTTPException(
+                status_code=status.HTTP_402_PAYMENT_REQUIRED,
+                detail=f"This batch would exceed your monthly URL limit. You can analyze {limit - current_usage} more URLs this month."
+            )
         if not request.urls:
             raise HTTPException(status_code=400, detail="No URLs provided for analysis")
         
