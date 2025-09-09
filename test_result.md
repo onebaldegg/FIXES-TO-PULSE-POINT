@@ -227,6 +227,9 @@ frontend:
         - working: true
           agent: "testing"
           comment: "TESTED SUCCESSFULLY: File upload endpoint working correctly for TXT, CSV, and Excel files. Proper file size validation (5MB limit), file type validation, and text extraction. Minor: PDF text extraction needs improvement but core functionality works. File metadata stored correctly in database. Error handling works for unsupported files, large files, and empty files. Response structure validation passed."
+        - working: "NA"
+          agent: "main"
+          comment: "FIXING PDF ISSUE: Improved PDF text extraction by adding pdfplumber library as primary extractor with PyPDF2 fallback. Enhanced text cleaning and paragraph splitting logic. Added better error handling and metadata tracking for extraction method used."
 
   - task: "Add batch sentiment analysis endpoint"
     implemented: true
