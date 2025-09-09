@@ -1730,7 +1730,7 @@ const AppContent = () => {
                           <Badge variant={getSentimentBadgeVariant(analysis.sentiment)} className="font-medium">
                             {analysis.sentiment.toUpperCase()}
                           </Badge>
-                          <span className="text-sm text-green-200">
+                          <span className="text-sm" style={{color: '#42DF50'}}>
                             {Math.round(analysis.confidence * 100)}% confidence
                           </span>
                           {/* Sarcasm Detection Warning */}
