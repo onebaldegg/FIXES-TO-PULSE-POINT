@@ -341,7 +341,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                      <div className="w-16 h-16 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{background: '#42DF50'}}>
                         <User className="h-8 w-8 text-white" />
                       </div>
                       <div>
