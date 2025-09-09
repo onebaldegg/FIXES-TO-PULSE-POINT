@@ -670,19 +670,15 @@ async def create_user(user_data: UserCreate):
     # Hash password and create user
     hashed_password = hash_password(user_data.password)
     
-    # Check if this is the test account for PRO access
-    subscription_tier = "pro" if user_data.email == "onebaldegg@gmail.com" else "free"
-    # TEMPORARY: Auto-verify all accounts for testing since email service not configured
-    is_verified = True  # Auto-verify all accounts temporarily
-    
+    # All accounts are automatically active and verified
     user_doc = {
         "id": str(uuid.uuid4()),
         "email": user_data.email,
         "hashed_password": hashed_password,
         "full_name": user_data.full_name,
         "is_active": True,
-        "is_verified": is_verified,
-        "subscription_tier": subscription_tier,
+        "is_verified": True,  # Always verified - no email verification needed
+        "subscription_tier": "free",  # All users start as free tier
         "created_at": datetime.now(timezone.utc),
         "last_login": None,
         "usage_stats": {
