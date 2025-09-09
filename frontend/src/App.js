@@ -1535,7 +1535,7 @@ const AppContent = () => {
                   onClick={() => setActiveTab("text")}
                   className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                     activeTab === "text"
-                      ? "text-white shadow-lg"
+                      ? "text-black shadow-lg"
                       : "hover:text-white"
                   }`}
                   style={activeTab === "text" 
