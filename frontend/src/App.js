@@ -2288,14 +2288,6 @@ const AppContent = () => {
   );
 };
 
-const App = () => {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
-};
-
 // Main App component with AuthProvider
 const App = () => {
   return (
