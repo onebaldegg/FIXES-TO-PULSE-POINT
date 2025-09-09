@@ -328,25 +328,25 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
 
       <div className="w-full max-w-6xl h-full max-h-[95vh] sm:max-h-[90vh] bg-black/90 backdrop-blur-lg border border-green-500/20 rounded-xl overflow-hidden relative z-20 mx-2 sm:mx-0">
         {/* Dashboard Header */}
-        <div className="flex items-center justify-between p-6 border-b border-green-500/20">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{background: '#42DF50'}}>
-              <BarChart3 className="h-6 w-6 text-white" />
+        <div className="flex items-center justify-between p-3 sm:p-6 border-b border-green-500/20">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center" style={{background: '#42DF50'}}>
+              <BarChart3 className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold" style={{color: '#42DF50'}}>User Dashboard</h2>
-              <p style={{color: '#42DF50'}}>Analytics and Account Overview</p>
+              <h2 className="text-lg sm:text-2xl font-bold" style={{color: '#42DF50'}}>User Dashboard</h2>
+              <p className="text-sm sm:text-base" style={{color: '#42DF50'}}>Analytics and Account Overview</p>
             </div>
           </div>
           <button
             onClick={() => setShowDashboard(false)}
             className="p-2 hover:bg-green-500/20 rounded-lg transition-colors"
           >
-            <X className="h-6 w-6" style={{color: '#42DF50'}} />
+            <X className="h-5 w-5 sm:h-6 sm:w-6" style={{color: '#42DF50'}} />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6">
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <Loader2 className="h-8 w-8 animate-spin" style={{color: '#42DF50'}} />
