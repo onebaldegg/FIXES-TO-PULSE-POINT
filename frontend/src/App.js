@@ -1054,7 +1054,134 @@ const App = () => {
                       </div>
                     ))
                   )}
-                </div>
+                  </div>
+                ) : (
+                  // File Analysis Detailed Results
+                  <div className="space-y-4 max-h-96 overflow-y-auto">
+                    {!batchResults ? (
+                      <div className="text-center py-8 text-green-300">
+                        <FileUp className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                        <p>No batch analysis results yet</p>
+                        <p className="text-sm">Upload a file to see detailed results here</p>
+                      </div>
+                    ) : (
+                      batchResults.results.map((result, index) => (
+                        <div key={index} className="p-4 rounded-xl border border-green-500/20 hover:border-green-500/40 transition-colors bg-black/40 backdrop-blur-sm">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center space-x-2 flex-wrap">
+                              <Badge variant={getSentimentBadgeVariant(result.sentiment)} className="text-xs">
+                                {result.sentiment}
+                              </Badge>
+                              <span className="text-xs text-green-300">
+                                Row {result.row_number}
+                              </span>
+                              {result.dominant_emotion && (
+                                <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getEmotionColor(result.dominant_emotion)}`}>
+                                  {getEmotionIcon(result.dominant_emotion)}
+                                  <span>{formatEmotionName(result.dominant_emotion)}</span>
+                                </div>
+                              )}
+                              {result.sarcasm_detected && (
+                                <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getSarcasmBadgeColor()}`}>
+                                  <AlertTriangle className="h-3 w-3" />
+                                  <span>SARCASM</span>
+                                </div>
+                              )}
+                              {result.primary_topic && (
+                                <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${getTopicColor(result.primary_topic)}`}>
+                                  {getTopicIcon(result.primary_topic)}
+                                  <span>{result.topics_detected?.find(t => t.topic === result.primary_topic)?.display_name || result.primary_topic.replace('_', ' ')}</span>
+                                </div>
+                              )}
+                              {result.aspects_analysis && result.aspects_analysis.length > 0 && (
+                                <div className="inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs bg-emerald-500/20 text-emerald-300">
+                                  <Tag className="h-3 w-3" />
+                                  <span>{result.aspects_analysis.length} aspects</span>
+                                </div>
+                              )}
+                            </div>
+                            <span className="text-xs text-green-300">
+                              {Math.round(result.confidence * 100)}%
+                            </span>
+                          </div>
+                          <p className="text-sm text-green-200 mb-2 line-clamp-2">
+                            "{result.text.length > 150 ? result.text.substring(0, 150) + "..." : result.text}"
+                          </p>
+                          
+                          {/* Sarcasm warning in batch results */}
+                          {result.sarcasm_detected && result.adjusted_sentiment !== result.sentiment && (
+                            <div className="text-xs text-orange-300 mb-2 italic">
+                              ⚠️ Appears {result.sentiment} but actually {result.adjusted_sentiment} (sarcastic)
+                            </div>
+                          )}
+                          
+                          {/* Aspects summary in batch results */}
+                          {result.aspects_summary && (
+                            <div className="text-xs text-emerald-300 mb-2 italic">
+                              🎯 {result.aspects_summary}
+                            </div>
+                          )}
+
+                          {/* Topic summary in batch results */}
+                          {result.topic_summary && (
+                            <div className="text-xs text-green-300 mb-2 italic">
+                              📋 {result.topic_summary}
+                            </div>
+                          )}
+                          
+                          <div className="flex flex-wrap gap-1">
+                            {/* Aspects Display */}
+                            {result.aspects_analysis && result.aspects_analysis.length > 0 && (
+                              <>
+                                {result.aspects_analysis
+                                  .sort((a, b) => b.confidence - a.confidence)
+                                  .slice(0, 2) // Show top 2 aspects in batch history
+                                  .map((aspect, aspectIndex) => (
+                                    <div key={aspectIndex} className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30`}>
+                                      {getSentimentIcon(aspect.sentiment)}
+                                      <span>{aspect.aspect}</span>
+                                      <span>({Math.round(aspect.confidence * 100)}%)</span>
+                                    </div>
+                                  ))}
+                              </>
+                            )}
+                            
+                            {/* Topics Display */}
+                            {result.topics_detected && result.topics_detected.length > 0 && (
+                              <>
+                                {result.topics_detected
+                                  .sort((a, b) => b.confidence - a.confidence)
+                                  .slice(0, 1) // Show top 1 topic in batch history
+                                  .map((topic, topicIndex) => (
+                                    <div key={topic.topic} className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs ${getTopicColor(topic.topic)}`}>
+                                      {getTopicIcon(topic.topic)}
+                                      <span>{Math.round(topic.confidence * 100)}%</span>
+                                    </div>
+                                  ))}
+                              </>
+                            )}
+                            
+                            {/* Emotions Display */}
+                            {result.emotions && Object.keys(result.emotions).length > 0 && (
+                              <>
+                                {Object.entries(result.emotions)
+                                  .filter(([_, confidence]) => confidence > 0.3) // Show emotions with >30% confidence
+                                  .sort(([, a], [, b]) => b - a) // Sort by confidence
+                                  .slice(0, 1) // Show top 1 emotion in batch history
+                                  .map(([emotion, confidence]) => (
+                                    <div key={emotion} className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-xs ${getEmotionColor(emotion)}`}>
+                                      {getEmotionIcon(emotion)}
+                                      <span>{Math.round(confidence * 100)}%</span>
+                                    </div>
+                                  ))}
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
