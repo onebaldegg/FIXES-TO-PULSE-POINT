@@ -2683,36 +2683,36 @@ const AppContent = () => {
 
           {/* Features Section */}
           <div className="mt-16">
-            <h2 className="text-3xl font-bold text-center text-green-100 mb-12">
+            <h2 className="text-3xl font-bold text-center mb-12" style={{color: '#42DF50'}}>
               Professional Features
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="text-center p-6 border-0 shadow-2xl bg-black/60 backdrop-blur-lg hover:shadow-xl transition-shadow border border-green-500/20">
-                <div className="bg-gradient-to-r from-green-500 to-emerald-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Tag className="h-6 w-6 text-white" />
+              <Card className="text-center p-6 border-0 shadow-2xl bg-black/60 backdrop-blur-lg hover:shadow-xl transition-shadow border" style={{borderColor: '#42DF50'}}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{backgroundColor: '#42DF50'}}>
+                  <Tag className="h-6 w-6 text-black" />
                 </div>
-                <h3 className="font-semibold text-green-100 mb-2">Aspect-Based Analysis</h3>
-                <p className="text-sm text-green-200">
+                <h3 className="font-semibold mb-2" style={{color: '#42DF50'}}>Aspect-Based Analysis</h3>
+                <p className="text-sm" style={{color: '#42DF50'}}>
                   Analyze sentiment for specific aspects like food quality, service speed, pricing, and more with individual confidence scores
                 </p>
               </Card>
 
-              <Card className="text-center p-6 border-0 shadow-2xl bg-black/60 backdrop-blur-lg hover:shadow-xl transition-shadow border border-green-500/20">
-                <div className="bg-gradient-to-r from-green-500 to-emerald-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Heart className="h-6 w-6 text-white" />
+              <Card className="text-center p-6 border-0 shadow-2xl bg-black/60 backdrop-blur-lg hover:shadow-xl transition-shadow border" style={{borderColor: '#42DF50'}}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{backgroundColor: '#42DF50'}}>
+                  <Heart className="h-6 w-6 text-black" />
                 </div>
-                <h3 className="font-semibold text-green-100 mb-2">Emotion Detection</h3>
-                <p className="text-sm text-green-200">
+                <h3 className="font-semibold mb-2" style={{color: '#42DF50'}}>Emotion Detection</h3>
+                <p className="text-sm" style={{color: '#42DF50'}}>
                   Advanced AI detects 8 core emotions including joy, trust, anger, and fear with confidence scores
                 </p>
               </Card>
 
-              <Card className="text-center p-6 border-0 shadow-2xl bg-black/60 backdrop-blur-lg hover:shadow-xl transition-shadow border border-green-500/20">
-                <div className="bg-gradient-to-r from-green-500 to-emerald-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <BarChart3 className="h-6 w-6 text-white" />
+              <Card className="text-center p-6 border-0 shadow-2xl bg-black/60 backdrop-blur-lg hover:shadow-xl transition-shadow border" style={{borderColor: '#42DF50'}}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{backgroundColor: '#42DF50'}}>
+                  <BarChart3 className="h-6 w-6 text-black" />
                 </div>
-                <h3 className="font-semibold text-green-100 mb-2">Professional Reports</h3>
-                <p className="text-sm text-green-200">
+                <h3 className="font-semibold mb-2" style={{color: '#42DF50'}}>Professional Reports</h3>
+                <p className="text-sm" style={{color: '#42DF50'}}>
                   Comprehensive analysis history and insights for professional decision making
                 </p>
               </Card>
