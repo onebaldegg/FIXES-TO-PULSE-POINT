@@ -749,8 +749,7 @@ async def get_current_active_user(current_user = Depends(get_current_user)):
     return current_user
 
 async def get_current_verified_user(current_user = Depends(get_current_active_user)):
-    """Ensure user account is verified."""
-    # TEMPORARY: Skip verification check for all users since email service not configured
+    """Return current active user (email verification removed)."""
     return current_user
 
 # Usage Tracking
