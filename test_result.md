@@ -329,6 +329,66 @@ frontend:
           agent: "testing"
           comment: "TESTED SUCCESSFULLY: Tab navigation working perfectly. Both 'Text Analysis' and 'File Analysis' tabs found and functional. Smooth switching between modes - text analysis interface appears when switching to Text Analysis tab, file upload interface appears when switching to File Analysis tab. Active tab highlighting working correctly. Icons and hover effects properly implemented with Matrix theme consistency."
 
+  - task: "Add web scraping dependencies and URL processing service"
+    implemented: false
+    working: "NA"
+    file: "backend/requirements.txt, backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to add web scraping libraries (requests, beautifulsoup4, newspaper3k) and create URL processing service for text extraction from web pages"
+
+  - task: "Create URL analysis endpoints"
+    implemented: false
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to create /api/analyze-url and /api/analyze-batch-urls endpoints for single and batch URL processing with sentiment analysis"
+
+  - task: "Add URL analysis data models"
+    implemented: false  
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to add Pydantic models for URL analysis requests/responses and database storage"
+
+  - task: "Create URL analysis UI interface"
+    implemented: false
+    working: "NA"
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to add URL Analysis tab with URL input form, batch processing, and results display"
+
+  - task: "Add URL analysis results display"
+    implemented: false
+    working: "NA"
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Initial task creation - need to display URL analysis results with article metadata, extracted text preview, and comprehensive sentiment analysis"
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
