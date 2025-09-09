@@ -1700,7 +1700,7 @@ const AppContent = () => {
                             )}
                           </Button>
                         </div>
-                        <p className="text-xs text-green-400/80">
+                        <p className="text-xs" style={{color: '#42DF50'}}>
                           Supports news articles, blog posts, product pages, and any web content
                         </p>
                       </div>
