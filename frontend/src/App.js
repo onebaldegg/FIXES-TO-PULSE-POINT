@@ -979,7 +979,7 @@ const AppContent = () => {
           <CardHeader className="text-center pb-4">
             <div className="mx-auto flex flex-col items-center">
               <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-16 w-16" />
-              <CardTitle className="text-3xl font-bold mt-2 neon-pulse-subtle" style={{color: '#42DF50'}}>
+              <CardTitle className="text-3xl font-bold mt-2 neon-robust" style={{color: '#42DF50'}}>
                 PULSE POINT
               </CardTitle>
             </div>
