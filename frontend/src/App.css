@@ -766,7 +766,9 @@ h1.neon-pulse-subtle,
   filter: brightness(1.2) !important;
 }
 
-/* DIAGNOSTIC TEST - Simple neon effect that MUST work */
+/* ROBUST NEON IMPLEMENTATION - Force with multiple fallbacks */
+
+/* Test different approaches */
 .neon-test {
   background: red !important;
   color: yellow !important;
@@ -775,6 +777,45 @@ h1.neon-pulse-subtle,
   padding: 10px !important;
   font-size: 24px !important;
   font-weight: bold !important;
+}
+
+/* Robust neon effects that work regardless of browser settings */
+.neon-robust {
+  /* Box-shadow based glow instead of text-shadow */
+  background: rgba(66, 223, 80, 0.1) !important;
+  border: 2px solid #42DF50 !important;
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  box-shadow: 
+    0 0 10px rgba(66, 223, 80, 0.5) !important,
+    0 0 20px rgba(66, 223, 80, 0.3) !important,
+    0 0 30px rgba(66, 223, 80, 0.1) !important,
+    inset 0 0 10px rgba(66, 223, 80, 0.1) !important;
+  filter: brightness(1.1) !important;
+  transform: translateZ(0) !important; /* Force GPU acceleration */
+}
+
+/* Alternative approach using outline */
+.neon-outline {
+  outline: 3px solid #42DF50 !important;
+  outline-offset: 5px !important;
+  box-shadow: 
+    0 0 15px #42DF50 !important,
+    inset 0 0 15px rgba(66, 223, 80, 0.2) !important;
+}
+
+/* CSS Transform based pulse instead of animation */
+.neon-transform-pulse {
+  transition: all 0.3s ease !important;
+  transform: scale(1) !important;
+}
+
+.neon-transform-pulse:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 
+    0 0 20px #42DF50 !important,
+    0 0 40px rgba(66, 223, 80, 0.4) !important;
+  filter: brightness(1.2) !important;
 }
 
 .neon-border-pulse {
