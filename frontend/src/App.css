@@ -413,21 +413,23 @@ canvas {
   }
 }
 
+/* CRITICAL TEST CLASS - Must be visible to prove CSS is working */
+html body div.css-test-visible,
+.css-test-visible {
+  background-color: red !important;
+  color: yellow !important;
+  border: 5px solid blue !important;
+  padding: 20px !important;
+  font-size: 24px !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 10px 0 !important;
+  z-index: 9999 !important;
+}
+
 @layer custom-effects {
-  /* CRITICAL TEST CLASS - Must be visible to prove CSS is working */
-  .css-test-visible {
-    background-color: red !important;
-    color: yellow !important;
-    border: 5px solid blue !important;
-    padding: 20px !important;
-    font-size: 24px !important;
-    font-weight: bold !important;
-    text-align: center !important;
-    display: block !important;
-    width: 100% !important;
-    margin: 10px 0 !important;
-    z-index: 9999 !important;
-  }
 
   /* GLASSMORPHISM IMPLEMENTATION - MAXIMUM SPECIFICITY */
 
