@@ -187,24 +187,25 @@ h1.neon-outline.neon-transform-pulse {
   filter: brightness(1.1) drop-shadow(0 0 10px rgba(66, 223, 80, 0.5)) !important;
 }
 
-/* Neon pulse animation */
+/* Keyframes for neon pulse animation */
 @keyframes neonPulse {
   0%, 100% {
-    text-shadow: 
-      0 0 5px #42DF50 !important,
-      0 0 10px #42DF50 !important,
-      0 0 15px #42DF50 !important,
-      0 0 20px #42DF50 !important;
-    filter: brightness(1) !important;
-  }
-  50% {
     text-shadow: 
       0 0 8px #42DF50 !important,
       0 0 16px #42DF50 !important,
       0 0 24px #42DF50 !important,
-      0 0 32px #42DF50 !important,
-      0 0 40px #42DF50 !important;
+      0 0 32px #42DF50 !important;
+    filter: brightness(1.1) !important;
+    transform: scale(1) !important;
+  }
+  50% {
+    text-shadow: 
+      0 0 12px #42DF50 !important,
+      0 0 24px #42DF50 !important,
+      0 0 36px #42DF50 !important,
+      0 0 48px #42DF50 !important;
     filter: brightness(1.2) !important;
+    transform: scale(1.02) !important;
   }
 }
 
