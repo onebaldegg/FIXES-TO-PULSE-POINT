@@ -389,7 +389,16 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                         </div>
                       </div>
                     </div>
-                    <div className="text-left sm:text-right flex-shrink-0 w-full sm:w-auto">
+                    <div className="text-left sm:text-right flex-shrink-0 w-full sm:w-auto relative">
+                      {/* Close Button positioned in top-right of user info */}
+                      <button
+                        onClick={() => setShowDashboard(false)}
+                        className="absolute -top-2 -right-2 p-2 bg-red-500 hover:bg-red-600 rounded-full transition-colors border-2 border-red-400 shadow-lg z-10"
+                        style={{ minWidth: '36px', minHeight: '36px' }}
+                      >
+                        <X className="h-4 w-4 text-white" />
+                      </button>
+                      
                       <p className="text-xs sm:text-sm" style={{color: '#42DF50'}}>Member since</p>
                       <p className="text-xs sm:text-base" style={{color: '#42DF50'}}>{new Date(user.created_at).toLocaleDateString()}</p>
                       {user.last_login && (
