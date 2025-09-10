@@ -574,6 +574,9 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
         />
       </video>
 
+      {/* Enhanced Interactive Matrix Particles for Dashboard */}
+      <EnhancedMatrixBackground />
+
       {/* Dark Overlay for Better Readability */}
       <div className="fixed inset-0 bg-black/20 z-10"></div>
 
