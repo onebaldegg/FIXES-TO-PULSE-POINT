@@ -3101,62 +3101,32 @@ const AppContent = () => {
               Professional Features
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="glass-card hover:shadow-xl transition-shadow border text-center" style={{
-                borderColor: '#42DF50',
-                border: '2px solid rgba(66, 223, 80, 0.4)',
-                background: 'rgba(0, 40, 0, 0.25)',
-                backdropFilter: 'blur(10px) saturate(200%) brightness(1.1)',
-                WebkitBackdropFilter: 'blur(10px) saturate(200%) brightness(1.1)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(66, 223, 80, 0.25), inset 0 2px 0 rgba(66, 223, 80, 0.3), 0 0 25px rgba(66, 223, 80, 0.15)',
-                padding: '1.5rem',
-                position: 'relative',
-                overflow: 'hidden'
-              }}>
+              <Card className="glass-card matrix-theme text-center p-6">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{backgroundColor: '#42DF50'}}>
                   <Tag className="h-6 w-6 text-black" />
                 </div>
-                <h3 className="font-semibold mb-2" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)', position: 'relative', zIndex: 2}}>Aspect-Based Analysis</h3>
-                <p className="text-sm" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)', position: 'relative', zIndex: 2}}>
+                <h3 className="font-semibold mb-2 relative z-10" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)'}}>Aspect-Based Analysis</h3>
+                <p className="text-sm relative z-10" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)'}}>
                   Analyze sentiment for specific aspects like food quality, service speed, pricing, and more with individual confidence scores
                 </p>
               </Card>
 
-              <Card className="glass-card hover:shadow-xl transition-shadow border text-center" style={{
-                borderColor: '#42DF50',
-                border: '2px solid rgba(66, 223, 80, 0.4)',
-                background: 'rgba(0, 40, 0, 0.25)',
-                backdropFilter: 'blur(10px) saturate(200%) brightness(1.1)',
-                WebkitBackdropFilter: 'blur(10px) saturate(200%) brightness(1.1)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(66, 223, 80, 0.25), inset 0 2px 0 rgba(66, 223, 80, 0.3), 0 0 25px rgba(66, 223, 80, 0.15)',
-                padding: '1.5rem',
-                position: 'relative',
-                overflow: 'hidden'
-              }}>
+              <Card className="glass-card matrix-theme text-center p-6">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{backgroundColor: '#42DF50'}}>
                   <Heart className="h-6 w-6 text-black" />
                 </div>
-                <h3 className="font-semibold mb-2" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)', position: 'relative', zIndex: 2}}>Emotion Detection</h3>
-                <p className="text-sm" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)', position: 'relative', zIndex: 2}}>
+                <h3 className="font-semibold mb-2 relative z-10" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)'}}>Emotion Detection</h3>
+                <p className="text-sm relative z-10" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)'}}>
                   Advanced AI detects 8 core emotions including joy, trust, anger, and fear with confidence scores
                 </p>
               </Card>
 
-              <Card className="glass-card hover:shadow-xl transition-shadow border text-center" style={{
-                borderColor: '#42DF50',
-                border: '2px solid rgba(66, 223, 80, 0.4)',
-                background: 'rgba(0, 40, 0, 0.25)',
-                backdropFilter: 'blur(10px) saturate(200%) brightness(1.1)',
-                WebkitBackdropFilter: 'blur(10px) saturate(200%) brightness(1.1)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(66, 223, 80, 0.25), inset 0 2px 0 rgba(66, 223, 80, 0.3), 0 0 25px rgba(66, 223, 80, 0.15)',
-                padding: '1.5rem',
-                position: 'relative',
-                overflow: 'hidden'
-              }}>
+              <Card className="glass-card matrix-theme text-center p-6">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{backgroundColor: '#42DF50'}}>
                   <BarChart3 className="h-6 w-6 text-black" />
                 </div>
-                <h3 className="font-semibold mb-2" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)', position: 'relative', zIndex: 2}}>Professional Reports</h3>
-                <p className="text-sm" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)', position: 'relative', zIndex: 2}}>
+                <h3 className="font-semibold mb-2 relative z-10" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)'}}>Professional Reports</h3>
+                <p className="text-sm relative z-10" style={{color: '#42DF50', textShadow: '0 1px 2px rgba(0, 0, 0, 0.8)'}}>
                   Comprehensive analysis history and insights for professional decision making
                 </p>
               </Card>
