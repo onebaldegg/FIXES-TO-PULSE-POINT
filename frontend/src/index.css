@@ -212,3 +212,19 @@ span.neon-outline {
 .neon-outline {
   animation: neonPulse 3s ease-in-out infinite !important;
 }
+
+/* SPECIFIC NEON FIXES for exact class combinations found */
+.tracking-tight.text-3xl.font-bold.mt-2.neon-robust,
+.text-lg.sm\:text-3xl.font-bold.truncate.neon-outline.neon-transform-pulse,
+.text-3xl.font-bold.text-center.mb-12.neon-robust.neon-transform-pulse,
+h1.neon-outline.neon-transform-pulse,
+h2.neon-robust.neon-transform-pulse,
+div.neon-robust {
+  text-shadow: 
+    0 0 8px #42DF50 !important,
+    0 0 16px #42DF50 !important,
+    0 0 24px #42DF50 !important,
+    0 0 32px #42DF50 !important;
+  color: #42DF50 !important;
+  filter: brightness(1.1) drop-shadow(0 0 10px rgba(66, 223, 80, 0.5)) !important;
+}
