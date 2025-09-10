@@ -101,7 +101,9 @@ code {
 .glass-card,
 div.glass-card,
 .glass-card.matrix-theme,
-div.glass-card.matrix-theme {
+div.glass-card.matrix-theme,
+.glass-modal,
+div.glass-modal {
   background-color: rgba(0, 50, 0, 0.2) !important;
   background-image: linear-gradient(135deg, rgba(0, 60, 0, 0.25) 0%, rgba(0, 40, 0, 0.15) 100%) !important;
   backdrop-filter: blur(20px) saturate(180%) !important;
