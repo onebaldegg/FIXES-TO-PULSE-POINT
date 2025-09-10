@@ -821,11 +821,22 @@ h1.neon-pulse-subtle,
 
 /* Alternative approach using outline */
 .neon-outline {
+  /* Forced text-shadow */
+  text-shadow: 
+    0 0 8px #42DF50,
+    0 0 16px #42DF50,
+    0 0 24px #42DF50 !important;
+    
+  /* Outline-based effects */
   outline: 3px solid #42DF50 !important;
   outline-offset: 5px !important;
   box-shadow: 
-    0 0 15px #42DF50 !important,
+    0 0 15px #42DF50,
     inset 0 0 15px rgba(66, 223, 80, 0.2) !important;
+    
+  /* Force GPU acceleration */
+  will-change: text-shadow, outline, box-shadow !important;
+  transform: translateZ(0) !important;
 }
 
 /* CSS Transform based pulse instead of animation */
