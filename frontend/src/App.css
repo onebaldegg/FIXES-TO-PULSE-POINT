@@ -401,84 +401,125 @@ canvas {
   }
 }
 
-/* PROVEN GLASSMORPHISM IMPLEMENTATION */
+/* ALTERNATIVE GLASSMORPHISM WITHOUT BACKDROP-FILTER */
+/* Since backdrop-filter may not be supported, create glassmorphism with traditional CSS */
 
-/* Reset any conflicting background styles */
 .glass-card {
-  /* Force positioning for stacking context */
+  /* Essential positioning */
   position: relative !important;
   z-index: 1 !important;
   
-  /* Remove any solid backgrounds first */
+  /* Remove conflicting backgrounds */
   background: none !important;
   background-color: transparent !important;
   
-  /* Apply glassmorphism with proven method */
-  background: rgba(255, 255, 255, 0.1) !important;
+  /* Create glass effect with multiple layered backgrounds */
+  background: 
+    linear-gradient(135deg, rgba(0, 50, 0, 0.2) 0%, rgba(0, 80, 0, 0.1) 100%),
+    linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)) !important;
   
-  /* Critical: Both prefixed and non-prefixed versions */
-  backdrop-filter: blur(15px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
+  /* Glass-like border */
+  border: 1px solid rgba(66, 223, 80, 0.4) !important;
   
-  /* Enhanced glass border */
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  
-  /* Proper shadow for depth */
+  /* Enhanced shadows for depth */
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.37),
-    0 2px 16px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 4px 16px rgba(66, 223, 80, 0.2),
+    inset 0 1px 0 rgba(66, 223, 80, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
   
   /* Smooth transitions */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
   
-  /* Ensure content is above the glass effect */
-  overflow: visible !important;
+  /* Pseudo-element for additional glass effect */
+  overflow: hidden !important;
+}
+
+/* Add frosted glass effect with pseudo-element */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(135deg, 
+      rgba(66, 223, 80, 0.1) 0%, 
+      transparent 25%, 
+      transparent 75%, 
+      rgba(66, 223, 80, 0.05) 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Add a subtle shine effect */
+.glass-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    transparent 70%);
+  transform: rotate(-45deg);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.glass-card:hover::after {
+  opacity: 1;
 }
 
 .glass-card:hover {
   /* Enhanced hover state */
-  background: rgba(255, 255, 255, 0.15) !important;
-  backdrop-filter: blur(20px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
-  
   transform: translateY(-8px) scale(1.02) !important;
   
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  background: 
+    linear-gradient(135deg, rgba(0, 60, 0, 0.3) 0%, rgba(0, 100, 0, 0.15) 100%),
+    linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)) !important;
+  
+  border: 1px solid rgba(66, 223, 80, 0.6) !important;
   
   box-shadow: 
-    0 16px 48px rgba(0, 0, 0, 0.5),
-    0 4px 24px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    0 16px 48px rgba(0, 0, 0, 0.7),
+    0 8px 24px rgba(66, 223, 80, 0.3),
+    inset 0 2px 0 rgba(66, 223, 80, 0.4),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Fallback for browsers that don't support backdrop-filter */
-@supports not (backdrop-filter: blur(1px)) {
-  .glass-card {
-    background: rgba(0, 40, 0, 0.8) !important;
-    border: 1px solid rgba(66, 223, 80, 0.4) !important;
-  }
-}
-
-/* Matrix-themed variation for our green theme */
+/* Enhanced matrix theme variant */
 .glass-card.matrix-theme {
-  background: rgba(0, 50, 0, 0.15) !important;
-  border: 1px solid rgba(66, 223, 80, 0.3) !important;
+  background: 
+    linear-gradient(135deg, rgba(0, 40, 0, 0.25) 0%, rgba(0, 70, 0, 0.1) 100%),
+    linear-gradient(rgba(66, 223, 80, 0.05), rgba(66, 223, 80, 0.02)) !important;
+  
+  border: 1.5px solid rgba(66, 223, 80, 0.4) !important;
   
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    0 2px 16px rgba(66, 223, 80, 0.1),
-    inset 0 1px 0 rgba(66, 223, 80, 0.2) !important;
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 4px 16px rgba(66, 223, 80, 0.2),
+    inset 0 1px 0 rgba(66, 223, 80, 0.3),
+    0 0 20px rgba(66, 223, 80, 0.1) !important;
 }
 
 .glass-card.matrix-theme:hover {
-  background: rgba(0, 60, 0, 0.2) !important;
-  border: 1px solid rgba(66, 223, 80, 0.4) !important;
+  background: 
+    linear-gradient(135deg, rgba(0, 50, 0, 0.35) 0%, rgba(0, 90, 0, 0.15) 100%),
+    linear-gradient(rgba(66, 223, 80, 0.08), rgba(66, 223, 80, 0.04)) !important;
+  
+  border: 1.5px solid rgba(66, 223, 80, 0.6) !important;
   
   box-shadow: 
-    0 16px 48px rgba(0, 0, 0, 0.5),
-    0 4px 24px rgba(66, 223, 80, 0.15),
-    inset 0 1px 0 rgba(66, 223, 80, 0.3) !important;
+    0 16px 48px rgba(0, 0, 0, 0.6),
+    0 8px 24px rgba(66, 223, 80, 0.25),
+    inset 0 2px 0 rgba(66, 223, 80, 0.4),
+    0 0 30px rgba(66, 223, 80, 0.2) !important;
 }
 
 /* Staggered Card Animations */
