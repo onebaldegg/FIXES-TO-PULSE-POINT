@@ -404,9 +404,10 @@ canvas {
 /* GLASSMORPHISM WITH SHADCN UI OVERRIDE */
 /* Override Shadcn UI CSS custom properties that conflict with glassmorphism */
 
+/* Global override for glassmorphism cards */
 .glass-card {
-  /* CRITICAL: Override Shadcn UI CSS custom properties */
-  --card: transparent !important;
+  /* CRITICAL: Override Shadcn UI CSS custom properties with transparent values */
+  --card: 0 0% 0% / 0 !important; /* HSL transparent */
   --card-foreground: inherit !important;
   
   /* Essential positioning */
