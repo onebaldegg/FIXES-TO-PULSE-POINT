@@ -1646,6 +1646,11 @@ const AppContent = () => {
           toast={toast}
         />
         
+        {/* CSS TEST ELEMENT - MUST BE VISIBLE */}
+        <div className="css-test-visible">
+          CSS TEST: If you can see this red box with yellow text, CSS is working!
+        </div>
+
         {/* Header */}
         <header className="bg-black/90 backdrop-blur-lg border-b border-green-500/20 shadow-2xl relative z-50">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-6">
