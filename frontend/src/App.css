@@ -202,6 +202,33 @@ video {
   animation: matrix-flicker 3s ease-in-out infinite;
 }
 
+/* Animated Chart Glow Effects */
+@keyframes chartGlow {
+  0%, 100% { 
+    box-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+    opacity: 0.3;
+  }
+  50% { 
+    box-shadow: 0 0 30px currentColor, 0 0 60px currentColor;
+    opacity: 0.5;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.2;
+  }
+  50% { 
+    transform: scale(1.05);
+    opacity: 0.4;
+  }
+}
+
+.chart-glow {
+  animation: chartGlow 3s ease-in-out infinite;
+}
+
 /* Hide Emergent platform badge that interferes with UI */
 iframe[src*="emergent"], 
 div[class*="emergent-badge"], 
