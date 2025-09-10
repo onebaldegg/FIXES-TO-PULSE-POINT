@@ -580,7 +580,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
       {/* Dark Overlay for Better Readability */}
       <div className="fixed inset-0 bg-black/20 z-10"></div>
 
-      <div className="w-full max-w-6xl h-[90vh] bg-black/90 backdrop-blur-lg border border-green-500/20 rounded-xl relative z-20 mx-2 sm:mx-0 my-2 sm:my-4 flex flex-col">
+      <div className="w-full max-w-6xl h-[90vh] glass-modal border border-green-500/20 rounded-xl relative z-20 mx-2 sm:mx-0 my-2 sm:my-4 flex flex-col">
         {/* Dashboard Header */}
         <div className="flex items-center justify-between p-4 border-b border-green-500/30 bg-black/80 backdrop-blur-sm rounded-t-xl">
           <div className="flex items-center space-x-4">
