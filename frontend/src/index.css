@@ -95,7 +95,23 @@ code {
 
 /* CRITICAL CSS FIX - Added directly to index.css for maximum priority */
 
+/* EXTREME NEON TEXT SHADOW FIX - Force text-shadow at all costs */
+* {
+  --neon-glow: 0 0 8px #42DF50, 0 0 16px #42DF50, 0 0 24px #42DF50, 0 0 32px #42DF50;
+}
 
+html body h1[class*="neon"],
+html body h2[class*="neon"],
+html body h3[class*="neon"],
+html body div[class*="neon"],
+html body span[class*="neon"],
+html body *[class*="neon-pulse"],
+html body *[class*="neon-robust"],  
+html body *[class*="neon-outline"] {
+  text-shadow: var(--neon-glow) !important;
+  -webkit-text-shadow: var(--neon-glow) !important;
+  -moz-text-shadow: var(--neon-glow) !important;
+}
 
 /* GLASSMORPHISM FIX - Maximum specificity */
 .glass-card,
