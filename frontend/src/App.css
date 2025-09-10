@@ -401,41 +401,17 @@ canvas {
   }
 }
 
-/* GLASSMORPHISM WITH SHADCN UI OVERRIDE */
-/* Override Shadcn UI bg-card class that causes solid white background */
+/* GLASSMORPHISM IMPLEMENTATION */
 
 .glass-card {
   /* Essential positioning */
   position: relative !important;
   z-index: 1 !important;
-}
-
-/* Direct override of Tailwind's bg-card class within glass-card context */
-.glass-card {
-  /* Force transparent background to override bg-card */
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
-/* More specific overrides for Tailwind bg-card class */
-div.glass-card.bg-card,
-div.glass-card[class*="bg-card"],
-.glass-card.rounded-xl.bg-card,
-[class*="glass-card"][class*="bg-card"] {
-  background: transparent !important;
-  background-color: transparent !important;
-}
   
-  /* Apply glassmorphism background AFTER overriding bg-card */
-  background: 
-    linear-gradient(135deg, rgba(0, 50, 0, 0.25) 0%, rgba(0, 80, 0, 0.15) 100%),
-    linear-gradient(rgba(66, 223, 80, 0.08), rgba(66, 223, 80, 0.04)) !important;
+  /* Create semi-transparent green glass effect */
+  background: rgba(0, 50, 0, 0.2) !important;
   
-  /* Add backdrop-filter for true glassmorphism effect */
-  backdrop-filter: blur(12px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
-  
-  /* Glass-like border */
+  /* Glass-like border with green tint */
   border: 1px solid rgba(66, 223, 80, 0.4) !important;
   
   /* Enhanced shadows for depth */
