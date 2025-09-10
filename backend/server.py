@@ -426,7 +426,7 @@ SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
 SMTP_USERNAME = os.getenv("SMTP_USERNAME")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD") 
 FROM_EMAIL = os.getenv("FROM_EMAIL")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "https://brand-monitor-2.preview.emergentagent.com")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://brand-pulse-6.preview.emergentagent.com")
 
 # Security utilities
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
