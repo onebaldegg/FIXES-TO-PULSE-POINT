@@ -92,3 +92,102 @@ code {
     @apply bg-background text-foreground;
     }
 }
+
+/* CRITICAL CSS FIX - Added directly to index.css for maximum priority */
+
+/* CSS TEST - Must be visible */
+.css-test-visible {
+  background-color: red !important;
+  color: yellow !important;
+  border: 5px solid blue !important;
+  padding: 20px !important;
+  font-size: 24px !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 10px 0 !important;
+  z-index: 9999 !important;
+}
+
+/* GLASSMORPHISM FIX - Maximum specificity */
+.glass-card,
+div.glass-card,
+.glass-card.matrix-theme,
+div.glass-card.matrix-theme {
+  background-color: rgba(0, 50, 0, 0.2) !important;
+  background-image: linear-gradient(135deg, rgba(0, 60, 0, 0.25) 0%, rgba(0, 40, 0, 0.15) 100%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  position: relative !important;
+  z-index: 1 !important;
+  border: 1px solid rgba(66, 223, 80, 0.4) !important;
+  border-color: rgba(66, 223, 80, 0.4) !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 4px 16px rgba(66, 223, 80, 0.2),
+    inset 0 1px 0 rgba(66, 223, 80, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+}
+
+/* NEON TEXT FIX - Maximum specificity */
+.neon-pulse,
+h1.neon-pulse,
+h2.neon-pulse,
+h3.neon-pulse,
+div.neon-pulse,
+span.neon-pulse,
+.neon-pulse-subtle,
+h1.neon-pulse-subtle,
+h2.neon-pulse-subtle,
+.neon-robust,
+h1.neon-robust,
+h2.neon-robust,
+h3.neon-robust,
+div.neon-robust,
+span.neon-robust,
+.neon-outline,
+h1.neon-outline,
+h2.neon-outline,
+h3.neon-outline,
+div.neon-outline,
+span.neon-outline {
+  text-shadow: 
+    0 0 8px #42DF50 !important,
+    0 0 16px #42DF50 !important,
+    0 0 24px #42DF50 !important,
+    0 0 32px #42DF50 !important;
+  color: #42DF50 !important;
+  filter: brightness(1.1) drop-shadow(0 0 10px rgba(66, 223, 80, 0.5)) !important;
+  will-change: text-shadow !important;
+  transform: translateZ(0) !important;
+}
+
+/* Neon pulse animation */
+@keyframes neonPulse {
+  0%, 100% {
+    text-shadow: 
+      0 0 5px #42DF50 !important,
+      0 0 10px #42DF50 !important,
+      0 0 15px #42DF50 !important,
+      0 0 20px #42DF50 !important;
+    filter: brightness(1) !important;
+  }
+  50% {
+    text-shadow: 
+      0 0 8px #42DF50 !important,
+      0 0 16px #42DF50 !important,
+      0 0 24px #42DF50 !important,
+      0 0 32px #42DF50 !important,
+      0 0 40px #42DF50 !important;
+    filter: brightness(1.2) !important;
+  }
+}
+
+.neon-pulse,
+.neon-robust,
+.neon-outline {
+  animation: neonPulse 3s ease-in-out infinite !important;
+}
