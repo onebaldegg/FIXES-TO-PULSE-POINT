@@ -663,3 +663,113 @@ div[style*="position: absolute"][style*="bottom"],
   z-index: 10;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
+
+/* NEON PULSE BRANDING EFFECTS */
+
+/* Core neon pulse animation */
+@keyframes neonPulse {
+  0%, 100% {
+    text-shadow: 
+      0 0 5px #42DF50,
+      0 0 10px #42DF50,
+      0 0 15px #42DF50,
+      0 0 20px #42DF50;
+    filter: brightness(1);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 
+      0 0 8px #42DF50,
+      0 0 16px #42DF50,
+      0 0 24px #42DF50,
+      0 0 32px #42DF50,
+      0 0 40px #42DF50;
+    filter: brightness(1.2);
+    transform: scale(1.02);
+  }
+}
+
+/* Subtle neon pulse for logos */
+@keyframes neonPulseSubtle {
+  0%, 100% {
+    text-shadow: 
+      0 0 3px #42DF50,
+      0 0 6px #42DF50,
+      0 0 9px #42DF50;
+    filter: brightness(1);
+  }
+  50% {
+    text-shadow: 
+      0 0 5px #42DF50,
+      0 0 10px #42DF50,
+      0 0 15px #42DF50,
+      0 0 20px #42DF50;
+    filter: brightness(1.1);
+  }
+}
+
+/* Border neon pulse animation */
+@keyframes neonBorderPulse {
+  0%, 100% {
+    border-color: rgba(66, 223, 80, 0.4);
+    box-shadow: 
+      0 0 5px rgba(66, 223, 80, 0.2),
+      inset 0 0 5px rgba(66, 223, 80, 0.1);
+  }
+  50% {
+    border-color: rgba(66, 223, 80, 0.8);
+    box-shadow: 
+      0 0 15px rgba(66, 223, 80, 0.4),
+      0 0 25px rgba(66, 223, 80, 0.2),
+      inset 0 0 10px rgba(66, 223, 80, 0.2);
+  }
+}
+
+/* Neon pulse classes */
+.neon-pulse {
+  animation: neonPulse 3s ease-in-out infinite;
+}
+
+.neon-pulse-subtle {
+  animation: neonPulseSubtle 4s ease-in-out infinite;
+}
+
+.neon-border-pulse {
+  animation: neonBorderPulse 2.5s ease-in-out infinite;
+}
+
+/* Logo-specific neon effects */
+.logo-neon {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-neon::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    transparent, 
+    rgba(66, 223, 80, 0.1), 
+    transparent, 
+    rgba(66, 223, 80, 0.1),
+    transparent);
+  background-size: 400% 400%;
+  border-radius: inherit;
+  z-index: -1;
+  animation: neonSweep 6s ease-in-out infinite;
+}
+
+@keyframes neonSweep {
+  0%, 100% {
+    background-position: 0% 50%;
+    opacity: 0.3;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.7;
+  }
+}
