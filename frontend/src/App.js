@@ -1655,11 +1655,7 @@ const AppContent = () => {
                   <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-8 w-8 sm:h-14 sm:w-14" />
                 </div>
                 <div className="min-w-0">
-                  <h1 className="text-lg sm:text-3xl font-bold truncate neon-pulse-subtle" style={{
-                    color: '#42DF50',
-                    textShadow: '0 0 10px #42DF50, 0 0 20px #42DF50, 0 0 30px #42DF50',
-                    animation: 'neonPulse 3s ease-in-out infinite'
-                  }}>PULSE POINT</h1>
+                  <h1 className="text-lg sm:text-3xl font-bold truncate neon-outline neon-transform-pulse" style={{color: '#42DF50'}}>PULSE POINT</h1>
                   <p className="text-xs sm:text-base truncate" style={{color: '#42DF50'}}>Advanced Sentiment Analysis Platform</p>
                 </div>
               </div>
