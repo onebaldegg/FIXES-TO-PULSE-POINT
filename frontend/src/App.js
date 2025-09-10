@@ -3098,6 +3098,9 @@ const AppContent = () => {
           {/* Features Section */}
           <div className="mt-16">
 
+            <div className="neon-test">
+              CRITICAL TEST: If you see this RED background with YELLOW text and BLUE border with GLOWING text-shadow, CSS layers fix is working!
+            </div>
             <h2 className="text-3xl font-bold text-center mb-12 neon-robust neon-transform-pulse" style={{color: '#42DF50'}}>
               Professional Features
             </h2>
