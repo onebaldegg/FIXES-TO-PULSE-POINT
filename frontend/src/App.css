@@ -522,28 +522,37 @@ div[style*="position: absolute"][style*="bottom"],
 
 /* Additional glassmorphism overrides for specific Card component conflicts */
 div.glass-card.rounded-xl {
-  background: rgba(0, 0, 0, 0.4) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 20, 0, 0.3) !important;
+  backdrop-filter: blur(15px) saturate(150%) !important;
+  border: 1px solid rgba(66, 223, 80, 0.3) !important;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    0 4px 16px rgba(66, 223, 80, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 4px 16px rgba(66, 223, 80, 0.15),
+    inset 0 1px 0 rgba(66, 223, 80, 0.2),
+    0 0 20px rgba(66, 223, 80, 0.1) !important;
 }
 
 div.glass-card.rounded-xl:hover {
-  background: rgba(0, 0, 0, 0.5) !important;
+  background: rgba(0, 30, 0, 0.4) !important;
   transform: translateY(-8px) scale(1.02) !important;
+  border: 1px solid rgba(66, 223, 80, 0.5) !important;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    0 8px 24px rgba(66, 223, 80, 0.3),
+    inset 0 1px 0 rgba(66, 223, 80, 0.3),
+    0 0 30px rgba(66, 223, 80, 0.2) !important;
 }
 
 /* More specific targeting for Professional Features cards */
 div[class*="glass-card"][class*="text-center"] {
-  background: rgba(0, 0, 0, 0.4) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  background: rgba(0, 20, 0, 0.3) !important;
+  backdrop-filter: blur(15px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(150%) !important;
+  border: 1px solid rgba(66, 223, 80, 0.3) !important;
 }
 
 div[class*="glass-card"][class*="text-center"]:hover {
-  background: rgba(0, 0, 0, 0.5) !important;
+  background: rgba(0, 30, 0, 0.4) !important;
   transform: translateY(-8px) scale(1.02) !important;
+  border: 1px solid rgba(66, 223, 80, 0.5) !important;
 }
