@@ -780,7 +780,7 @@ h1.neon-pulse-subtle,
 .neon-test {
   background-color: red !important;
   color: yellow !important;
-  text-shadow: 0 0 20px yellow !important;
+  text-shadow: 0 0 20px yellow, 0 0 40px yellow, 0 0 60px yellow !important;
   border: 5px solid blue !important;
   padding: 20px !important;
   font-size: 30px !important;
@@ -789,6 +789,9 @@ h1.neon-pulse-subtle,
   width: 100% !important;
   text-align: center !important;
   margin: 20px 0 !important;
+  /* Force GPU acceleration for effects */
+  will-change: text-shadow !important;
+  transform: translateZ(0) !important;
 }
 
 /* Robust neon effects that work regardless of browser settings */
