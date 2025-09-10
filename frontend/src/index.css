@@ -209,11 +209,7 @@ h1.neon-outline.neon-transform-pulse {
   }
 }
 
-.neon-pulse,
-.neon-robust,
-.neon-outline {
-  animation: neonPulse 3s ease-in-out infinite !important;
-}
+
 
 /* SPECIFIC NEON FIXES for exact class combinations found */
 .tracking-tight.text-3xl.font-bold.mt-2.neon-robust,
