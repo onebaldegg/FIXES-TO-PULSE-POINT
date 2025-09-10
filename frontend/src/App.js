@@ -2935,6 +2935,44 @@ const AppContent = () => {
 
 // Main App component with AuthProvider
 const App = () => {
+  useEffect(() => {
+    // Remove Emergent badge that interferes with UI
+    const removeEmergentBadge = () => {
+      // Remove any element containing "Made with Emergent" or "Emergent"
+      const badgeElements = document.querySelectorAll('*');
+      badgeElements.forEach(el => {
+        if (el.textContent && (
+          el.textContent.includes('Made with Emergent') || 
+          el.textContent.includes('Emergent') ||
+          el.innerHTML?.includes('Emergent')
+        )) {
+          // Don't remove our own PULSE POINT elements
+          if (!el.textContent.includes('PULSE POINT') && 
+              !el.classList.contains('keep') &&
+              !el.closest('.main-app-content')) {
+            el.style.display = 'none';
+            el.remove();
+          }
+        }
+      });
+      
+      // Also target common badge positioning patterns
+      const fixedElements = document.querySelectorAll('[style*="position: fixed"]');
+      fixedElements.forEach(el => {
+        if (el.style.bottom !== '' && el.textContent?.includes('Emergent')) {
+          el.style.display = 'none';
+          el.remove();
+        }
+      });
+    };
+    
+    // Run immediately and periodically to catch dynamically injected badges
+    removeEmergentBadge();
+    const badgeInterval = setInterval(removeEmergentBadge, 1000);
+    
+    return () => clearInterval(badgeInterval);
+  }, []);
+
   return (
     <AuthProvider>
       <AppContent />
