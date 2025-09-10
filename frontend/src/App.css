@@ -661,16 +661,16 @@ div[style*="position: absolute"][style*="bottom"],
   display: block !important;
 }
 
-/* Enhanced text visibility and content layering */
-.glass-card h3,
-.glass-card p,
-.glass-card .card-content {
-  position: relative;
-  z-index: 10;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-}
+  /* Enhanced text visibility and content layering */
+  .glass-card h3,
+  .glass-card p,
+  .glass-card .card-content {
+    position: relative;
+    z-index: 10;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  }
 
-/* NEON PULSE BRANDING EFFECTS - FORCED WITH HIGH SPECIFICITY */
+  /* NEON PULSE BRANDING EFFECTS - FORCED WITH HIGH SPECIFICITY */
 
 /* Core neon pulse animation - Check for reduced motion preference */
 @media (prefers-reduced-motion: no-preference) {
