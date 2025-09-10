@@ -664,28 +664,42 @@ div[style*="position: absolute"][style*="bottom"],
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
-/* NEON PULSE BRANDING EFFECTS */
+/* NEON PULSE BRANDING EFFECTS - FORCED WITH HIGH SPECIFICITY */
 
-/* Core neon pulse animation */
-@keyframes neonPulse {
-  0%, 100% {
-    text-shadow: 
-      0 0 5px #42DF50,
-      0 0 10px #42DF50,
-      0 0 15px #42DF50,
-      0 0 20px #42DF50;
-    filter: brightness(1);
-    transform: scale(1);
+/* Core neon pulse animation - Check for reduced motion preference */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes neonPulse {
+    0%, 100% {
+      text-shadow: 
+        0 0 5px #42DF50 !important,
+        0 0 10px #42DF50 !important,
+        0 0 15px #42DF50 !important,
+        0 0 20px #42DF50 !important;
+      filter: brightness(1) !important;
+      transform: scale(1) !important;
+    }
+    50% {
+      text-shadow: 
+        0 0 8px #42DF50 !important,
+        0 0 16px #42DF50 !important,
+        0 0 24px #42DF50 !important,
+        0 0 32px #42DF50 !important,
+        0 0 40px #42DF50 !important;
+      filter: brightness(1.2) !important;
+      transform: scale(1.02) !important;
+    }
   }
-  50% {
+}
+
+/* Fallback without animation for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .neon-pulse,
+  .neon-pulse-subtle {
     text-shadow: 
-      0 0 8px #42DF50,
-      0 0 16px #42DF50,
-      0 0 24px #42DF50,
-      0 0 32px #42DF50,
-      0 0 40px #42DF50;
-    filter: brightness(1.2);
-    transform: scale(1.02);
+      0 0 8px #42DF50 !important,
+      0 0 16px #42DF50 !important,
+      0 0 24px #42DF50 !important;
+    animation: none !important;
   }
 }
 
