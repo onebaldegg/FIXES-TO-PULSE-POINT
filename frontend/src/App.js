@@ -508,8 +508,8 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                 </CardContent>
               </Card>
 
-              {/* Usage Statistics */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+              {/* Usage Statistics - Animated Charts */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {(() => {
                   const limits = getUsageLimits();
                   const usage = user.usage_stats || {};
@@ -520,59 +520,33 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                       current: usage.analyses_this_month || 0, 
                       limit: limits.analyses,
                       icon: FileText,
-                      color: 'from-blue-600 to-cyan-600'
+                      color: '#3B82F6'
                     },
                     { 
                       label: 'Files Uploaded', 
                       current: usage.files_uploaded || 0, 
                       limit: limits.files,
                       icon: Upload,
-                      color: 'from-[#42DF50] to-[#42DF50]'
+                      color: '#ff073a'
                     },
                     { 
                       label: 'URLs Analyzed', 
                       current: usage.urls_analyzed || 0, 
                       limit: limits.urls,
                       icon: Monitor,
-                      color: 'from-cyan-600 to-blue-600'
+                      color: '#42DF50'
                     }
                   ].map((stat, index) => (
-                    <Card key={index} className="bg-black/60 border-green-500/20">
-                      <CardContent className="p-4 sm:p-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="w-12 h-12 rounded-xl flex items-center justify-center" 
-                               style={{
-                                 background: stat.label === 'Files Uploaded' ? '#42DF50' : 
-                                            stat.label === 'Text Analyses' ? '#3B82F6' : 
-                                            '#06B6D4'
-                               }}>
-                            <stat.icon className="h-6 w-6 text-white" />
-                          </div>
-                          <div className="text-right">
-                            <p className="text-2xl font-bold" style={{color: '#42DF50'}}>{stat.current}</p>
-                            <p className="text-sm" style={{color: '#42DF50'}}>of {stat.limit}</p>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span style={{color: '#42DF50'}}>{stat.label}</span>
-                            <span style={{color: '#42DF50'}}>{Math.round((stat.current / stat.limit) * 100)}%</span>
-                          </div>
-                          <div className="w-full bg-green-800/30 rounded-full h-2">
-                            <div 
-                              className="h-2 rounded-full transition-all duration-300"
-                              style={{ 
-                                width: `${Math.min((stat.current / stat.limit) * 100, 100)}%`,
-                                background: stat.label === 'Files Uploaded' ? '#42DF50' : 
-                                           stat.label === 'Text Analyses' ? '#3B82F6' : 
-                                           '#06B6D4'
-                              }}
-                            />
-                          </div>
-                          {stat.current / stat.limit > 0.8 && (
-                            <p className="text-xs text-orange-400">⚠️ Approaching limit</p>
-                          )}
-                        </div>
+                    <Card key={index} className="bg-black/60 border-green-500/20 overflow-hidden">
+                      <CardContent className="p-6 flex justify-center">
+                        <AnimatedProgressRing 
+                          current={stat.current}
+                          limit={stat.limit}
+                          label={stat.label}
+                          icon={stat.icon}
+                          color={stat.color}
+                          size={140}
+                        />
                       </CardContent>
                     </Card>
                   ));
