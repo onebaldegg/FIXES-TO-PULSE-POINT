@@ -210,7 +210,9 @@ a[href*="emergent"],
 *[class*="watermark"],
 *[class*="branding"],
 div:has-text("Made with Emergent"),
-div:has-text("Emergent") {
+div:has-text("Emergent"),
+*:contains("Made with Emergent"),
+*:contains("Emergent") {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -225,6 +227,21 @@ div:has-text("Emergent") {
 .fixed.bottom-3,
 .fixed.bottom-4,
 .fixed.bottom-5 {
+  display: none !important;
+}
+
+/* More specific targeting for the Emergent badge */
+div[style*="position: fixed"][style*="bottom"],
+div[style*="position: absolute"][style*="bottom"],
+*[style*="z-index: 9999"],
+*[style*="z-index: 999999"] {
+  display: none !important;
+}
+
+/* Target any element containing "Emergent" text */
+*[innerHTML*="Emergent"],
+*[textContent*="Emergent"],
+*[innerText*="Made with"] {
   display: none !important;
 }
 
