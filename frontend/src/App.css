@@ -426,10 +426,10 @@ div.glass-card[class*="bg-card"],
   background-color: transparent !important;
 }
   
-  /* Create glass effect with multiple layered backgrounds */
+  /* Apply glassmorphism background AFTER overriding bg-card */
   background: 
-    linear-gradient(135deg, rgba(0, 50, 0, 0.2) 0%, rgba(0, 80, 0, 0.1) 100%),
-    linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)) !important;
+    linear-gradient(135deg, rgba(0, 50, 0, 0.25) 0%, rgba(0, 80, 0, 0.15) 100%),
+    linear-gradient(rgba(66, 223, 80, 0.08), rgba(66, 223, 80, 0.04)) !important;
   
   /* Glass-like border */
   border: 1px solid rgba(66, 223, 80, 0.4) !important;
