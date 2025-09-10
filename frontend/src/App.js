@@ -1670,7 +1670,7 @@ const AppContent = () => {
                       onClick={analyzeSentiment}
                       disabled={loading || !text.trim()}
                       className="w-full py-3 text-lg font-semibold transition-all duration-200 hover:scale-105"
-                      style={{backgroundColor: '#42DF50', color: 'black'}}
+                      style={{backgroundColor: '#ff073a', color: 'white'}}
                     >
                       {loading ? (
                         <>
