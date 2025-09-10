@@ -1,6 +1,3 @@
-/* Import App.css first to establish layers */
-@import './App.css';
-
 @layer tailwind-base {
   @tailwind base;
 }
