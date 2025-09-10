@@ -28,8 +28,9 @@ video {
   z-index: -1;
 }
 
-/* Enhanced Matrix Background Pattern - Always Visible */
+/* Enhanced Matrix Background Pattern - Always Visible with proper stacking context */
 body {
+  position: relative;
   background: 
     /* Primary dark base */
     linear-gradient(135deg, #000a00 0%, #001a00 50%, #000a00 100%),
@@ -70,6 +71,7 @@ body {
     400px 100px,
     -200px 500px;
   animation: matrixShift 30s ease-in-out infinite;
+  background-attachment: fixed;
 }
 
 @keyframes matrixShift {
@@ -93,6 +95,18 @@ body {
       200px 300px,
       100px 300px;
   }
+}
+
+/* Create a fixed backdrop for glassmorphism to work against */
+.matrix-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: inherit;
+  pointer-events: none;
 }
 
 .line-clamp-2 {
