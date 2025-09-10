@@ -28,6 +28,40 @@ video {
   z-index: -1;
 }
 
+/* Fallback Matrix Background for when video fails to load */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(45deg, #001100 0%, #003300 25%, #001100 50%, #003300 75%, #001100 100%),
+    radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.2) 0%, transparent 50%),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      rgba(34, 197, 94, 0.1) 1px,
+      rgba(34, 197, 94, 0.1) 2px
+    );
+  background-size: 400px 400px, 600px 600px, 800px 800px, 20px 20px;
+  background-position: 0 0, 100px 100px, 200px 200px, 0 0;
+  animation: matrixMove 20s linear infinite;
+  z-index: -2;
+}
+
+@keyframes matrixMove {
+  0% { 
+    background-position: 0 0, 100px 100px, 200px 200px, 0 0; 
+  }
+  100% { 
+    background-position: 400px 400px, 500px 500px, 600px 600px, 20px 20px; 
+  }
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
