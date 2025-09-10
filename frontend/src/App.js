@@ -3101,7 +3101,7 @@ const AppContent = () => {
               Professional Features
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="text-center p-6 border-0 shadow-2xl bg-black/60 backdrop-blur-lg hover:shadow-xl transition-shadow border" style={{borderColor: '#42DF50'}}>
+              <Card className="glass-card hover:shadow-xl transition-shadow border" style={{borderColor: '#42DF50'}}>
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{backgroundColor: '#42DF50'}}>
                   <Tag className="h-6 w-6 text-black" />
                 </div>
