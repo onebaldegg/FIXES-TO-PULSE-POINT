@@ -197,22 +197,32 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
   }, [showDashboard, user]);
 
   const loadDashboardStats = async () => {
+    // Only load dashboard stats if user is authenticated
+    if (!isAuthenticated || !user || authLoading) {
+      console.log("Skipping dashboard stats - user not authenticated or still loading");
+      return;
+    }
+
     setLoading(true);
     try {
-      // Load user's recent activity
-      const historyResponse = await axios.get(`${API}/sentiment-history?limit=50`);
+      // Load user's recent activity with same endpoint as fetchHistory
+      const historyResponse = await axios.get(`${API}/sentiment-history`);
       const recentHistory = historyResponse.data;
 
       // Calculate dashboard statistics
       const stats = calculateDashboardStats(recentHistory);
       setDashboardStats(stats);
+      console.log("Dashboard stats loaded successfully:", stats);
     } catch (error) {
       console.error('Error loading dashboard stats:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load dashboard statistics",
-        variant: "destructive"
-      });
+      // Only show toast for non-authentication errors
+      if (error.response?.status !== 401) {
+        toast({
+          title: "Error",
+          description: "Failed to load dashboard statistics",
+          variant: "destructive"
+        });
+      }
     } finally {
       setLoading(false);
     }
