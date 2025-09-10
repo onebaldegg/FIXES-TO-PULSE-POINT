@@ -3101,7 +3101,7 @@ const AppContent = () => {
               Professional Features
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="glass-card hover:shadow-xl transition-shadow border" style={{borderColor: '#42DF50'}}>
+              <Card className="glass-card hover:shadow-xl transition-shadow border text-center" style={{borderColor: '#42DF50'}}>
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{backgroundColor: '#42DF50'}}>
                   <Tag className="h-6 w-6 text-black" />
                 </div>
@@ -3111,7 +3111,7 @@ const AppContent = () => {
                 </p>
               </Card>
 
-              <Card className="glass-card hover:shadow-xl transition-shadow border" style={{borderColor: '#42DF50'}}>
+              <Card className="glass-card hover:shadow-xl transition-shadow border text-center" style={{borderColor: '#42DF50'}}>
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{backgroundColor: '#42DF50'}}>
                   <Heart className="h-6 w-6 text-black" />
                 </div>
@@ -3121,7 +3121,7 @@ const AppContent = () => {
                 </p>
               </Card>
 
-              <Card className="glass-card hover:shadow-xl transition-shadow border" style={{borderColor: '#42DF50'}}>
+              <Card className="glass-card hover:shadow-xl transition-shadow border text-center" style={{borderColor: '#42DF50'}}>
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{backgroundColor: '#42DF50'}}>
                   <BarChart3 className="h-6 w-6 text-black" />
                 </div>
