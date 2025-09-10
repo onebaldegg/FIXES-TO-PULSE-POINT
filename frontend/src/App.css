@@ -202,6 +202,49 @@ video {
   animation: matrix-flicker 3s ease-in-out infinite;
 }
 
+/* Enhanced Matrix Effects */
+@keyframes matrix-scan {
+  0% { transform: translateY(-100vh); opacity: 0; }
+  10%, 90% { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+@keyframes matrix-glow {
+  0%, 100% { 
+    text-shadow: 0 0 5px #42DF50, 0 0 10px #42DF50, 0 0 15px #42DF50;
+  }
+  50% { 
+    text-shadow: 0 0 10px #42DF50, 0 0 20px #42DF50, 0 0 30px #42DF50;
+  }
+}
+
+.matrix-enhanced {
+  position: relative;
+}
+
+.matrix-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #42DF50, transparent);
+  animation: matrix-scan 8s linear infinite;
+  z-index: 1;
+}
+
+/* Interactive hover effects for Matrix elements */
+.matrix-interactive:hover {
+  animation: matrix-glow 0.5s ease-in-out;
+  transition: all 0.3s ease;
+}
+
+/* Canvas particle effects */
+canvas {
+  mix-blend-mode: screen;
+}
+
 /* Animated Chart Glow Effects */
 @keyframes chartGlow {
   0%, 100% { 
