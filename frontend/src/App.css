@@ -796,18 +796,27 @@ h1.neon-pulse-subtle,
 
 /* Robust neon effects that work regardless of browser settings */
 .neon-robust {
-  /* Box-shadow based glow instead of text-shadow */
+  /* Forced text-shadow with GPU acceleration */
+  text-shadow: 
+    0 0 10px #42DF50,
+    0 0 20px #42DF50,
+    0 0 40px #42DF50 !important;
+  
+  /* Box-shadow based glow as backup */
   background: rgba(66, 223, 80, 0.1) !important;
   border: 2px solid #42DF50 !important;
   border-radius: 8px !important;
   padding: 8px 16px !important;
   box-shadow: 
-    0 0 10px rgba(66, 223, 80, 0.5) !important,
-    0 0 20px rgba(66, 223, 80, 0.3) !important,
-    0 0 30px rgba(66, 223, 80, 0.1) !important,
+    0 0 10px rgba(66, 223, 80, 0.5),
+    0 0 20px rgba(66, 223, 80, 0.3),
+    0 0 30px rgba(66, 223, 80, 0.1),
     inset 0 0 10px rgba(66, 223, 80, 0.1) !important;
+  
+  /* Force GPU acceleration */
+  will-change: text-shadow, box-shadow !important;
+  transform: translateZ(0) !important;
   filter: brightness(1.1) !important;
-  transform: translateZ(0) !important; /* Force GPU acceleration */
 }
 
 /* Alternative approach using outline */
