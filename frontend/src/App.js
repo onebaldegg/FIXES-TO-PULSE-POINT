@@ -2688,7 +2688,7 @@ const AppContent = () => {
             </Card>
 
             {/* History Panel */}
-            <Card className="shadow-2xl border-0 bg-black/60 backdrop-blur-lg border border-green-500/20">
+            <Card className="glass-card border-green-500/20">
               <CardHeader className="pb-4">
                 <CardTitle className="text-lg sm:text-2xl font-semibold" style={{color: '#42DF50'}}>
                   {activeTab === "text" ? "Recent Analysis" : 
