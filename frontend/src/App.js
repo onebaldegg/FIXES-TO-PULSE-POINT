@@ -3104,7 +3104,7 @@ const AppContent = () => {
             <div className="neon-test text-center mb-4">
               CSS TEST - If you see this styled, CSS works!
             </div>
-            <h2 className="text-3xl font-bold text-center mb-12 neon-pulse neon-force-visible" style={{color: '#42DF50'}}>
+            <h2 className="text-3xl font-bold text-center mb-12 neon-robust neon-transform-pulse" style={{color: '#42DF50'}}>
               Professional Features
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
