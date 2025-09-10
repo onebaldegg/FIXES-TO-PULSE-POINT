@@ -9,6 +9,13 @@
 @import 'tailwindcss/utilities' layer(tailwind-utilities);
 
 @layer custom-effects {
+  /* Override Tailwind CSS variables for glassmorphism */
+  :root {
+    --card: 0 50 0 / 0.2; /* Override white card background */
+    --card-foreground: 142 71% 45%; /* Green text */
+    --border: 142 71% 45% / 0.4; /* Green border */
+  }
+  
   * {
     margin: 0;
     padding: 0;
