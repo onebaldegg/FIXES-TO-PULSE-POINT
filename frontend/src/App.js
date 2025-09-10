@@ -1857,7 +1857,19 @@ const AppContent = () => {
                           <Button 
                             onClick={analyzeBatchUrls}
                             disabled={batchUrlLoading || !urls.trim()}
-                            className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border border-cyan-500/20 w-full sm:w-auto"
+                            className="text-white font-medium py-2 px-4 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border w-full sm:w-auto"
+                            style={{
+                              backgroundColor: '#ff073a',
+                              borderColor: '#ff073a'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = '#cc0527';
+                              e.target.style.borderColor = '#cc0527';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = '#ff073a';
+                              e.target.style.borderColor = '#ff073a';
+                            }}
                           >
                             {batchUrlLoading ? (
                               <>
