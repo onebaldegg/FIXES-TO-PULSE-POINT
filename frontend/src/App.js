@@ -1793,7 +1793,19 @@ const AppContent = () => {
                           <Button 
                             onClick={analyzeUrl}
                             disabled={urlLoading || !url.trim()}
-                            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium px-6 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border border-blue-500/20 w-full sm:w-auto"
+                            className="text-white font-medium px-6 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border w-full sm:w-auto"
+                            style={{
+                              backgroundColor: '#ff073a',
+                              borderColor: '#ff073a'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = '#cc0527';
+                              e.target.style.borderColor = '#cc0527';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = '#ff073a';
+                              e.target.style.borderColor = '#ff073a';
+                            }}
                           >
                             {urlLoading ? (
                               <>
