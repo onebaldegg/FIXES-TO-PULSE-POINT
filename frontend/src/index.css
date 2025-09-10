@@ -95,20 +95,7 @@ code {
 
 /* CRITICAL CSS FIX - Added directly to index.css for maximum priority */
 
-/* CSS TEST - Must be visible */
-.css-test-visible {
-  background-color: red !important;
-  color: yellow !important;
-  border: 5px solid blue !important;
-  padding: 20px !important;
-  font-size: 24px !important;
-  font-weight: bold !important;
-  text-align: center !important;
-  display: block !important;
-  width: 100% !important;
-  margin: 10px 0 !important;
-  z-index: 9999 !important;
-}
+
 
 /* GLASSMORPHISM FIX - Maximum specificity */
 .glass-card,
