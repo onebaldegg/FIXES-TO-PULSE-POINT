@@ -739,13 +739,31 @@ div[style*="position: absolute"][style*="bottom"],
   }
 }
 
-/* Neon pulse classes */
+/* Neon pulse classes with maximum specificity */
+h1.neon-pulse-subtle,
+h2.neon-pulse,
+.neon-pulse-subtle,
 .neon-pulse {
-  animation: neonPulse 3s ease-in-out infinite;
+  animation: neonPulse 3s ease-in-out infinite !important;
+  text-shadow: 
+    0 0 5px #42DF50 !important,
+    0 0 10px #42DF50 !important,
+    0 0 15px #42DF50 !important;
 }
 
+h1.neon-pulse-subtle,
 .neon-pulse-subtle {
-  animation: neonPulseSubtle 4s ease-in-out infinite;
+  animation: neonPulseSubtle 4s ease-in-out infinite !important;
+}
+
+/* Force visible neon effect even without animation */
+.neon-force-visible {
+  text-shadow: 
+    0 0 10px #42DF50 !important,
+    0 0 20px #42DF50 !important,
+    0 0 30px #42DF50 !important,
+    0 0 40px #42DF50 !important;
+  filter: brightness(1.2) !important;
 }
 
 .neon-border-pulse {
