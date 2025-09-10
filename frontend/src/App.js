@@ -1884,7 +1884,7 @@ const AppContent = () => {
                         placeholder="Enter customer feedback, social media mentions, reviews, or any text you want to analyze..."
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        className="min-h-[120px] resize-none bg-black/40 border-green-500/30 text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50"
+                        className="min-h-[120px] resize-none bg-black/40 border-green-500/30 text-green-100 placeholder:text-green-300/60 focus:border-green-400 focus:ring-green-400/50 neon-input-focus"
                       />
                     </div>
                     
