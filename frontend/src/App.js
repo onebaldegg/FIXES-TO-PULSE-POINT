@@ -1559,8 +1559,8 @@ const AppContent = () => {
             <div className="max-w-4xl mx-auto text-center pointer-events-auto">
               <div className="flex flex-col items-center justify-center text-center mb-4 sm:mb-6">
                 <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-24 w-24 sm:h-40 sm:w-40 mb-4" />
-                <div className="flex justify-center w-full">
-                  <img src="/pulse-point-logo.png" alt="Pulse Point Logo" className="h-20 sm:h-30 w-auto mx-auto ml-2 sm:ml-8" />
+                <div className="flex justify-center items-center w-full">
+                  <img src="/pulse-point-logo.png" alt="Pulse Point Logo" className="h-20 sm:h-30 w-auto mx-auto" />
                 </div>
               </div>
               <p className="text-sm sm:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md" style={{color: '#42DF50'}}>
