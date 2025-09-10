@@ -1624,6 +1624,9 @@ const AppContent = () => {
         />
       </video>
 
+      {/* Enhanced Interactive Matrix Particles */}
+      <EnhancedMatrixBackground />
+
       {/* Dark Overlay for Better Readability */}
       <div className="fixed inset-0 bg-black/20 z-10"></div>
 
