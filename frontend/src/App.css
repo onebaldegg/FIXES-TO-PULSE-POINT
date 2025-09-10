@@ -411,9 +411,18 @@ canvas {
 }
 
 /* Direct override of Tailwind's bg-card class within glass-card context */
-.glass-card.bg-card,
-.glass-card[class*="bg-card"] {
-  background: none !important;
+.glass-card {
+  /* Force transparent background to override bg-card */
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* More specific overrides for Tailwind bg-card class */
+div.glass-card.bg-card,
+div.glass-card[class*="bg-card"],
+.glass-card.rounded-xl.bg-card,
+[class*="glass-card"][class*="bg-card"] {
+  background: transparent !important;
   background-color: transparent !important;
 }
   
