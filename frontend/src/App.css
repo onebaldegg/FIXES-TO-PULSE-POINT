@@ -28,37 +28,70 @@ video {
   z-index: -1;
 }
 
-/* Fallback Matrix Background for when video fails to load */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+/* Enhanced Matrix Background Pattern - Always Visible */
+body {
   background: 
-    linear-gradient(45deg, #001100 0%, #003300 25%, #001100 50%, #003300 75%, #001100 100%),
-    radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.2) 0%, transparent 50%),
+    /* Primary dark base */
+    linear-gradient(135deg, #000a00 0%, #001a00 50%, #000a00 100%),
+    /* Matrix-style grid pattern */
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 19px,  
+      rgba(66, 223, 80, 0.1) 19px,
+      rgba(66, 223, 80, 0.1) 20px
+    ),
     repeating-linear-gradient(
       90deg,
       transparent,
-      transparent 1px,
-      rgba(34, 197, 94, 0.1) 1px,
-      rgba(34, 197, 94, 0.1) 2px
-    );
-  background-size: 400px 400px, 600px 600px, 800px 800px, 20px 20px;
-  background-position: 0 0, 100px 100px, 200px 200px, 0 0;
-  animation: matrixMove 20s linear infinite;
-  z-index: -2;
+      transparent 19px,
+      rgba(66, 223, 80, 0.1) 19px, 
+      rgba(66, 223, 80, 0.1) 20px
+    ),
+    /* Scattered glow spots */
+    radial-gradient(circle at 25% 25%, rgba(66, 223, 80, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(66, 223, 80, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 50% 10%, rgba(66, 223, 80, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 10% 90%, rgba(66, 223, 80, 0.1) 0%, transparent 50%);
+  background-size: 
+    100% 100%,
+    40px 40px,
+    40px 40px, 
+    800px 800px,
+    1000px 1000px,
+    600px 600px,
+    700px 700px;
+  background-position: 
+    0 0,
+    0 0,
+    0 0,
+    200px 200px,
+    -300px -300px,
+    400px 100px,
+    -200px 500px;
+  animation: matrixShift 30s ease-in-out infinite;
 }
 
-@keyframes matrixMove {
-  0% { 
-    background-position: 0 0, 100px 100px, 200px 200px, 0 0; 
+@keyframes matrixShift {
+  0%, 100% { 
+    background-position: 
+      0 0,
+      0 0,
+      0 0,
+      200px 200px,
+      -300px -300px,
+      400px 100px,
+      -200px 500px;
   }
-  100% { 
-    background-position: 400px 400px, 500px 500px, 600px 600px, 20px 20px; 
+  50% { 
+    background-position: 
+      0 0,
+      20px 20px,
+      -20px 20px,
+      400px 400px,
+      100px -100px,
+      200px 300px,
+      100px 300px;
   }
 }
 
