@@ -2079,7 +2079,7 @@ const AppContent = () => {
                           <Button 
                             onClick={analyzeBatchUrls}
                             disabled={batchUrlLoading || !urls.trim()}
-                            className="text-white font-medium py-2 px-4 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border w-full sm:w-auto"
+                            className="text-white font-medium py-2 px-4 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl border w-full sm:w-auto neon-border-pulse"
                             style={{
                               backgroundColor: '#ff073a',
                               borderColor: '#ff073a'
