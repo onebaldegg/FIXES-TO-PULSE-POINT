@@ -402,21 +402,20 @@ canvas {
 }
 
 /* GLASSMORPHISM WITH SHADCN UI OVERRIDE */
-/* Override Shadcn UI CSS custom properties that conflict with glassmorphism */
+/* Override Shadcn UI bg-card class that causes solid white background */
 
-/* Global override for glassmorphism cards */
 .glass-card {
-  /* CRITICAL: Override Shadcn UI CSS custom properties with transparent values */
-  --card: 0 0% 0% / 0 !important; /* HSL transparent */
-  --card-foreground: inherit !important;
-  
   /* Essential positioning */
   position: relative !important;
   z-index: 1 !important;
-  
-  /* Remove conflicting backgrounds */
+}
+
+/* Direct override of Tailwind's bg-card class within glass-card context */
+.glass-card.bg-card,
+.glass-card[class*="bg-card"] {
   background: none !important;
   background-color: transparent !important;
+}
   
   /* Create glass effect with multiple layered backgrounds */
   background: 
