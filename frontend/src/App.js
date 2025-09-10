@@ -343,22 +343,22 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
       <div className="fixed inset-0 bg-black/20 z-10"></div>
 
       <div className="w-full max-w-6xl max-h-[95vh] bg-black/90 backdrop-blur-lg border border-green-500/20 rounded-xl overflow-hidden relative z-20 mx-2 sm:mx-0 my-2 sm:my-4 flex flex-col">
-        {/* Dashboard Header */}
-        <div className="flex items-center justify-between p-3 sm:p-6 border-b border-green-500/20 flex-shrink-0 min-h-16">
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center" style={{background: '#42DF50'}}>
-              <BarChart3 className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
+        {/* Dashboard Header - Fixed visibility */}
+        <div className="flex items-center justify-between p-4 border-b border-green-500/30 bg-black/60 backdrop-blur-sm">
+          <div className="flex items-center space-x-4">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{background: '#42DF50'}}>
+              <BarChart3 className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg sm:text-2xl font-bold" style={{color: '#42DF50'}}>User Dashboard</h2>
-              <p className="text-sm sm:text-base" style={{color: '#42DF50'}}>Analytics and Account Overview</p>
+              <h2 className="text-xl font-bold" style={{color: '#42DF50'}}>User Dashboard</h2>
+              <p className="text-sm" style={{color: '#42DF50'}}>Analytics and Account Overview</p>
             </div>
           </div>
           <button
             onClick={() => setShowDashboard(false)}
-            className="p-2 hover:bg-green-500/20 rounded-lg transition-colors flex-shrink-0"
+            className="p-2 hover:bg-red-500/20 rounded-lg transition-colors bg-red-500/10 border border-red-500/30"
           >
-            <X className="h-5 w-5 sm:h-6 sm:w-6" style={{color: '#42DF50'}} />
+            <X className="h-6 w-6 text-red-400 hover:text-red-300" />
           </button>
         </div>
 
