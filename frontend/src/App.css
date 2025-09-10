@@ -697,14 +697,118 @@ div[style*="position: absolute"][style*="bottom"],
 
 } /* End custom-effects layer */
 
-  /* Enhanced text visibility and content layering */
-  .glass-card h3,
-  .glass-card p,
-  .glass-card .card-content {
-    position: relative;
-    z-index: 10;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-  }
+/* MAXIMUM PRIORITY GLASSMORPHISM - Outside layers for highest specificity */
+html body .glass-card,
+html body div.glass-card,
+html body .glass-card.matrix-theme,
+html body div.glass-card.matrix-theme,
+.glass-card,
+div.glass-card,
+.glass-card.matrix-theme,
+div.glass-card.matrix-theme {
+  /* Force override Tailwind's bg-card with extreme specificity */
+  background-color: rgba(0, 50, 0, 0.2) !important;
+  background-image: linear-gradient(135deg, rgba(0, 60, 0, 0.25) 0%, rgba(0, 40, 0, 0.15) 100%) !important;
+  background: rgba(0, 50, 0, 0.2) !important;
+  
+  /* Force backdrop blur */
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  
+  /* Essential positioning */
+  position: relative !important;
+  z-index: 1 !important;
+  
+  /* Glass-like border with green tint - override Tailwind border */
+  border: 1px solid rgba(66, 223, 80, 0.4) !important;
+  border-color: rgba(66, 223, 80, 0.4) !important;
+
+  /* Enhanced shadows for depth - override Tailwind shadow */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 4px 16px rgba(66, 223, 80, 0.2),
+    inset 0 1px 0 rgba(66, 223, 80, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+  
+  /* Smooth transitions */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  
+  /* Pseudo-element for additional glass effect */
+  overflow: hidden !important;
+}
+
+/* MAXIMUM PRIORITY NEON EFFECTS - Outside layers for highest specificity */
+html body .neon-pulse,
+html body h1.neon-pulse,
+html body h2.neon-pulse,
+html body h3.neon-pulse,
+html body div.neon-pulse,
+html body span.neon-pulse,
+html body .neon-pulse-subtle,
+html body h1.neon-pulse-subtle,
+html body h2.neon-pulse-subtle,
+html body .neon-robust,
+html body h1.neon-robust,
+html body h2.neon-robust,
+html body h3.neon-robust,
+html body div.neon-robust,
+html body span.neon-robust,
+html body .neon-outline,
+html body h1.neon-outline,
+html body h2.neon-outline,
+html body h3.neon-outline,
+html body div.neon-outline,
+html body span.neon-outline,
+.neon-pulse,
+h1.neon-pulse,
+h2.neon-pulse,
+h3.neon-pulse,
+div.neon-pulse,
+span.neon-pulse,
+.neon-pulse-subtle,
+h1.neon-pulse-subtle,
+h2.neon-pulse-subtle,
+.neon-robust,
+h1.neon-robust,
+h2.neon-robust,
+h3.neon-robust,
+div.neon-robust,
+span.neon-robust,
+.neon-outline,
+h1.neon-outline,
+h2.neon-outline,
+h3.neon-outline,
+div.neon-outline,
+span.neon-outline {
+  /* Force text shadow regardless of other styles */
+  text-shadow: 
+    0 0 8px #42DF50 !important,
+    0 0 16px #42DF50 !important,
+    0 0 24px #42DF50 !important,
+    0 0 32px #42DF50 !important;
+  
+  /* Force animation */
+  animation: neonPulse 3s ease-in-out infinite !important;
+  
+  /* Force GPU acceleration */
+  will-change: text-shadow !important;
+  transform: translateZ(0) !important;
+  
+  /* Ensure color is visible */
+  color: #42DF50 !important;
+  
+  /* Force filter effects */
+  filter: brightness(1.1) drop-shadow(0 0 10px rgba(66, 223, 80, 0.5)) !important;
+}
+
+/* Enhanced text visibility and content layering */
+.glass-card h3,
+.glass-card p,
+.glass-card .card-content {
+  position: relative;
+  z-index: 10;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
 
   /* NEON PULSE BRANDING EFFECTS - FORCED WITH HIGH SPECIFICITY */
 
