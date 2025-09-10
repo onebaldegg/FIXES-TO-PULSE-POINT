@@ -653,13 +653,15 @@ div[style*="position: absolute"][style*="bottom"],
   display: none !important;
 }
 
-/* Re-enable fixed bottom elements that are legitimate (like modals) */
-.modal,
-.toast,
-.notification,
-.alert {
-  display: block !important;
-}
+  /* Re-enable fixed bottom elements that are legitimate (like modals) */
+  .modal,
+  .toast,
+  .notification,
+  .alert {
+    display: block !important;
+  }
+
+} /* End custom-effects layer */
 
   /* Enhanced text visibility and content layering */
   .glass-card h3,
