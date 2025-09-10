@@ -15,6 +15,85 @@ import { useToast } from "./hooks/use-toast";
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+// Animated Progress Ring Component
+const AnimatedProgressRing = ({ 
+  current, 
+  limit, 
+  label, 
+  icon: Icon, 
+  color = '#42DF50',
+  size = 120
+}) => {
+  const [animatedValue, setAnimatedValue] = useState(0);
+  const percentage = Math.min((current / limit) * 100, 100);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimatedValue(percentage);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [percentage]);
+
+  const chartData = {
+    datasets: [{
+      data: [animatedValue, 100 - animatedValue],
+      backgroundColor: [color, 'rgba(0, 0, 0, 0.1)'],
+      borderWidth: 0,
+      cutout: '75%',
+    }]
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false }
+    },
+    animation: {
+      animateRotate: true,
+      duration: 2000,
+      easing: 'easeInOutCubic'
+    }
+  };
+
+  return (
+    <div className="relative flex flex-col items-center">
+      <div className="relative" style={{ width: size, height: size }}>
+        <Doughnut data={chartData} options={chartOptions} />
+        {/* Center content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <Icon className="h-6 w-6 mb-1" style={{ color }} />
+          <div className="text-center">
+            <div className="text-lg font-bold" style={{ color }}>
+              {current}
+            </div>
+            <div className="text-xs opacity-60" style={{ color }}>
+              of {limit}
+            </div>
+          </div>
+        </div>
+        {/* Glow effect */}
+        <div 
+          className="absolute inset-0 rounded-full opacity-20 animate-pulse"
+          style={{ 
+            boxShadow: `0 0 20px ${color}, 0 0 40px ${color}20`,
+            animation: 'pulse 3s ease-in-out infinite'
+          }}
+        />
+      </div>
+      <div className="mt-3 text-center">
+        <div className="text-sm font-medium" style={{ color }}>
+          {label}
+        </div>
+        <div className="text-xs" style={{ color }}>
+          {Math.round(percentage)}% used
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
