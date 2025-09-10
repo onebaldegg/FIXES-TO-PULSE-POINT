@@ -773,3 +773,72 @@ div[style*="position: absolute"][style*="bottom"],
     opacity: 0.7;
   }
 }
+
+/* Interactive neon hover effects for buttons */
+.neon-button-hover {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.neon-button-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 0 20px rgba(66, 223, 80, 0.4),
+    0 0 40px rgba(66, 223, 80, 0.2),
+    0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Red neon effects for analyze buttons */
+.neon-border-pulse[style*="ff073a"] {
+  animation: neonBorderPulseRed 2.5s ease-in-out infinite;
+}
+
+@keyframes neonBorderPulseRed {
+  0%, 100% {
+    border-color: #ff073a;
+    box-shadow: 
+      0 0 5px rgba(255, 7, 58, 0.3),
+      inset 0 0 5px rgba(255, 7, 58, 0.1);
+  }
+  50% {
+    border-color: #ff4066;
+    box-shadow: 
+      0 0 15px rgba(255, 7, 58, 0.5),
+      0 0 25px rgba(255, 7, 58, 0.3),
+      inset 0 0 10px rgba(255, 7, 58, 0.2);
+  }
+}
+
+/* Enhanced neon effects for brand elements */
+.brand-neon-enhance {
+  position: relative;
+  overflow: visible;
+}
+
+.brand-neon-enhance::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: radial-gradient(
+    circle at center,
+    rgba(66, 223, 80, 0.1) 0%,
+    transparent 70%
+  );
+  border-radius: inherit;
+  z-index: -1;
+  animation: brandGlow 4s ease-in-out infinite;
+}
+
+@keyframes brandGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
