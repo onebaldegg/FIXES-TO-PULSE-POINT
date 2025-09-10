@@ -401,53 +401,84 @@ canvas {
   }
 }
 
-/* Enhanced Glassmorphism Base Styles */
+/* PROVEN GLASSMORPHISM IMPLEMENTATION */
+
+/* Reset any conflicting background styles */
 .glass-card {
-  backdrop-filter: blur(10px) saturate(200%) brightness(1.1) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(200%) brightness(1.1) !important;
-  background: rgba(0, 40, 0, 0.25) !important;
-  border: 2px solid rgba(66, 223, 80, 0.4) !important;
+  /* Force positioning for stacking context */
+  position: relative !important;
+  z-index: 1 !important;
+  
+  /* Remove any solid backgrounds first */
+  background: none !important;
+  background-color: transparent !important;
+  
+  /* Apply glassmorphism with proven method */
+  background: rgba(255, 255, 255, 0.1) !important;
+  
+  /* Critical: Both prefixed and non-prefixed versions */
+  backdrop-filter: blur(15px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
+  
+  /* Enhanced glass border */
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  
+  /* Proper shadow for depth */
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 4px 16px rgba(66, 223, 80, 0.25),
-    inset 0 2px 0 rgba(66, 223, 80, 0.3),
-    inset 0 -2px 0 rgba(66, 223, 80, 0.1),
-    0 0 25px rgba(66, 223, 80, 0.15) !important;
-  animation: slideInFromBottom 0.6s ease-out, glowPulse 4s ease-in-out infinite;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    0 8px 32px rgba(0, 0, 0, 0.37),
+    0 2px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  
+  /* Smooth transitions */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  
+  /* Ensure content is above the glass effect */
+  overflow: visible !important;
 }
 
 .glass-card:hover {
-  transform: translateY(-12px) scale(1.03) !important;
-  background: rgba(0, 60, 0, 0.35) !important;
-  border: 2px solid rgba(66, 223, 80, 0.7) !important;
-  backdrop-filter: blur(12px) saturate(250%) brightness(1.2) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(250%) brightness(1.2) !important;
+  /* Enhanced hover state */
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+  
+  transform: translateY(-8px) scale(1.02) !important;
+  
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  
   box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.7),
-    0 12px 30px rgba(66, 223, 80, 0.4),
-    inset 0 3px 0 rgba(66, 223, 80, 0.5),
-    inset 0 -3px 0 rgba(66, 223, 80, 0.2),
-    0 0 40px rgba(66, 223, 80, 0.3) !important;
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    0 4px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
 }
 
-@keyframes glowPulse {
-  0%, 100% { 
-    box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.6),
-      0 4px 16px rgba(66, 223, 80, 0.25),
-      inset 0 2px 0 rgba(66, 223, 80, 0.3),
-      inset 0 -2px 0 rgba(66, 223, 80, 0.1),
-      0 0 25px rgba(66, 223, 80, 0.15);
+/* Fallback for browsers that don't support backdrop-filter */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-card {
+    background: rgba(0, 40, 0, 0.8) !important;
+    border: 1px solid rgba(66, 223, 80, 0.4) !important;
   }
-  50% { 
-    box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.6),
-      0 4px 16px rgba(66, 223, 80, 0.35),
-      inset 0 2px 0 rgba(66, 223, 80, 0.4),
-      inset 0 -2px 0 rgba(66, 223, 80, 0.2),
-      0 0 35px rgba(66, 223, 80, 0.25);
-  }
+}
+
+/* Matrix-themed variation for our green theme */
+.glass-card.matrix-theme {
+  background: rgba(0, 50, 0, 0.15) !important;
+  border: 1px solid rgba(66, 223, 80, 0.3) !important;
+  
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 2px 16px rgba(66, 223, 80, 0.1),
+    inset 0 1px 0 rgba(66, 223, 80, 0.2) !important;
+}
+
+.glass-card.matrix-theme:hover {
+  background: rgba(0, 60, 0, 0.2) !important;
+  border: 1px solid rgba(66, 223, 80, 0.4) !important;
+  
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    0 4px 24px rgba(66, 223, 80, 0.15),
+    inset 0 1px 0 rgba(66, 223, 80, 0.3) !important;
 }
 
 /* Staggered Card Animations */
