@@ -201,3 +201,37 @@ video {
 .matrix-text {
   animation: matrix-flicker 3s ease-in-out infinite;
 }
+
+/* Hide Emergent platform badge that interferes with UI */
+iframe[src*="emergent"], 
+div[class*="emergent-badge"], 
+div[class*="made-with-emergent"],
+a[href*="emergent"],
+*[class*="watermark"],
+*[class*="branding"],
+div:has-text("Made with Emergent"),
+div:has-text("Emergent") {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+/* Additional hiding for common badge patterns */
+.fixed.bottom-0,
+.fixed.bottom-1,
+.fixed.bottom-2,
+.fixed.bottom-3,
+.fixed.bottom-4,
+.fixed.bottom-5 {
+  display: none !important;
+}
+
+/* Re-enable fixed bottom elements that are legitimate (like modals) */
+.modal,
+.toast,
+.notification,
+.alert {
+  display: block !important;
+}
