@@ -15,7 +15,146 @@ import { useToast } from "./hooks/use-toast";
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// Animated Progress Ring Component
+// Enhanced Matrix Background Component
+const EnhancedMatrixBackground = () => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const particlesRef = useRef([]);
+  const mouseRef = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Matrix characters
+    const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+    
+    // Initialize particles
+    const initParticles = () => {
+      particlesRef.current = [];
+      for (let i = 0; i < 50; i++) {
+        particlesRef.current.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          char: matrixChars[Math.floor(Math.random() * matrixChars.length)],
+          speed: Math.random() * 2 + 1,
+          opacity: Math.random() * 0.5 + 0.3,
+          size: Math.random() * 14 + 10,
+          color: `hsl(${Math.random() * 60 + 120}, 100%, ${Math.random() * 30 + 50}%)`,
+          mouseDistance: 0
+        });
+      }
+    };
+
+    initParticles();
+
+    // Mouse tracking
+    const handleMouseMove = (e) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY };
+    };
+
+    // Click effect
+    const handleClick = (e) => {
+      const rippleParticles = [];
+      for (let i = 0; i < 15; i++) {
+        rippleParticles.push({
+          x: e.clientX,
+          y: e.clientY,
+          char: matrixChars[Math.floor(Math.random() * matrixChars.length)],
+          speed: Math.random() * 8 + 4,
+          angle: (Math.PI * 2 * i) / 15,
+          life: 1,
+          decay: 0.02,
+          size: Math.random() * 16 + 12,
+          color: Math.random() > 0.5 ? '#42DF50' : '#ff073a'
+        });
+      }
+      particlesRef.current.push(...rippleParticles);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('click', handleClick);
+
+    // Animation loop
+    const animate = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      particlesRef.current.forEach((particle, index) => {
+        // Calculate distance to mouse
+        const dx = mouseRef.current.x - particle.x;
+        const dy = mouseRef.current.y - particle.y;
+        particle.mouseDistance = Math.sqrt(dx * dx + dy * dy);
+
+        // Mouse attraction effect
+        if (particle.mouseDistance < 100) {
+          particle.x += dx * 0.01;
+          particle.y += dy * 0.01;
+          particle.opacity = Math.min(1, particle.opacity + 0.02);
+        } else {
+          particle.opacity = Math.max(0.3, particle.opacity - 0.01);
+        }
+
+        // Ripple effect particles
+        if (particle.life !== undefined) {
+          particle.x += Math.cos(particle.angle) * particle.speed;
+          particle.y += Math.sin(particle.angle) * particle.speed;
+          particle.life -= particle.decay;
+          particle.opacity = particle.life;
+          
+          if (particle.life <= 0) {
+            particlesRef.current.splice(index, 1);
+            return;
+          }
+        } else {
+          // Normal falling particles
+          particle.y += particle.speed;
+          if (particle.y > canvas.height) {
+            particle.y = -20;
+            particle.x = Math.random() * canvas.width;
+          }
+        }
+
+        // Draw particle
+        ctx.fillStyle = particle.color;
+        ctx.globalAlpha = particle.opacity;
+        ctx.font = `${particle.size}px 'Courier New', monospace`;
+        ctx.fillText(particle.char, particle.x, particle.y);
+      });
+
+      ctx.globalAlpha = 1;
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('click', handleClick);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none z-5"
+      style={{ mixBlendMode: 'screen' }}
+    />
+  );
+};
 const AnimatedProgressRing = ({ 
   current, 
   limit, 
