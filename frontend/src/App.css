@@ -406,18 +406,19 @@ canvas {
   }
 }
 
-/* GLASSMORPHISM IMPLEMENTATION */
+@layer custom-effects {
+  /* GLASSMORPHISM IMPLEMENTATION */
 
-.glass-card {
-  /* Essential positioning */
-  position: relative !important;
-  z-index: 1 !important;
-  
-  /* Create semi-transparent green glass effect */
-  background: rgba(0, 50, 0, 0.2) !important;
-  
-  /* Glass-like border with green tint */
-  border: 1px solid rgba(66, 223, 80, 0.4) !important;
+  .glass-card {
+    /* Essential positioning */
+    position: relative !important;
+    z-index: 1 !important;
+    
+    /* Create semi-transparent green glass effect */
+    background: rgba(0, 50, 0, 0.2) !important;
+    
+    /* Glass-like border with green tint */
+    border: 1px solid rgba(66, 223, 80, 0.4) !important;
   
   /* Enhanced shadows for depth */
   box-shadow: 
