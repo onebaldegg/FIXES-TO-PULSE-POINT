@@ -401,10 +401,14 @@ canvas {
   }
 }
 
-/* ALTERNATIVE GLASSMORPHISM WITHOUT BACKDROP-FILTER */
-/* Since backdrop-filter may not be supported, create glassmorphism with traditional CSS */
+/* GLASSMORPHISM WITH SHADCN UI OVERRIDE */
+/* Override Shadcn UI CSS custom properties that conflict with glassmorphism */
 
 .glass-card {
+  /* CRITICAL: Override Shadcn UI CSS custom properties */
+  --card: transparent !important;
+  --card-foreground: inherit !important;
+  
   /* Essential positioning */
   position: relative !important;
   z-index: 1 !important;
