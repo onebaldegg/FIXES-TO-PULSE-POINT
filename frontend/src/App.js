@@ -342,15 +342,6 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
       {/* Dark Overlay for Better Readability */}
       <div className="fixed inset-0 bg-black/20 z-10"></div>
 
-      {/* FIXED CLOSE BUTTON - Always Visible */}
-      <button
-        onClick={() => setShowDashboard(false)}
-        className="fixed top-4 right-4 p-3 bg-red-500 hover:bg-red-600 rounded-lg transition-colors border-2 border-red-400 z-[9999] shadow-2xl"
-        style={{ minWidth: '48px', minHeight: '48px' }}
-      >
-        <X className="h-6 w-6 text-white" />
-      </button>
-
       <div className="w-full max-w-6xl h-[90vh] bg-black/90 backdrop-blur-lg border border-green-500/20 rounded-xl relative z-20 mx-2 sm:mx-0 my-2 sm:my-4 flex flex-col">
         {/* Dashboard Header */}
         <div className="flex items-center justify-between p-4 border-b border-green-500/30 bg-black/80 backdrop-blur-sm rounded-t-xl">
