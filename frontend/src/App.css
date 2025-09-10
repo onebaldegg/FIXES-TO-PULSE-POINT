@@ -412,32 +412,57 @@ canvas {
 }
 
 @layer custom-effects {
-  /* GLASSMORPHISM IMPLEMENTATION */
+  /* CRITICAL TEST CLASS - Must be visible to prove CSS is working */
+  .css-test-visible {
+    background-color: red !important;
+    color: yellow !important;
+    border: 5px solid blue !important;
+    padding: 20px !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 10px 0 !important;
+    z-index: 9999 !important;
+  }
 
-  .glass-card {
+  /* GLASSMORPHISM IMPLEMENTATION - MAXIMUM SPECIFICITY */
+
+  /* Override Tailwind card defaults with extreme specificity */
+  .glass-card,
+  div.glass-card,
+  .glass-card.matrix-theme,
+  div.glass-card.matrix-theme {
+    /* Force override Tailwind's bg-card */
+    background-color: rgba(0, 50, 0, 0.2) !important;
+    background-image: linear-gradient(135deg, rgba(0, 60, 0, 0.25) 0%, rgba(0, 40, 0, 0.15) 100%) !important;
+    
+    /* Force backdrop blur */
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    
     /* Essential positioning */
     position: relative !important;
     z-index: 1 !important;
     
-    /* Create semi-transparent green glass effect */
-    background: rgba(0, 50, 0, 0.2) !important;
-    
-    /* Glass-like border with green tint */
+    /* Glass-like border with green tint - override Tailwind border */
     border: 1px solid rgba(66, 223, 80, 0.4) !important;
+    border-color: rgba(66, 223, 80, 0.4) !important;
   
-  /* Enhanced shadows for depth */
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 4px 16px rgba(66, 223, 80, 0.2),
-    inset 0 1px 0 rgba(66, 223, 80, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
-  
-  /* Smooth transitions */
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  
-  /* Pseudo-element for additional glass effect */
-  overflow: hidden !important;
-}
+    /* Enhanced shadows for depth - override Tailwind shadow */
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.6),
+      0 4px 16px rgba(66, 223, 80, 0.2),
+      inset 0 1px 0 rgba(66, 223, 80, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+    
+    /* Smooth transitions */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    
+    /* Pseudo-element for additional glass effect */
+    overflow: hidden !important;
+  }
 
 /* Add frosted glass effect with pseudo-element */
 .glass-card::before {
