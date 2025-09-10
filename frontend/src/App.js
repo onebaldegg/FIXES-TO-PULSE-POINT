@@ -1711,11 +1711,11 @@ const AppContent = () => {
                       onDragLeave={handleDragLeave}
                       className="border-2 border-dashed rounded-xl p-4 sm:p-8 text-center transition-all duration-200"
                       style={{
-                        borderColor: isDragActive ? '#42DF50' : '#42DF50',
-                        backgroundColor: isDragActive ? 'rgba(66, 223, 80, 0.1)' : 'transparent'
+                        borderColor: isDragActive ? '#ff073a' : '#ff073a',
+                        backgroundColor: isDragActive ? 'rgba(255, 7, 58, 0.1)' : 'transparent'
                       }}
-                      onMouseEnter={(e) => e.target.style.borderColor = '#42DF50'}
-                      onMouseLeave={(e) => e.target.style.borderColor = '#42DF50'}
+                      onMouseEnter={(e) => e.target.style.borderColor = '#ff073a'}
+                      onMouseLeave={(e) => e.target.style.borderColor = '#ff073a'}
                     >
                       <FileUp className={`mx-auto h-12 w-12 mb-4`} style={{color: '#42DF50'}} />
                       <div className="space-y-2">
