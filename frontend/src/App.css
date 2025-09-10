@@ -776,15 +776,19 @@ h1.neon-pulse-subtle,
 
 /* ROBUST NEON IMPLEMENTATION - Force with multiple fallbacks */
 
-/* Test different approaches */
+/* CRITICAL TEST - This MUST work to prove fix */
 .neon-test {
-  background: red !important;
+  background-color: red !important;
   color: yellow !important;
   text-shadow: 0 0 20px yellow !important;
   border: 5px solid blue !important;
-  padding: 10px !important;
-  font-size: 24px !important;
+  padding: 20px !important;
+  font-size: 30px !important;
   font-weight: bold !important;
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  margin: 20px 0 !important;
 }
 
 /* Robust neon effects that work regardless of browser settings */
