@@ -679,7 +679,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
                       color: '#42DF50'
                     }
                   ].map((stat, index) => (
-                    <Card key={index} className="glass-card glass-progress border-green-500/20 overflow-hidden">
+                    <Card key={index} className="glass-card matrix-theme overflow-hidden">
                       <CardContent className="p-6 flex justify-center">
                         <AnimatedProgressRing 
                           current={stat.current}
