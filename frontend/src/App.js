@@ -975,7 +975,7 @@ const AppContent = () => {
         {/* Dark Overlay for Better Readability */}
         <div className="fixed inset-0 bg-black/20 z-10"></div>
 
-        <Card className="w-full max-w-md shadow-2xl border-0 bg-black/80 backdrop-blur-lg border border-green-500/20 relative z-20">
+        <Card className="glass-modal border-0 shadow-2xl border border-green-500/20 relative z-20">
           <CardHeader className="text-center pb-4">
             <div className="mx-auto flex flex-col items-center">
               <img src="/pulse-point-icon.png" alt="Pulse Point Icon" className="h-16 w-16" />
