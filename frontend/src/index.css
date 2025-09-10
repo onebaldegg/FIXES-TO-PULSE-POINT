@@ -132,7 +132,28 @@ div.glass-card.matrix-theme {
   overflow: hidden !important;
 }
 
-/* NEON TEXT FIX - Maximum specificity */
+/* NEON TEXT FIX - Maximum specificity with extreme selectors */
+html body .neon-pulse,
+html body h1.neon-pulse,
+html body h2.neon-pulse,
+html body h3.neon-pulse,
+html body div.neon-pulse,
+html body span.neon-pulse,
+html body .neon-pulse-subtle,
+html body h1.neon-pulse-subtle,
+html body h2.neon-pulse-subtle,
+html body .neon-robust,
+html body h1.neon-robust,
+html body h2.neon-robust,
+html body h3.neon-robust,
+html body div.neon-robust,
+html body span.neon-robust,
+html body .neon-outline,
+html body h1.neon-outline,
+html body h2.neon-outline,
+html body h3.neon-outline,
+html body div.neon-outline,
+html body span.neon-outline,
 .neon-pulse,
 h1.neon-pulse,
 h2.neon-pulse,
