@@ -1891,7 +1891,7 @@ const AppContent = () => {
                     <Button 
                       onClick={analyzeSentiment}
                       disabled={loading || !text.trim()}
-                      className="w-full py-3 text-lg font-semibold transition-all duration-200 hover:scale-105 neon-border-pulse"
+                      className="w-full py-3 text-lg font-semibold transition-all duration-200 hover:scale-105 neon-border-pulse neon-trail-button"
                       style={{backgroundColor: '#ff073a', color: 'white', border: '2px solid #ff073a'}}
                     >
                       {loading ? (
