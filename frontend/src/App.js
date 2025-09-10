@@ -607,7 +607,7 @@ const UserDashboard = ({ showDashboard, setShowDashboard, user, toast }) => {
           ) : (
             <div className="space-y-4 sm:space-y-6">
               {/* User Info Card */}
-              <Card className="glass-card border-green-500/20">
+              <Card className="glass-card matrix-theme">
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                     <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
