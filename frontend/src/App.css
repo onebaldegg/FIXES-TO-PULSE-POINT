@@ -3,11 +3,6 @@
 /* CSS Layer Declarations - Critical for Effect Precedence */
 @layer tailwind-base, tailwind-components, tailwind-utilities, custom-effects;
 
-/* Import Tailwind layers in correct order */
-@import 'tailwindcss/base' layer(tailwind-base);
-@import 'tailwindcss/components' layer(tailwind-components);
-@import 'tailwindcss/utilities' layer(tailwind-utilities);
-
 @layer custom-effects {
   /* Override Tailwind CSS variables for glassmorphism */
   :root {
