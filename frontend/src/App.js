@@ -7,8 +7,13 @@ import { Textarea } from "./components/ui/textarea";
 import { Badge } from "./components/ui/badge";
 import { Alert, AlertDescription } from "./components/ui/alert";
 import { Loader2, TrendingUp, TrendingDown, Minus, BarChart3, Brain, Zap, Smile, Frown, Meh, Heart, Shield, X, Sparkles, Clock, AlertTriangle, Tag, Users, DollarSign, Truck, Monitor, Bug, Megaphone, FileText, GitCompare, Lightbulb, Lock, Zap as Performance, Upload, Download, FileUp, CheckCircle, XCircle, AlertCircle, User, Settings, LogOut, Eye, EyeOff, Mail, Key } from "lucide-react";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
 import { Toaster } from "./components/ui/toaster";
 import { useToast } from "./hooks/use-toast";
+
+// Register Chart.js components
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
