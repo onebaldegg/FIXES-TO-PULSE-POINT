@@ -322,25 +322,25 @@ canvas {
 
 /* Enhanced Glassmorphism Base Styles */
 .glass-card {
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.3),
     0 4px 16px rgba(66, 223, 80, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   animation: slideInFromBottom 0.6s ease-out;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  background: rgba(0, 0, 0, 0.5);
+  transform: translateY(-8px) scale(1.02) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
   box-shadow: 
     0 20px 40px rgba(0, 0, 0, 0.4),
     0 8px 24px rgba(66, 223, 80, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Staggered Card Animations */
