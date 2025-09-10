@@ -525,7 +525,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Implement user dashboard and data association"
+    - "Glassmorphism and Neon Effects Testing"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
